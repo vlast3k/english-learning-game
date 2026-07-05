@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Placeholder camp scene</title>
+  <desc id="desc">A quiet illustrated campsite with a distant jungle and temple shape.</desc>
+  <rect width="800" height="600" fill="#9ed8d1"/>
+  <circle cx="666" cy="94" r="54" fill="#f4b942"/>
+  <path d="M0 220 C105 160 178 188 275 140 C392 82 493 152 607 118 C688 94 742 116 800 82 L800 600 L0 600 Z" fill="#5a8f73"/>
+  <path d="M0 288 C110 230 240 278 344 218 C448 158 541 234 646 188 C718 156 760 160 800 144 L800 600 L0 600 Z" fill="#34745f"/>
+  <path d="M0 410 C132 350 284 390 420 336 C555 284 676 326 800 284 L800 600 L0 600 Z" fill="#c7b06a"/>
+  <path d="M116 404 L196 260 L278 404 Z" fill="#9f7e45"/>
+  <path d="M139 404 L196 300 L254 404 Z" fill="#efd993"/>
+  <rect x="167" y="368" width="58" height="36" fill="#6f5137"/>
+  <path d="M514 378 L572 252 L630 378 Z" fill="#786b57"/>
+  <rect x="543" y="378" width="58" height="54" fill="#6f604f"/>
+  <path d="M534 432 L614 432 L642 476 L506 476 Z" fill="#5b5046"/>
+  <path d="M0 468 C114 492 198 456 304 480 C426 508 542 468 650 486 C718 498 760 496 800 484 L800 600 L0 600 Z" fill="#436f56"/>
+  <path d="M92 474 C120 444 160 444 190 474" fill="none" stroke="#7f5a35" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="122" cy="476" r="16" fill="#f47e4b"/>
+  <circle cx="150" cy="466" r="19" fill="#ffcf5a"/>
+  <circle cx="174" cy="477" r="14" fill="#e8573e"/>
+  <path d="M332 515 C406 488 492 488 574 518" fill="none" stroke="#d6c279" stroke-width="34" stroke-linecap="round"/>
+</svg>

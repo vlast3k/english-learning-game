@@ -1,0 +1,42 @@
+{
+  "frameWidth": 192,
+  "frameHeight": 220,
+  "hero": {
+    "file": "assets/phaser/hero-painted-spritesheet.png",
+    "portraitFile": "assets/phaser/hero-painted-portraits.png",
+    "animations": {
+      "walkDown": [
+        0,
+        7
+      ],
+      "walkUp": [
+        8,
+        15
+      ],
+      "walkSide": [
+        16,
+        23
+      ],
+      "idleDown": 24,
+      "idleUp": 32,
+      "idleSide": 40
+    }
+  },
+  "guide": {
+    "file": "assets/phaser/guide-painted-spritesheet.png",
+    "animations": {
+      "idle": [
+        0,
+        3
+      ],
+      "talk": [
+        4,
+        7
+      ],
+      "point": [
+        8,
+        11
+      ]
+    }
+  }
+}

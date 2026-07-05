@@ -1,0 +1,15 @@
+{
+  "name": "english-learning-game-poc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npm run test:assets && npm run test:browser",
+    "test:assets": "python3 tools/validate_character_sprites.py && node --check phaser-game.js",
+    "test:browser": "node tools/browser-smoke-test.mjs",
+    "serve": "python3 -m http.server 9231"
+  },
+  "devDependencies": {
+    "playwright": "^1.55.0"
+  }
+}

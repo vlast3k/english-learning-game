@@ -1,0 +1,1567 @@
+const GAME_WIDTH = 1024;
+const GAME_HEIGHT = 576;
+const ASSET_VERSION = "20260705-guide-close-1";
+const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
+const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
+const REVEAL_TRANSLATIONS = new Map([
+  ["a", "един"],
+  ["alex", "Алекс"],
+  ["am", "съм"],
+  ["an", "един"],
+  ["and", "и"],
+  ["are", "са"],
+  ["backpack", "раница"],
+  ["backpackes", "раници"],
+  ["backpacks", "раници"],
+  ["bakpack", "раница"],
+  ["best", "най-добро"],
+  ["camp", "лагер"],
+  ["challenge", "изпитание"],
+  ["checking", "проверява"],
+  ["checks", "проверява"],
+  ["choose", "избери"],
+  ["correct", "правилно"],
+  ["find", "намери"],
+  ["first", "първо"],
+  ["for", "за"],
+  ["found", "намери"],
+  ["gear", "екипировка"],
+  ["ground", "земя"],
+  ["guide", "водач"],
+  ["hand", "ръка"],
+  ["in", "в"],
+  ["is", "е"],
+  ["jungle", "джунгла"],
+  ["looking", "гледат"],
+  ["map", "карта"],
+  ["mapp", "карта"],
+  ["mep", "карта"],
+  ["now", "сега"],
+  ["on", "на"],
+  ["path", "пътека"],
+  ["pick", "избери"],
+  ["plural", "множествено"],
+  ["question", "въпрос"],
+  ["raises", "вдига"],
+  ["right", "точно"],
+  ["roap", "въже"],
+  ["rop", "въже"],
+  ["rope", "въже"],
+  ["sentence", "изречение"],
+  ["spelling", "правопис"],
+  ["the", "the"],
+  ["then", "после"],
+  ["this", "този"],
+  ["to", "към"],
+  ["tool", "инструмент"],
+  ["two", "две"],
+  ["what", "какво"],
+  ["where", "къде"],
+  ["which", "кое"],
+  ["with", "с"],
+  ["word", "дума"],
+  ["boiling", "ври"],
+  ["burning", "гори"],
+  ["campfire", "огън"],
+  ["cauldron", "казан"],
+  ["crackling", "пука"],
+  ["dinner", "вечеря"],
+  ["explorers", "изследователи"],
+  ["glowing", "свети"],
+  ["hangs", "виси"],
+  ["hanging", "виси"],
+  ["inside", "вътре"],
+  ["keeps", "пази"],
+  ["lantern", "фенер"],
+  ["lights", "осветява"],
+  ["long", "дълъг"],
+  ["lying", "лежи"],
+  ["night", "нощ"],
+  ["over", "над"],
+  ["ready", "готов"],
+  ["safe", "безопасни"],
+  ["sleeping", "спи"],
+  ["slowly", "бавно"],
+  ["soup", "супа"],
+  ["strong", "здраво"],
+  ["supplies", "провизии"],
+  ["tent", "палатка"],
+  ["tonight", "тази нощ"],
+  ["trail", "пътека"],
+  ["warm", "топъл"],
+  ["water", "вода"],
+]);
+
+class CampScene extends Phaser.Scene {
+  constructor() {
+    super("CampScene");
+    this.learnedWords = [];
+    this.flags = {};
+    this.activeBubble = null;
+    this.commandText = null;
+    this.inventoryText = null;
+    this.heroTween = null;
+  }
+
+  preload() {
+    const versionedAsset = (path) => `${path}?v=${ASSET_VERSION}`;
+    this.load.image("campBg", versionedAsset("assets/phaser/camp-bg-painted.png"));
+    this.load.spritesheet("heroSprite", versionedAsset("assets/phaser/hero-painted-spritesheet.png"), { frameWidth: 192, frameHeight: 220 });
+    this.load.spritesheet("heroPortraits", versionedAsset("assets/phaser/hero-painted-portraits.png"), { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("guideSprite", versionedAsset("assets/phaser/guide-painted-spritesheet.png"), { frameWidth: 192, frameHeight: 220 });
+    this.load.json("scenario", versionedAsset("scenarios/sun-temple-poc.json"));
+  }
+
+  create() {
+    this.scenario = this.cache.json.get("scenario");
+    this.camp = this.scenario.scenes.camp;
+    this.guideTree = this.scenario.dialogues.guide_intro_tree;
+    this.objectQuizzes = this.createObjectQuizzes();
+
+    this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, "campBg").setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
+    this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT - 44, GAME_WIDTH, 88, 0x1f2d24, 0.16);
+    this.createCharacterAnimations();
+    this.setupNavigation();
+
+    this.createHotspots();
+    this.guide = this.createGuide(602, 440);
+    this.hero = this.createHero(360, 470);
+    this.createHud();
+
+    this.input.on("pointerdown", (pointer, targets) => {
+      if (targets.length > 0 || this.activeBubble) {
+        return;
+      }
+      if (pointer.y >= 360) {
+        this.setCommand("Walk to clearing");
+        this.walkHeroTo(pointer.x, pointer.y);
+      }
+    });
+    this.input.on("pointermove", (pointer) => this.resetRevealIfPointerLeft(pointer));
+  }
+
+  createCharacterAnimations() {
+    if (!this.anims.exists("hero-walk-down")) {
+      this.anims.create({
+        key: "hero-walk-down",
+        frames: this.anims.generateFrameNumbers("heroSprite", { start: 16, end: 23 }),
+        frameRate: 10,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "hero-walk-up",
+        frames: this.anims.generateFrameNumbers("heroSprite", { start: 16, end: 23 }),
+        frameRate: 10,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "hero-walk-side",
+        frames: this.anims.generateFrameNumbers("heroSprite", { start: 16, end: 23 }),
+        frameRate: 10,
+        repeat: -1,
+      });
+    }
+
+    if (!this.anims.exists("guide-idle")) {
+      this.anims.create({
+        key: "guide-idle",
+        frames: this.anims.generateFrameNumbers("guideSprite", { start: 0, end: 3 }),
+        frameRate: 4,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "guide-talk",
+        frames: this.anims.generateFrameNumbers("guideSprite", { start: 4, end: 7 }),
+        frameRate: 7,
+        repeat: -1,
+      });
+      this.anims.create({
+        key: "guide-point",
+        frames: this.anims.generateFrameNumbers("guideSprite", { start: 8, end: 11 }),
+        frameRate: 6,
+        repeat: -1,
+      });
+    }
+  }
+
+  createHud() {
+    const hudBg = this.add.graphics().setDepth(900);
+    hudBg.fillStyle(0xfffbef, 0.9);
+    hudBg.lineStyle(2, 0x173837, 0.18);
+    hudBg.fillRoundedRect(18, 16, 224, 58, 8);
+    hudBg.strokeRoundedRect(18, 16, 224, 58, 8);
+
+    this.add.text(34, 27, "INVENTORY", {
+      fontFamily: UI_FONT,
+      fontSize: "13px",
+      fontStyle: "700",
+      color: "#526763",
+    }).setDepth(901);
+
+    this.inventoryText = this.add.text(34, 47, "Empty", {
+      fontFamily: UI_FONT,
+      fontSize: "16px",
+      color: "#173837",
+    }).setDepth(901);
+
+    this.statusText = this.add.text(GAME_WIDTH - 32, 24, "Prepare for the jungle", {
+      fontFamily: UI_FONT,
+      fontSize: "17px",
+      fontStyle: "700",
+      color: "#173837",
+      backgroundColor: "rgba(255,251,239,0.92)",
+      padding: { x: 12, y: 8 },
+    }).setOrigin(1, 0).setDepth(901);
+
+    this.commandBg = this.add.graphics().setDepth(900);
+    this.commandBg.fillStyle(0x1f2d24, 0.82);
+    this.commandBg.fillRoundedRect(322, 522, 380, 40, 8);
+    this.commandText = this.add.text(512, 542, "Walk to...", {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: "17px",
+      fontStyle: "700",
+      color: "#fff6d4",
+    }).setOrigin(0.5).setDepth(901);
+  }
+
+  createHotspots() {
+    this.hotspots = [
+      {
+        id: "rope",
+        label: "rope",
+        english: "rope",
+        bg: "въже",
+        x: 222,
+        y: 424,
+        walkTo: { x: 258, y: 464 },
+        radius: 28,
+        intro: { text: "A long rope is lying on the ground. It looks strong.", bg: "Дълго въже лежи на земята. Изглежда здраво." },
+      },
+      {
+        id: "backpack",
+        label: "backpack",
+        english: "backpack",
+        bg: "раница",
+        x: 128,
+        y: 444,
+        walkTo: { x: 170, y: 468 },
+        radius: 31,
+        intro: { text: "A backpack is ready for the trail. It keeps supplies safe.", bg: "Раницата е готова за пътеката. Тя пази провизиите." },
+      },
+      {
+        id: "map",
+        label: "map",
+        english: "map",
+        bg: "карта",
+        x: 526,
+        y: 386,
+        walkTo: { x: 516, y: 456 },
+        radius: 48,
+        intro: { text: "A map is hanging over the table. Alex is looking at it now.", bg: "Карта виси над масата. Алекс я гледа сега." },
+      },
+      {
+        id: "cauldron",
+        label: "cauldron",
+        english: "cauldron",
+        bg: "казан",
+        x: 698,
+        y: 392,
+        walkTo: { x: 630, y: 468 },
+        radius: 26,
+        scenery: true,
+        description: { text: "A cauldron hangs over the fire. The water is boiling slowly.", bg: "Казан виси над огъня. Водата ври бавно." },
+      },
+      {
+        id: "campfire",
+        label: "campfire",
+        english: "campfire",
+        bg: "огън",
+        x: 700,
+        y: 452,
+        walkTo: { x: 630, y: 480 },
+        radius: 28,
+        scenery: true,
+        description: { text: "The campfire is burning. It keeps the camp warm tonight.", bg: "Лагерният огън гори. Той пази лагера топъл тази нощ." },
+      },
+      {
+        id: "lantern",
+        label: "lantern",
+        english: "lantern",
+        bg: "фенер",
+        x: 330,
+        y: 372,
+        walkTo: { x: 340, y: 456 },
+        radius: 22,
+        scenery: true,
+        description: { text: "A lantern is glowing on the table. It lights the camp at night.", bg: "Фенер свети на масата. Той осветява лагера през нощта." },
+      },
+      {
+        id: "tent",
+        label: "tent",
+        english: "tent",
+        bg: "палатка",
+        x: 120,
+        y: 362,
+        walkTo: { x: 160, y: 448 },
+        radius: 42,
+        scenery: true,
+        description: { text: "The tent is ready for sleeping. The explorers are resting inside tonight.", bg: "Палатката е готова за спане. Изследователите почиват вътре тази нощ." },
+      },
+    ];
+
+    this.hotspots.forEach((hotspot) => {
+      const marker = this.add.container(hotspot.x, hotspot.y).setDepth(530).setSize(hotspot.radius * 2, hotspot.radius * 2);
+      const glow = this.add.graphics();
+      const label = this.add.text(0, hotspot.radius + 13, hotspot.label, {
+        fontFamily: ADVENTURE_FONT,
+        fontSize: "14px",
+        fontStyle: "700",
+        color: "#173837",
+        backgroundColor: "rgba(255,251,239,0.93)",
+        padding: { x: 7, y: 4 },
+      }).setOrigin(0.5).setAlpha(0);
+
+      marker.add([glow, label]);
+      hotspot.glow = glow;
+      this.drawHotspotGlow(hotspot, false);
+      const zone = this.add.zone(hotspot.x, hotspot.y, hotspot.radius * 2.4, hotspot.radius * 2.4)
+        .setDepth(850)
+        .setInteractive({ useHandCursor: true });
+      zone.on("pointerover", () => label.setAlpha(1));
+      zone.on("pointerout", () => label.setAlpha(0));
+      zone.on("pointerdown", () => {
+        this.closeBubble();
+        this.setCommand(`Look at ${hotspot.label}`);
+        if (hotspot.scenery) {
+          this.walkHeroTo(hotspot.walkTo.x, hotspot.walkTo.y, () => this.openSceneryBubble(hotspot));
+        } else {
+          this.walkHeroTo(hotspot.walkTo.x, hotspot.walkTo.y, () => this.openObjectIntro(hotspot));
+        }
+      });
+      hotspot.marker = marker;
+      hotspot.zone = zone;
+      this.tweens.add({
+        targets: glow,
+        alpha: { from: 0.45, to: 1 },
+        duration: 950,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+    });
+
+    this.exitMarker = this.createExitMarker(938, 355);
+  }
+
+  createExitMarker(x, y) {
+    const marker = this.add.container(x, y).setDepth(540).setSize(76, 76);
+    const glow = this.add.graphics();
+    glow.fillStyle(0xf4c44e, 0.92);
+    glow.fillRoundedRect(-18, -18, 36, 36, 8);
+    glow.lineStyle(4, 0xfff7d0, 1);
+    glow.beginPath();
+    glow.moveTo(-6, -10);
+    glow.lineTo(8, 0);
+    glow.lineTo(-6, 10);
+    glow.strokePath();
+    const label = this.add.text(0, 42, "jungle path", {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: "14px",
+      fontStyle: "700",
+      color: "#173837",
+      backgroundColor: "rgba(255,251,239,0.93)",
+      padding: { x: 7, y: 4 },
+    }).setOrigin(0.5);
+    marker.add([glow, label]);
+    const zone = this.add.zone(x, y, 96, 118)
+      .setDepth(850)
+      .setInteractive({ useHandCursor: true });
+    zone.on("pointerdown", () => {
+      this.closeBubble();
+      this.setCommand("Walk to jungle path");
+      this.walkHeroTo(895, 435, () => {
+        if (!this.flags.jungle_path_open) {
+          this.showSpeechBubble({
+            speaker: "Alex",
+            text: "The guide raises a hand. \"Gear first, then jungle.\"",
+            bg: "Водачът вдига ръка: \"Първо екипировката, после джунглата.\"",
+            anchor: { x: this.hero.x + 18, y: this.hero.y - 100 },
+            options: [{ text: "OK", action: () => this.closeBubble() }],
+          });
+          return;
+        }
+        this.setCommand("The jungle path is open!");
+        this.statusText.setText("Jungle path open");
+        this.flashToast("Next scene would load here.");
+      });
+    });
+    marker.zone = zone;
+    return marker;
+  }
+
+  createHero(x, y) {
+    const hero = this.add.container(x, y).setDepth(y).setSize(72, 124);
+    hero.shadowOuter = this.add.ellipse(0, -11, 88, 22, 0x14201a, 0.22);
+    hero.shadow = this.add.ellipse(0, -12, 58, 12, 0x14201a, 0.42);
+    hero.fireBounce = this.add.ellipse(10, -42, 46, 92, 0xf4b942, 0.12);
+    hero.sprite = this.add.sprite(0, 0, "heroSprite", 24).setOrigin(0.5, 1);
+    hero.sprite.setTint(0xfff1d2);
+    hero.add([hero.shadowOuter, hero.shadow, hero.fireBounce, hero.sprite]);
+    hero.facing = "down";
+    hero.expression = "normal";
+    hero.walkStartedAt = 0;
+    hero.setScale(this.getCharacterScale(y));
+    return hero;
+  }
+
+  createGuide(x, y) {
+    const guide = this.add.container(x, y).setDepth(y).setSize(80, 130);
+    guide.highlight = this.add.graphics();
+    this.drawGuideHighlight(guide.highlight);
+    guide.shadowOuter = this.add.ellipse(0, -11, 92, 23, 0x14201a, 0.22);
+    guide.shadow = this.add.ellipse(0, -12, 62, 13, 0x14201a, 0.44);
+    guide.fireBounce = this.add.ellipse(-8, -44, 52, 96, 0xf4b942, 0.13);
+    guide.sprite = this.add.sprite(0, 0, "guideSprite", 0).setOrigin(0.5, 1);
+    guide.sprite.setTint(0xfff1d2);
+    guide.sprite.play("guide-idle");
+    guide.add([guide.highlight, guide.shadowOuter, guide.shadow, guide.fireBounce, guide.sprite]);
+    guide.setScale(this.getCharacterScale(y));
+    guide.zone = this.add.zone(x, y - 62, 96, 142)
+      .setDepth(850)
+      .setInteractive({ useHandCursor: true });
+    guide.zone.on("pointerdown", () => this.onGuideClicked());
+    return guide;
+  }
+
+  drawHotspotGlow(hotspot, retrieved) {
+    const color = retrieved ? 0x38d276 : 0xffcf5a;
+    const fillAlpha = retrieved ? 0.17 : 0.11;
+    const lineAlpha = retrieved ? 1 : 0.9;
+    hotspot.glow.clear();
+    hotspot.glow.lineStyle(3, color, lineAlpha);
+    hotspot.glow.strokeCircle(0, 0, hotspot.radius);
+    hotspot.glow.fillStyle(color, fillAlpha);
+    hotspot.glow.fillCircle(0, 0, hotspot.radius);
+    if (retrieved) {
+      hotspot.glow.lineStyle(2, 0xfffbef, 0.78);
+      hotspot.glow.beginPath();
+      hotspot.glow.moveTo(-hotspot.radius * 0.32, -2);
+      hotspot.glow.lineTo(-hotspot.radius * 0.08, hotspot.radius * 0.25);
+      hotspot.glow.lineTo(hotspot.radius * 0.42, -hotspot.radius * 0.28);
+      hotspot.glow.strokePath();
+    }
+  }
+
+  drawGuideHighlight(graphics) {
+    graphics.clear();
+    graphics.lineStyle(3, 0x73d7ff, 0.92);
+    graphics.strokeCircle(0, -68, 48);
+    graphics.fillStyle(0x73d7ff, 0.09);
+    graphics.fillCircle(0, -68, 48);
+    graphics.lineStyle(1, 0xfffbef, 0.55);
+    graphics.strokeCircle(0, -68, 55);
+  }
+
+  createObjectQuizzes() {
+    return {
+      rope: [
+        {
+          text: "Rope challenge 1/3. Which spelling is correct for this camp tool?",
+          bg: "Предизвикателство с въже 1/3. Кое изписване е правилно?",
+          options: [
+            { text: "rope", isCorrect: true },
+            { text: "roap", feedback: "Почти, но oa тук не е правилно. Правилното изписване е rope." },
+            { text: "rop", feedback: "Липсва последната буква e. Правилно: rope." },
+          ],
+        },
+        {
+          text: "Rope challenge 2/3. Choose the best sentence.",
+          bg: "Предизвикателство с въже 2/3. Избери най-доброто изречение.",
+          options: [
+            { text: "Alex found a rope.", isCorrect: true },
+            { text: "Alex found an rope.", feedback: "Използваме an пред гласен звук. Rope започва със съгласен звук, затова е a rope." },
+            { text: "Alex found rope a.", feedback: "В английския статията идва преди съществителното: a rope." },
+          ],
+        },
+        {
+          text: "Rope challenge 3/3. Right now, Alex ___ the rope.",
+          bg: "Предизвикателство с въже 3/3. Точно сега Алекс ___ въжето.",
+          options: [
+            { text: "is checking", isCorrect: true },
+            { text: "checks", feedback: "Checks е за навик. За действие точно сега използваме is + -ing." },
+            { text: "checking", feedback: "Липсва is. Правилно: Alex is checking." },
+          ],
+        },
+      ],
+      backpack: [
+        {
+          text: "Backpack challenge 1/3. Which spelling is correct?",
+          bg: "Предизвикателство с раница 1/3. Кое изписване е правилно?",
+          options: [
+            { text: "backpack", isCorrect: true },
+            { text: "bakpack", feedback: "Липсва c след ba. Правилно: backpack." },
+            { text: "backpak", feedback: "Липсва c в края. Правилно: backpack." },
+          ],
+        },
+        {
+          text: "Backpack challenge 2/3. Pick the correct plural.",
+          bg: "Предизвикателство с раница 2/3. Избери правилното множествено число.",
+          options: [
+            { text: "two backpacks", isCorrect: true },
+            { text: "two backpack", feedback: "След two трябва множествено число: backpacks." },
+            { text: "two backpackes", feedback: "За backpack добавяме само -s: backpacks." },
+          ],
+        },
+        {
+          text: "Backpack challenge 3/3. Choose the best sentence.",
+          bg: "Предизвикателство с раница 3/3. Избери най-доброто изречение.",
+          options: [
+            { text: "The backpack is on the ground.", isCorrect: true },
+            { text: "The backpack are on the ground.", feedback: "Backpack е единствено число, затова използваме is." },
+            { text: "The backpack on the ground.", feedback: "Липсва глаголът is." },
+          ],
+        },
+      ],
+      map: [
+        {
+          text: "Map challenge 1/3. Which spelling is correct?",
+          bg: "Предизвикателство с карта 1/3. Кое изписване е правилно?",
+          options: [
+            { text: "map", isCorrect: true },
+            { text: "mapp", feedback: "Има само едно p. Правилно: map." },
+            { text: "mep", feedback: "Средната буква е a. Правилно: map." },
+          ],
+        },
+        {
+          text: "Map challenge 2/3. Choose the correct question.",
+          bg: "Предизвикателство с карта 2/3. Избери правилния въпрос.",
+          options: [
+            { text: "Where is the map?", isCorrect: true },
+            { text: "Where the map is?", feedback: "Въпросът има ред: Where + is + subject." },
+            { text: "Where are the map?", feedback: "Map е единствено число, затова е is." },
+          ],
+        },
+        {
+          text: "Map challenge 3/3. Alex and the guide ___ looking at the map.",
+          bg: "Предизвикателство с карта 3/3. Алекс и водачът ___ гледат картата.",
+          options: [
+            { text: "are", isCorrect: true },
+            { text: "is", feedback: "Alex and the guide са двама, затова използваме are." },
+            { text: "am", feedback: "Am се използва само с I." },
+          ],
+        },
+      ],
+    };
+  }
+
+  onGuideClicked() {
+    this.closeBubble();
+    this.setCommand("Talk to guide");
+    this.walkHeroTo(610, 470, () => {
+      this.faceHeroToward(this.guide.x, this.guide.y, "normal");
+      this.playGuideTalk();
+      if (!["rope", "backpack", "map"].every((word) => this.learnedWords.includes(word))) {
+        this.showSpeechBubble({
+          speaker: "Guide",
+          text: "Find the camp gear first: backpack, rope, and map.",
+          bg: "Първо намери екипировката в лагера: раница, въже и карта.",
+          anchor: { x: this.guide.x, y: this.guide.y - 128 },
+          options: [{ text: "OK", action: () => this.closeBubble() }],
+        });
+        return;
+      }
+      this.openGuideQuestion("node_1");
+    });
+  }
+
+  walkHeroTo(x, y, onComplete = null) {
+    if (this.heroTween) {
+      this.heroTween.stop();
+    }
+    this.closeToast();
+    // Route around obstacles (table, campfire) instead of walking straight through.
+    const goal = this.clampToWalkable(x, y);
+    const path = this.findPath({ x: this.hero.x, y: this.hero.y }, goal);
+    // path[0] is the current position; walk through the remaining waypoints.
+    this.walkToken = (this.walkToken || 0) + 1;
+    this.hero.strideAccumDist = 0;
+    this.hero.strideAccumTime = 0;
+    this.followHeroPath(path.slice(1), this.walkToken, onComplete);
+  }
+
+  followHeroPath(waypoints, token, onComplete = null) {
+    if (token !== this.walkToken) {
+      return;
+    }
+    if (!waypoints.length) {
+      const lastDx = this.hero.sprite.flipX ? -1 : 1;
+      this.animateHeroWalk(false, lastDx, 0);
+      this.hero.setDepth(Math.round(this.hero.y));
+      if (onComplete) {
+        onComplete();
+      }
+      return;
+    }
+    const [target, ...rest] = waypoints;
+    const dx = target.x - this.hero.x;
+    const dy = target.y - this.hero.y;
+    const distance = Phaser.Math.Distance.Between(this.hero.x, this.hero.y, target.x, target.y);
+    const duration = Phaser.Math.Clamp(distance * 7.6, 120, 2800);
+    this.hero.prevWalkX = this.hero.x;
+    this.hero.prevWalkY = this.hero.y;
+    this.animateHeroWalk(true, dx, dy);
+    this.heroTween = this.tweens.add({
+      targets: this.hero,
+      x: target.x,
+      y: target.y,
+      duration,
+      ease: rest.length ? "Linear" : "Sine.easeOut",
+      onUpdate: () => {
+        this.hero.setDepth(Math.round(this.hero.y));
+        this.hero.setScale(this.getCharacterScale(this.hero.y));
+        this.syncHeroStride();
+        this.updateHeroWalkPose(dx, dy);
+      },
+      onComplete: () => {
+        this.hero.setDepth(Math.round(this.hero.y));
+        this.followHeroPath(rest, token, onComplete);
+      },
+    });
+  }
+
+  setupNavigation() {
+    // Ground area the hero may stand on (feet position), in game coordinates.
+    this.walkablePoly = [
+      { x: 55, y: 412 },
+      { x: 980, y: 412 },
+      { x: 1008, y: 566 },
+      { x: 24, y: 566 },
+    ];
+    // Ground footprints the hero must walk around. Values are the base of each
+    // prop where it meets the ground (feet cannot enter these boxes).
+    this.obstacles = [
+      { id: "table", x1: 386, y1: 400, x2: 580, y2: 474 },
+      { id: "fire", x1: 624, y1: 398, x2: 740, y2: 484 },
+    ];
+    // How far path corners are pushed off each obstacle so the hero body clears it.
+    this.navClearance = 30;
+  }
+
+  pointInPoly(p, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const a = poly[i];
+      const b = poly[j];
+      if ((a.y > p.y) !== (b.y > p.y) &&
+        p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  pointInRect(p, r, margin = 0) {
+    return p.x >= r.x1 - margin && p.x <= r.x2 + margin &&
+      p.y >= r.y1 - margin && p.y <= r.y2 + margin;
+  }
+
+  clampToWalkable(x, y) {
+    let p = { x, y };
+    // Keep inside the walkable polygon bounds.
+    const minX = Math.min(...this.walkablePoly.map((v) => v.x)) + 6;
+    const maxX = Math.max(...this.walkablePoly.map((v) => v.x)) - 6;
+    const minY = Math.min(...this.walkablePoly.map((v) => v.y)) + 4;
+    const maxY = Math.max(...this.walkablePoly.map((v) => v.y)) - 4;
+    p.x = Phaser.Math.Clamp(p.x, minX, maxX);
+    p.y = Phaser.Math.Clamp(p.y, minY, maxY);
+    // Push out of any obstacle to its nearest edge.
+    for (const r of this.obstacles) {
+      if (this.pointInRect(p, r)) {
+        const toLeft = p.x - r.x1;
+        const toRight = r.x2 - p.x;
+        const toTop = p.y - r.y1;
+        const toBottom = r.y2 - p.y;
+        const min = Math.min(toLeft, toRight, toTop, toBottom);
+        if (min === toBottom) {
+          p.y = r.y2 + 8;
+        } else if (min === toTop) {
+          p.y = r.y1 - 8;
+        } else if (min === toLeft) {
+          p.x = r.x1 - 8;
+        } else {
+          p.x = r.x2 + 8;
+        }
+      }
+    }
+    return p;
+  }
+
+  segIntersectsRect(a, b, r) {
+    // Quick accept: either endpoint strictly inside the rect.
+    if (this.pointInRect(a, r, -0.5) || this.pointInRect(b, r, -0.5)) {
+      return true;
+    }
+    const edges = [
+      [{ x: r.x1, y: r.y1 }, { x: r.x2, y: r.y1 }],
+      [{ x: r.x2, y: r.y1 }, { x: r.x2, y: r.y2 }],
+      [{ x: r.x2, y: r.y2 }, { x: r.x1, y: r.y2 }],
+      [{ x: r.x1, y: r.y2 }, { x: r.x1, y: r.y1 }],
+    ];
+    return edges.some(([p, q]) => this.segmentsIntersect(a, b, p, q));
+  }
+
+  segmentsIntersect(p1, p2, p3, p4) {
+    const d = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    const d1 = d(p3, p4, p1);
+    const d2 = d(p3, p4, p2);
+    const d3 = d(p1, p2, p3);
+    const d4 = d(p1, p2, p4);
+    if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
+      ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
+      return true;
+    }
+    return false;
+  }
+
+  lineIsClear(a, b) {
+    return !this.obstacles.some((r) => this.segIntersectsRect(a, b, r));
+  }
+
+  findPath(start, goal) {
+    // Direct line if nothing is in the way.
+    if (this.lineIsClear(start, goal)) {
+      return [start, goal];
+    }
+    // Visibility graph: nodes are start, goal and the expanded corners of each
+    // obstacle. Edges connect nodes whose straight line avoids all obstacles.
+    const c = this.navClearance;
+    const nodes = [start, goal];
+    for (const r of this.obstacles) {
+      nodes.push(
+        { x: r.x1 - c, y: r.y1 - c },
+        { x: r.x2 + c, y: r.y1 - c },
+        { x: r.x2 + c, y: r.y2 + c },
+        { x: r.x1 - c, y: r.y2 + c },
+      );
+    }
+    // Drop corner nodes that fall inside another obstacle.
+    const valid = nodes.filter((n, i) =>
+      i < 2 || !this.obstacles.some((r) => this.pointInRect(n, r)));
+    const n = valid.length;
+    const dist = new Array(n).fill(Infinity);
+    const prev = new Array(n).fill(-1);
+    const done = new Array(n).fill(false);
+    dist[0] = 0;
+    for (let iter = 0; iter < n; iter++) {
+      let u = -1;
+      for (let i = 0; i < n; i++) {
+        if (!done[i] && (u === -1 || dist[i] < dist[u])) {
+          u = i;
+        }
+      }
+      if (u === -1 || dist[u] === Infinity) {
+        break;
+      }
+      done[u] = true;
+      if (u === 1) {
+        break;
+      }
+      for (let v = 0; v < n; v++) {
+        if (done[v] || !this.lineIsClear(valid[u], valid[v])) {
+          continue;
+        }
+        const w = Phaser.Math.Distance.Between(valid[u].x, valid[u].y, valid[v].x, valid[v].y);
+        if (dist[u] + w < dist[v]) {
+          dist[v] = dist[u] + w;
+          prev[v] = u;
+        }
+      }
+    }
+    if (dist[1] === Infinity) {
+      return [start, goal];
+    }
+    const path = [];
+    for (let at = 1; at !== -1; at = prev[at]) {
+      path.unshift(valid[at]);
+    }
+    return path;
+  }
+
+  getCharacterScale(y) {
+    return 0.39 + y / 2050;
+  }
+
+  animateHeroWalk(isWalking, dx = 0, dy = 0) {
+    const facing = this.getFacingFromDelta(dx, dy);
+    if (!isWalking) {
+      this.setHeroIdle(facing);
+      return;
+    }
+    this.hero.facing = facing;
+    this.hero.expression = "normal";
+    this.hero.walkStartedAt = this.time.now;
+    this.updateHeroWalkPose(dx, dy);
+    if (facing === "side") {
+      this.hero.sprite.setFlipX(dx < 0);
+      this.hero.sprite.play("hero-walk-side", true);
+      return;
+    }
+    this.hero.sprite.setFlipX(dx < 0);
+    this.hero.sprite.play(facing === "up" ? "hero-walk-up" : "hero-walk-down", true);
+  }
+
+  syncHeroStride() {
+    if (!this.hero?.sprite?.anims) {
+      return;
+    }
+    const nowX = this.hero.x;
+    const nowY = this.hero.y;
+    const moved = Phaser.Math.Distance.Between(this.hero.prevWalkX ?? nowX, this.hero.prevWalkY ?? nowY, nowX, nowY);
+    this.hero.prevWalkX = nowX;
+    this.hero.prevWalkY = nowY;
+    const dt = this.game.loop.delta / 1000;
+    if (dt <= 0) {
+      return;
+    }
+    // Accumulate distance/time over a short window so the speed reading is stable
+    // even at high refresh rates (per-frame deltas are otherwise too noisy).
+    this.hero.strideAccumDist = (this.hero.strideAccumDist ?? 0) + moved;
+    this.hero.strideAccumTime = (this.hero.strideAccumTime ?? 0) + dt;
+    if (this.hero.strideAccumTime < 0.05) {
+      return;
+    }
+    // Ground speed in px/sec, corrected for perspective scale so a smaller (distant)
+    // hero takes proportionally smaller steps.
+    const scale = this.getCharacterScale(nowY);
+    const speed = this.hero.strideAccumDist / this.hero.strideAccumTime;
+    this.hero.strideAccumDist = 0;
+    this.hero.strideAccumTime = 0;
+    // Ground distance that should pass per animation frame to keep a foot planted.
+    const stridePxPerFrame = 24 * scale;
+    const desiredFps = Phaser.Math.Clamp(speed / stridePxPerFrame, 6, 16);
+    // Base animation frameRate is 10fps, so timeScale scales it to the desired cadence.
+    this.hero.sprite.anims.timeScale = desiredFps / 10;
+  }
+
+  updateHeroWalkPose(dx = 0, dy = 0) {
+    if (!this.hero?.sprite || !this.hero.walkStartedAt) {
+      return;
+    }
+    const facing = this.getFacingFromDelta(dx, dy);
+    const phase = ((this.time.now - this.hero.walkStartedAt) / 1000) * Math.PI * 2.5;
+    const stepLift = Math.abs(Math.sin(phase)) * 4;
+    const sway = Math.sin(phase) * 2;
+    const sideSign = dx < 0 ? -1 : 1;
+    this.hero.sprite.y = -stepLift;
+    this.hero.sprite.x = facing === "side" ? 0 : sway * 0.45;
+    this.hero.sprite.angle = facing === "side" ? sideSign * Math.sin(phase) * 1.2 : Math.sin(phase) * 0.7;
+    this.hero.fireBounce.y = -42 - stepLift * 0.55;
+    this.hero.shadow.setScale(1 + stepLift * 0.018, 1 - stepLift * 0.012);
+    this.hero.shadowOuter.setScale(1 + stepLift * 0.012, 1);
+  }
+
+  getFacingFromDelta(dx, dy) {
+    if (Math.abs(dx) > Math.abs(dy) * 0.85) {
+      return "side";
+    }
+    return dy < 0 ? "up" : "down";
+  }
+
+  setHeroIdle(facing = this.hero.facing, expression = "normal") {
+    this.hero.sprite.anims.stop();
+    this.hero.sprite.anims.timeScale = 1;
+    this.hero.facing = facing;
+    this.hero.expression = expression;
+    this.hero.walkStartedAt = 0;
+    this.hero.sprite.x = 0;
+    this.hero.sprite.y = 0;
+    this.hero.sprite.angle = 0;
+    this.hero.fireBounce.y = -42;
+    this.hero.shadow.setScale(1, 1);
+    this.hero.shadowOuter.setScale(1, 1);
+    const downFrames = { normal: 24, curious: 25, smile: 26, surprised: 27, thinking: 28, focused: 29 };
+    const sideFrames = { normal: 40, curious: 41, smile: 42, surprised: 43, thinking: 44, focused: 45 };
+    if (facing === "up") {
+      this.hero.sprite.setFlipX(false);
+      this.hero.sprite.setFrame(32);
+      return;
+    }
+    if (facing === "side") {
+      this.hero.sprite.setFrame(sideFrames[expression] || sideFrames.normal);
+      return;
+    }
+    this.hero.sprite.setFlipX(false);
+    this.hero.sprite.setFrame(downFrames[expression] || downFrames.normal);
+  }
+
+  faceHeroToward(x, y, expression = "normal") {
+    const dx = x - this.hero.x;
+    const dy = y - this.hero.y;
+    const facing = this.getFacingFromDelta(dx, dy);
+    if (facing === "side") {
+      this.hero.sprite.setFlipX(dx < 0);
+    }
+    this.setHeroIdle(facing, expression);
+  }
+
+  setHeroExpression(expression) {
+    this.setHeroIdle("down", expression);
+    if (this.heroExpressionTimer) {
+      this.heroExpressionTimer.remove(false);
+    }
+    this.heroExpressionTimer = this.time.delayedCall(1400, () => {
+      const isWalking = this.heroTween?.isPlaying && this.heroTween.isPlaying();
+      if (!isWalking) {
+        this.setHeroIdle("down", "normal");
+      }
+    });
+  }
+
+  playGuideTalk(duration = 1300) {
+    if (!this.guide?.sprite) {
+      return;
+    }
+    this.guide.sprite.play("guide-talk", true);
+    if (this.guideTalkTimer) {
+      this.guideTalkTimer.remove(false);
+    }
+    this.guideTalkTimer = this.time.delayedCall(duration, () => {
+      if (this.guide?.sprite) {
+        this.guide.sprite.play("guide-idle", true);
+      }
+    });
+  }
+
+  openObjectIntro(hotspot) {
+    if (this.learnedWords.includes(hotspot.id)) {
+      this.openObjectQuestion(hotspot, 0);
+      return;
+    }
+    this.faceHeroToward(hotspot.x, hotspot.y, "curious");
+    this.showSpeechBubble({
+      speaker: "Alex",
+      text: hotspot.intro.text,
+      bg: hotspot.intro.bg,
+      anchor: { x: hotspot.x, y: hotspot.y - 40 },
+      onClose: () => {
+        this.closeBubble();
+        this.setCommand(`Looked at ${hotspot.label}`);
+      },
+      options: [{ text: "Pick it up", action: () => {
+        this.closeBubble();
+        this.time.delayedCall(120, () => this.openObjectQuestion(hotspot, 0));
+      }}],
+    });
+  }
+
+  openSceneryBubble(hotspot) {
+    this.faceHeroToward(hotspot.x, hotspot.y, "curious");
+    this.showSpeechBubble({
+      speaker: "Alex",
+      text: hotspot.description.text,
+      bg: hotspot.description.bg,
+      anchor: { x: hotspot.x, y: hotspot.y - 40 },
+      options: [{ text: "OK", action: () => this.closeBubble() }],
+    });
+  }
+
+  openObjectQuestion(hotspot, questionIndex) {
+    if (this.learnedWords.includes(hotspot.id)) {
+      this.setCommand(`${hotspot.label} already retrieved`);
+      this.showVocabBubble(hotspot, true);
+      return;
+    }
+
+    const quiz = this.objectQuizzes[hotspot.id];
+    const question = quiz?.[questionIndex];
+    if (!question) {
+      this.retrieveHotspot(hotspot);
+      return;
+    }
+
+    const expressions = { rope: "curious", backpack: "smile", map: "thinking" };
+    this.setHeroExpression(expressions[hotspot.id] || "curious");
+    this.showSpeechBubble({
+      speaker: hotspot.label,
+      text: question.text,
+      bg: question.bg,
+      anchor: { x: hotspot.x, y: hotspot.y - 40 },
+      onClose: () => {
+        this.closeBubble();
+        this.setCommand(`Paused ${hotspot.label} challenge`);
+      },
+      options: question.options.map((option) => ({
+        text: option.text,
+        action: () => this.handleObjectQuizOption(hotspot, questionIndex, option),
+      })),
+    });
+  }
+
+  handleObjectQuizOption(hotspot, questionIndex, option) {
+    if (!option.isCorrect) {
+      this.activeBubble.showFeedback(option.feedback);
+      return;
+    }
+
+    const nextIndex = questionIndex + 1;
+    if (nextIndex < this.objectQuizzes[hotspot.id].length) {
+      this.closeBubble();
+      this.time.delayedCall(120, () => this.openObjectQuestion(hotspot, nextIndex));
+      return;
+    }
+
+    this.closeBubble();
+    this.retrieveHotspot(hotspot);
+  }
+
+  retrieveHotspot(hotspot) {
+    if (!this.learnedWords.includes(hotspot.id)) {
+      this.learnedWords.push(hotspot.id);
+      this.updateInventory();
+      this.drawHotspotGlow(hotspot, true);
+      hotspot.marker.setAlpha(0.95);
+    }
+    const expressions = { rope: "curious", backpack: "smile", map: "thinking" };
+    this.setHeroExpression(expressions[hotspot.id] || "curious");
+    this.showVocabBubble(hotspot, false);
+  }
+
+  showVocabBubble(hotspot, alreadyRetrieved = false) {
+    this.closeBubble();
+    const bubble = this.add.container(hotspot.x, hotspot.y - 100).setDepth(930);
+    const expressionFrames = { rope: 1, backpack: 4, map: 5 };
+    const portrait = this.add.sprite(-105, 0, "heroPortraits", expressionFrames[hotspot.id] ?? 3)
+      .setScale(0.68)
+      .setOrigin(0.5);
+    const bg = this.add.graphics();
+    bg.fillStyle(0xfffbef, 0.96);
+    bg.lineStyle(3, 0xffcf5a, 0.88);
+    bg.fillRoundedRect(-156, -50, 312, 100, 16);
+    bg.strokeRoundedRect(-156, -50, 312, 100, 16);
+    bg.fillStyle(0xf6dda4, 0.95);
+    bg.fillRoundedRect(-148, -42, 86, 84, 12);
+    const label = this.add.text(-42, -26, alreadyRetrieved ? "Retrieved" : "New word", { fontFamily: UI_FONT, fontSize: "13px", fontStyle: "700", color: "#526763" }).setOrigin(0, 0.5);
+    const word = this.add.text(-42, -3, hotspot.english, { fontFamily: ADVENTURE_FONT, fontSize: "30px", fontStyle: "700", color: "#0d5552" }).setOrigin(0, 0.5);
+    const translation = this.add.text(-42, 27, hotspot.bg, { fontFamily: UI_FONT, fontSize: "19px", color: "#2b342f" }).setOrigin(0, 0.5);
+    bubble.add([bg, portrait, label, word, translation]);
+    this.activeBubble = bubble;
+    this.time.delayedCall(1600, () => {
+      if (this.activeBubble === bubble) {
+        this.closeBubble();
+      }
+    });
+  }
+
+  openGuideQuestion(nodeId) {
+    const node = this.guideTree.nodes[nodeId];
+    this.playGuideTalk();
+    this.showSpeechBubble({
+      speaker: node.speaker,
+      text: node.npc_text,
+      bg: node.npc_text_bg,
+      anchor: { x: this.guide.x, y: this.guide.y - 128 },
+      options: node.options.map((option) => ({
+        text: option.text,
+        action: () => this.handleGuideOption(option),
+      })),
+    });
+  }
+
+  handleGuideOption(option) {
+    if (!option.is_correct) {
+      this.activeBubble.showFeedback(option.feedback_bg);
+      return;
+    }
+    if (option.next_node) {
+      this.closeBubble();
+      this.openGuideQuestion(option.next_node);
+      return;
+    }
+    if (option.action?.type === "set_flag") {
+      this.flags[option.action.flag] = true;
+      this.statusText.setText("Jungle path open");
+      this.exitMarker.getAt(0).clear();
+      this.exitMarker.getAt(0).fillStyle(0xf4c44e, 1);
+      this.exitMarker.getAt(0).fillRoundedRect(-18, -18, 36, 36, 8);
+    }
+    this.closeBubble();
+    this.flashToast("Jungle path unlocked!");
+  }
+
+  showSpeechBubble({ speaker, text, bg, anchor, options, onClose = null }) {
+    this.closeBubble();
+    const width = 660;
+    const optionHeight = 52;
+    const feedbackReserve = 104;
+    const speakerTitle = speaker ? `${speaker[0].toUpperCase()}${speaker.slice(1)}` : "";
+    const textFlow = this.createRevealTextFlow(30, 61, text, width - 62, {
+      fontFamily: UI_FONT,
+      fontSize: "23px",
+      fontStyle: "700",
+      color: "#172321",
+      lineSpacing: 8,
+    });
+    const choicesY = Math.max(132, 61 + textFlow.contentHeight + 22);
+    const feedbackY = choicesY + options.length * optionHeight + 10;
+    const height = feedbackY + feedbackReserve;
+    const preferredX = anchor.x > GAME_WIDTH * 0.55 ? anchor.x - width - 42 : anchor.x - width * 0.5;
+    const x = Phaser.Math.Clamp(preferredX, 32, GAME_WIDTH - width - 32);
+    const y = Phaser.Math.Clamp(anchor.y - height - 24, 58, 340);
+    const tailTipX = Phaser.Math.Clamp(anchor.x - x, 70, width - 44);
+    const tailBaseX = Phaser.Math.Clamp(tailTipX - 34, 52, width - 112);
+    const bubble = this.add.container(x, y).setDepth(950);
+
+    const panel = this.add.graphics();
+    this.drawDialoguePanel(panel, width, height);
+
+    const tail = this.add.graphics();
+    tail.fillStyle(0xfff2cf, 0.98);
+    tail.lineStyle(3, 0x8e6d3e, 0.85);
+    tail.beginPath();
+    tail.moveTo(tailBaseX, height - 2);
+    tail.lineTo(tailTipX, height + 32);
+    tail.lineTo(tailBaseX + 64, height - 2);
+    tail.closePath();
+    tail.fillPath();
+    tail.strokePath();
+
+    const speakerRibbon = this.add.graphics();
+    const ribbonWidth = Phaser.Math.Clamp(speakerTitle.length * 16 + 40, 132, 236);
+    speakerRibbon.fillStyle(0x4f2f1e, 0.22);
+    speakerRibbon.fillRoundedRect(19, 18, ribbonWidth, 34, 9);
+    speakerRibbon.fillStyle(0x174846, 0.96);
+    speakerRibbon.fillRoundedRect(16, 14, ribbonWidth, 34, 9);
+    speakerRibbon.fillStyle(0xf0b74f, 1);
+    speakerRibbon.fillRoundedRect(16, 14, 8, 34, 4);
+    speakerRibbon.lineStyle(1, 0xfff2cf, 0.38);
+    speakerRibbon.strokeRoundedRect(24, 18, ribbonWidth - 12, 25, 7);
+
+    const speakerBadge = this.add.text(32, 16, speakerTitle,
+    {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: "19px",
+      fontStyle: "700",
+      color: "#fff4cf",
+    });
+    const closeButton = onClose ? this.makeCloseButton(width - 51, 17, onClose) : null;
+
+    const choices = options.map((option, index) => this.makeChoice(
+      32,
+      choicesY + index * optionHeight,
+      width - 64,
+      42,
+      option.text,
+      option.action,
+    ));
+
+    bubble.add([panel, tail, speakerRibbon, speakerBadge, textFlow, ...choices]);
+    if (closeButton) {
+      bubble.add(closeButton);
+    }
+
+    const feedbackBg = this.add.graphics().setVisible(false);
+    const feedbackNote = this.add.text(36, feedbackY + 8, "", {
+      fontFamily: UI_FONT,
+      fontSize: "16px",
+      fontStyle: "700",
+      color: "#31432d",
+      lineSpacing: 3,
+      wordWrap: { width: width - 92 },
+    }).setVisible(false);
+    const drawFeedback = () => {
+      const noteHeight = Math.min(feedbackNote.height + 18, feedbackReserve - 14);
+      feedbackBg.clear();
+      feedbackBg.fillStyle(0x4d3322, 0.15);
+      feedbackBg.fillRoundedRect(23, feedbackY + 4, width - 46, noteHeight, 9);
+      feedbackBg.fillStyle(0xffe9b4, 0.98);
+      feedbackBg.lineStyle(2, 0x7b9a55, 0.68);
+      feedbackBg.fillRoundedRect(20, feedbackY, width - 46, noteHeight, 9);
+      feedbackBg.strokeRoundedRect(20, feedbackY, width - 46, noteHeight, 9);
+      feedbackBg.fillStyle(0x0f7a78, 0.86);
+      feedbackBg.fillRoundedRect(20, feedbackY, 7, noteHeight, 3);
+      feedbackBg.lineStyle(1, 0xfffbef, 0.45);
+      feedbackBg.strokeRoundedRect(29, feedbackY + 6, width - 66, noteHeight - 12, 7);
+    };
+    bubble.showFeedback = (feedback) => {
+      feedbackNote.setText(feedback);
+      drawFeedback();
+      feedbackBg.setVisible(true);
+      feedbackNote.setVisible(true);
+    };
+    bubble.feedbackBg = feedbackBg;
+    bubble.feedbackNote = feedbackNote;
+    bubble.add([feedbackBg, feedbackNote]);
+
+    this.activeBubble = bubble;
+  }
+
+  drawDialoguePanel(graphics, width, height) {
+    graphics.fillStyle(0x0b1d18, 0.3);
+    graphics.fillRoundedRect(7, 9, width, height, 18);
+    graphics.fillStyle(0xb77a2f, 0.98);
+    graphics.fillRoundedRect(-5, -5, width + 10, height + 10, 22);
+    graphics.fillStyle(0xfff2cf, 0.99);
+    graphics.fillRoundedRect(0, 0, width, height, 18);
+    graphics.lineStyle(4, 0x77502d, 0.98);
+    graphics.strokeRoundedRect(0, 0, width, height, 18);
+    graphics.lineStyle(2, 0xf8d98c, 0.72);
+    graphics.strokeRoundedRect(11, 11, width - 22, height - 22, 14);
+    graphics.fillStyle(0xffe2a1, 0.28);
+    graphics.fillRoundedRect(18, 52, width - 36, Math.max(72, height - 84), 14);
+    graphics.lineStyle(2, 0xc18a39, 0.18);
+    graphics.beginPath();
+    graphics.moveTo(width - 112, 23);
+    graphics.lineTo(width - 70, 49);
+    graphics.lineTo(width - 104, 83);
+    graphics.lineTo(width - 140, 111);
+    graphics.lineTo(width - 82, 142);
+    graphics.strokePath();
+    graphics.fillStyle(0x7b4d25, 0.45);
+    graphics.fillCircle(31, 27, 6);
+    graphics.fillCircle(width - 31, 27, 6);
+    graphics.fillCircle(31, height - 27, 6);
+    graphics.fillCircle(width - 31, height - 27, 6);
+    graphics.lineStyle(2, 0xfff2cf, 0.5);
+    graphics.strokeCircle(31, 27, 4);
+    graphics.strokeCircle(width - 31, 27, 4);
+    graphics.strokeCircle(31, height - 27, 4);
+    graphics.strokeCircle(width - 31, height - 27, 4);
+  }
+
+  createRevealTextFlow(x, y, text, maxWidth, style) {
+    const flow = this.add.container(x, y);
+    const tokens = text.match(/\S+|\s+/g) || [];
+    const fontSize = Number.parseInt(style.fontSize, 10) || 20;
+    const lineHeight = fontSize + (style.lineSpacing ?? 6);
+    const spaceWidth = this.measureTextWidth(" ", style);
+    let cursorX = 0;
+    let cursorY = 0;
+    let contentWidth = 0;
+
+    tokens.forEach((token) => {
+      if (/^\s+$/.test(token)) {
+        cursorX += spaceWidth;
+        return;
+      }
+
+      const translation = this.getWordTranslation(token);
+      const originalWidth = Math.ceil(this.measureTextWidth(token, style));
+      const tokenWidth = originalWidth;
+
+      if (cursorX > 0 && cursorX + tokenWidth > maxWidth) {
+        cursorX = 0;
+        cursorY += lineHeight;
+      }
+
+      const word = this.add.text(cursorX, cursorY, token, style).setOrigin(0, 0);
+      word.originalText = token;
+      word.translationText = translation ? this.withOriginalPunctuation(token, translation) : null;
+      word.revealWidth = originalWidth;
+      word.revealFlow = flow;
+
+      if (word.translationText) {
+        const bar = this.add.graphics();
+        word.revealBar = bar;
+        flow.add(bar);
+        word.setInteractive(new Phaser.Geom.Rectangle(0, 0, originalWidth, lineHeight), Phaser.Geom.Rectangle.Contains);
+        word.on("pointerover", () => this.beginWordReveal(word));
+        word.on("pointerout", () => this.endWordReveal(word));
+      }
+
+      flow.add(word);
+      cursorX += tokenWidth;
+      contentWidth = Math.max(contentWidth, cursorX);
+    });
+
+    flow.contentHeight = cursorY + lineHeight;
+    flow.contentWidth = Math.min(maxWidth, contentWidth);
+    flow.maxWidth = maxWidth;
+    return flow;
+  }
+
+  measureTextWidth(text, style) {
+    const sample = this.add.text(-9999, -9999, text, style).setVisible(false);
+    const width = sample.width;
+    sample.destroy();
+    return width;
+  }
+
+  getWordTranslation(token) {
+    const key = token.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, "");
+    return REVEAL_TRANSLATIONS.get(key) || null;
+  }
+
+  withOriginalPunctuation(token, translation) {
+    const prefix = token.match(/^[^a-zA-Z]+/)?.[0] || "";
+    const suffix = token.match(/[^a-zA-Z]+$/)?.[0] || "";
+    return `${prefix}${translation}${suffix}`;
+  }
+
+  beginWordReveal(word) {
+    if (!word.translationText) {
+      return;
+    }
+    this.endWordReveal(word, false);
+    this.activeRevealWord = word;
+    word.setColor("#0b5f5d");
+    word.revealState = { progress: 0 };
+    word.revealTween = this.tweens.add({
+      targets: word.revealState,
+      progress: 1,
+      duration: 2000,
+      ease: "Sine.easeInOut",
+      onUpdate: () => this.drawRevealProgress(word, word.revealState.progress),
+      onComplete: () => {
+        word.setColor("#172321");
+        this.showTranslationBalloon(word);
+        this.drawRevealProgress(word, 1);
+      },
+    });
+  }
+
+  showTranslationBalloon(word) {
+    this.clearTranslationBalloon(word);
+    const text = this.add.text(0, 0, word.translationText, {
+      fontFamily: UI_FONT,
+      fontSize: "22px",
+      fontStyle: "800",
+      color: "#7a3e14",
+    }).setOrigin(0, 0);
+    const paddingX = 11;
+    const paddingY = 5;
+    const balloonWidth = Math.ceil(text.width + paddingX * 2);
+    const balloonHeight = Math.ceil(text.height + paddingY * 2);
+    const centerX = word.x + word.revealWidth / 2;
+    const maxLeft = (word.revealFlow?.maxWidth ?? 620) - balloonWidth + 8;
+    const balloonX = Phaser.Math.Clamp(centerX - balloonWidth / 2, -8, maxLeft);
+    const preferredBalloonY = word.y - balloonHeight - 5;
+    const balloonY = Math.max(4, preferredBalloonY);
+    const showTail = preferredBalloonY >= 4;
+    const tailX = Phaser.Math.Clamp(centerX - balloonX, 10, balloonWidth - 10);
+    const bg = this.add.graphics();
+    bg.fillStyle(0x4d3322, 0.18);
+    bg.fillRoundedRect(balloonX + 2, balloonY + 3, balloonWidth, balloonHeight, 9);
+    bg.fillStyle(0xfff4c4, 1);
+    bg.lineStyle(2, 0x8b6336, 0.95);
+    bg.fillRoundedRect(balloonX, balloonY, balloonWidth, balloonHeight, 9);
+    bg.strokeRoundedRect(balloonX, balloonY, balloonWidth, balloonHeight, 9);
+    if (showTail) {
+      bg.fillStyle(0xfff4c4, 1);
+      bg.beginPath();
+      bg.moveTo(balloonX + tailX - 6, balloonY + balloonHeight - 1);
+      bg.lineTo(balloonX + tailX + 6, balloonY + balloonHeight - 1);
+      bg.lineTo(centerX, word.y - 1);
+      bg.closePath();
+      bg.fillPath();
+      bg.lineStyle(2, 0x8b6336, 0.78);
+      bg.beginPath();
+      bg.moveTo(balloonX + tailX - 6, balloonY + balloonHeight - 1);
+      bg.lineTo(centerX, word.y - 1);
+      bg.lineTo(balloonX + tailX + 6, balloonY + balloonHeight - 1);
+      bg.strokePath();
+    }
+    text.setPosition(balloonX + paddingX, balloonY + paddingY - 1);
+    word.translationBalloon = { bg, text };
+    word.revealFlow.add([bg, text]);
+  }
+
+  clearTranslationBalloon(word) {
+    if (!word.translationBalloon) {
+      return;
+    }
+    word.translationBalloon.bg.destroy();
+    word.translationBalloon.text.destroy();
+    word.translationBalloon = null;
+  }
+
+  drawRevealProgress(word, progress) {
+    word.revealBar.clear();
+    word.revealBar.fillStyle(0xffcf5a, 0.26);
+    word.revealBar.fillRoundedRect(word.x - 1, word.y - 5, word.revealWidth + 2, 5, 2);
+    word.revealBar.fillStyle(0x0f7a78, 0.95);
+    word.revealBar.fillRoundedRect(word.x - 1, word.y - 5, Math.max(3, (word.revealWidth + 2) * progress), 5, 2);
+  }
+
+  endWordReveal(word, resetText = true) {
+    if (word.revealTween) {
+      word.revealTween.stop();
+      word.revealTween = null;
+    }
+    if (word.revealBar) {
+      word.revealBar.clear();
+    }
+    this.clearTranslationBalloon(word);
+    if (resetText) {
+      word.setText(word.originalText);
+      word.setColor("#172321");
+    }
+    if (this.activeRevealWord === word) {
+      this.activeRevealWord = null;
+    }
+  }
+
+  resetRevealIfPointerLeft(pointer) {
+    const word = this.activeRevealWord;
+    if (!word?.active) {
+      this.activeRevealWord = null;
+      return;
+    }
+    const bounds = word.getBounds();
+    Phaser.Geom.Rectangle.Inflate(bounds, 4, 8);
+    if (!Phaser.Geom.Rectangle.Contains(bounds, pointer.worldX, pointer.worldY)) {
+      this.endWordReveal(word);
+    }
+  }
+
+  makeCloseButton(x, y, action) {
+    const button = this.add.container(x, y).setSize(34, 34);
+    const bg = this.add.graphics();
+    const redraw = (state = "idle") => {
+      const hover = state === "hover";
+      const down = state === "down";
+      bg.clear();
+      bg.fillStyle(0x4d3322, 0.18);
+      bg.fillRoundedRect(2, down ? 4 : 3, 32, 30, 9);
+      bg.fillStyle(down ? 0xeab75d : hover ? 0xffdc83 : 0xffedbd, 1);
+      bg.lineStyle(2, hover || down ? 0x0f7a78 : 0x8b6336, hover || down ? 0.95 : 0.72);
+      bg.fillRoundedRect(0, 0, 32, 30, 9);
+      bg.strokeRoundedRect(0, 0, 32, 30, 9);
+      bg.lineStyle(3, 0x123937, hover || down ? 0.92 : 0.72);
+      bg.beginPath();
+      bg.moveTo(11, 9);
+      bg.lineTo(21, 19);
+      bg.moveTo(21, 9);
+      bg.lineTo(11, 19);
+      bg.strokePath();
+    };
+    redraw();
+    const hitPlate = this.add.zone(16, 15, 34, 34).setInteractive({ useHandCursor: true });
+    hitPlate.on("pointerover", () => redraw("hover"));
+    hitPlate.on("pointerout", () => redraw("idle"));
+    hitPlate.on("pointerdown", () => {
+      redraw("down");
+      action();
+    });
+    hitPlate.on("pointerup", () => redraw("hover"));
+    button.add([bg, hitPlate]);
+    button.hitPlate = hitPlate;
+    button.isCloseButton = true;
+    return button;
+  }
+
+  makeChoice(x, y, width, height, text, action) {
+    const choice = this.add.container(x, y).setSize(width, height);
+    const bg = this.add.graphics();
+    const redraw = (state = "idle") => {
+      choice.hoverState = state;
+      const hover = state === "hover";
+      const down = state === "down";
+      bg.clear();
+      bg.fillStyle(0x4d3322, down ? 0.25 : 0.18);
+      bg.fillRoundedRect(4, down ? 5 : 4, width, height, 9);
+      bg.fillStyle(down ? 0xf0bd55 : hover ? 0xffdc83 : 0xffedbd, 1);
+      bg.lineStyle(3, hover || down ? 0x0f7a78 : 0x9b7343, hover || down ? 0.98 : 0.72);
+      bg.fillRoundedRect(0, 0, width, height, 9);
+      bg.strokeRoundedRect(0, 0, width, height, 9);
+      bg.lineStyle(1, 0xfffbef, hover ? 0.72 : 0.38);
+      bg.strokeRoundedRect(8, 7, width - 16, height - 14, 7);
+      bg.fillStyle(0x0f7a78, hover || down ? 0.95 : 0.72);
+      bg.fillTriangle(17, height / 2, 29, 10, 29, height - 10);
+    };
+    redraw("idle");
+    const label = this.add.text(width / 2, height / 2, text, {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: text.length > 28 ? "17px" : "20px",
+      fontStyle: "700",
+      color: "#123937",
+      align: "center",
+      wordWrap: { width: width - 70 },
+    }).setOrigin(0.5);
+    const hitPlate = this.add.zone(width / 2, height / 2, width, height)
+      .setInteractive({ useHandCursor: true });
+    choice.add([bg, label, hitPlate]);
+    choice.bg = bg;
+    choice.label = label;
+    choice.hitPlate = hitPlate;
+    hitPlate.on("pointerover", () => {
+      redraw("hover");
+    });
+    hitPlate.on("pointerout", () => {
+      redraw("idle");
+    });
+    hitPlate.on("pointerdown", () => {
+      redraw("down");
+      action();
+    });
+    hitPlate.on("pointerup", () => {
+      redraw("hover");
+    });
+    return choice;
+  }
+
+  updateInventory() {
+    this.inventoryText.setText(this.learnedWords.join("  "));
+  }
+
+  setCommand(text) {
+    this.commandText.setText(text);
+  }
+
+  flashToast(text) {
+    this.closeToast();
+    const toast = this.add.container(GAME_WIDTH / 2, 512).setDepth(970);
+    const bg = this.add.graphics();
+    bg.fillStyle(0x1f2d24, 0.88);
+    bg.fillRoundedRect(-160, -24, 320, 48, 10);
+    const label = this.add.text(0, 0, text, {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: "18px",
+      fontStyle: "700",
+      color: "#fff6d4",
+    }).setOrigin(0.5);
+    toast.add([bg, label]);
+    this.toast = toast;
+    this.time.delayedCall(1600, () => this.closeToast());
+  }
+
+  closeToast() {
+    if (this.toast) {
+      this.toast.destroy();
+      this.toast = null;
+    }
+  }
+
+  closeBubble() {
+    if (this.activeBubble) {
+      this.activeBubble.destroy();
+      this.activeBubble = null;
+    }
+  }
+}
+
+const config = {
+  type: Phaser.AUTO,
+  parent: "phaser-game",
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
+  backgroundColor: "#173837",
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  render: {
+    antialias: true,
+    pixelArt: false,
+  },
+  scene: [CampScene],
+};
+
+const startGame = () => {
+  window.phaserGame = new Phaser.Game(config);
+};
+
+if (document.fonts?.ready) {
+  document.fonts.ready.then(startGame);
+} else {
+  startGame();
+}

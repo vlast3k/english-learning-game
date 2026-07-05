@@ -1,0 +1,308 @@
+{
+  "scenario_name": "Secrets of the Sun Temple",
+  "scenario_id": "sun-temple-adventure-poc",
+  "description": "A walkable point-and-click adventure slice with vocabulary and grammar puzzles.",
+  "player": {
+    "name": "Alex",
+    "start_scene": "camp",
+    "start_spawn": "start"
+  },
+  "scenes": {
+    "camp": {
+      "title": "Base Camp",
+      "background_image": "assets/camp-scene.svg",
+      "status_text": "Prepare for the jungle",
+      "complete_status_text": "Jungle path open",
+      "complete_flag": "jungle_path_open",
+      "walkable_area": [
+        { "x": 40, "y": 430 },
+        { "x": 760, "y": 390 },
+        { "x": 760, "y": 560 },
+        { "x": 40, "y": 560 }
+      ],
+      "spawn_points": {
+        "start": { "x": 250, "y": 500 },
+        "from_jungle": { "x": 710, "y": 456 }
+      },
+      "characters": [
+        {
+          "id": "guide",
+          "label": "guide",
+          "speaker": "Guide",
+          "x_pos": 522,
+          "y_pos": 384,
+          "walk_to": { "x": 480, "y": 462 },
+          "visual": "guide",
+          "dialogue_tree": "guide_intro_tree",
+          "requires_learned": ["backpack", "rope", "map"],
+          "locked_text": "Find the camp gear first: backpack, rope, and map.",
+          "locked_text_bg": "Първо намери екипировката в лагера: раница, въже и карта."
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "backpack",
+          "type": "vocabulary",
+          "label": "backpack",
+          "english_word": "backpack",
+          "bulgarian_translation": "раница",
+          "x_pos": 256,
+          "y_pos": 420,
+          "walk_to": { "x": 275, "y": 500 },
+          "visual": "bag"
+        },
+        {
+          "id": "rope",
+          "type": "vocabulary",
+          "label": "rope",
+          "english_word": "rope",
+          "bulgarian_translation": "въже",
+          "x_pos": 116,
+          "y_pos": 434,
+          "walk_to": { "x": 150, "y": 506 },
+          "visual": "coil"
+        },
+        {
+          "id": "map",
+          "type": "vocabulary",
+          "label": "map",
+          "english_word": "map",
+          "bulgarian_translation": "карта",
+          "x_pos": 630,
+          "y_pos": 424,
+          "walk_to": { "x": 625, "y": 500 },
+          "visual": "paper"
+        }
+      ],
+      "exits": [
+        {
+          "id": "exit_jungle",
+          "label": "jungle path",
+          "x_pos": 748,
+          "y_pos": 438,
+          "width": 86,
+          "height": 150,
+          "walk_to": { "x": 718, "y": 456 },
+          "target_scene": "jungle_path",
+          "target_spawn": "from_camp",
+          "requires_flag": "jungle_path_open",
+          "locked_text": "The guide raises a hand. \"Gear first, then jungle.\"",
+          "locked_text_bg": "Водачът вдига ръка: \"Първо екипировката, после джунглата.\""
+        }
+      ]
+    },
+    "jungle_path": {
+      "title": "Jungle Path",
+      "background_image": "assets/jungle-path.svg",
+      "status_text": "A panther blocks the old trail",
+      "complete_status_text": "The panther path is safe",
+      "complete_flag": "panther_path_clear",
+      "walkable_area": [
+        { "x": 30, "y": 438 },
+        { "x": 765, "y": 414 },
+        { "x": 780, "y": 560 },
+        { "x": 36, "y": 560 }
+      ],
+      "spawn_points": {
+        "from_camp": { "x": 80, "y": 500 },
+        "from_temple": { "x": 704, "y": 486 }
+      },
+      "characters": [
+        {
+          "id": "panther",
+          "label": "sleeping panther",
+          "speaker": "Guide",
+          "x_pos": 514,
+          "y_pos": 414,
+          "walk_to": { "x": 438, "y": 496 },
+          "visual": "panther",
+          "dialogue_tree": "panther_tree"
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "journal_page",
+          "type": "vocabulary",
+          "label": "journal page",
+          "english_word": "journal",
+          "bulgarian_translation": "дневник",
+          "x_pos": 252,
+          "y_pos": 430,
+          "walk_to": { "x": 260, "y": 500 },
+          "visual": "page"
+        }
+      ],
+      "exits": [
+        {
+          "id": "exit_camp",
+          "label": "base camp",
+          "x_pos": 64,
+          "y_pos": 454,
+          "width": 70,
+          "height": 150,
+          "walk_to": { "x": 70, "y": 500 },
+          "target_scene": "camp",
+          "target_spawn": "from_jungle"
+        },
+        {
+          "id": "exit_temple",
+          "label": "temple gate",
+          "x_pos": 760,
+          "y_pos": 438,
+          "width": 86,
+          "height": 160,
+          "walk_to": { "x": 708, "y": 486 },
+          "target_scene": "temple_gate",
+          "target_spawn": "from_jungle",
+          "requires_flag": "panther_path_clear",
+          "locked_text": "The panther is sleeping across the narrow trail.",
+          "locked_text_bg": "Пантерата спи напречно на тясната пътека."
+        }
+      ]
+    },
+    "temple_gate": {
+      "title": "Sun Temple Gate",
+      "background_image": "assets/temple-gate.svg",
+      "status_text": "You reached the Sun Temple gate",
+      "complete_status_text": "The sun symbol is understood",
+      "complete_flag": "sun_symbol_read",
+      "walkable_area": [
+        { "x": 58, "y": 430 },
+        { "x": 742, "y": 430 },
+        { "x": 770, "y": 560 },
+        { "x": 30, "y": 560 }
+      ],
+      "spawn_points": {
+        "from_jungle": { "x": 86, "y": 498 }
+      },
+      "characters": [],
+      "hotspots": [
+        {
+          "id": "sun_symbol",
+          "type": "dialogue",
+          "label": "sun symbol",
+          "x_pos": 405,
+          "y_pos": 300,
+          "walk_to": { "x": 405, "y": 488 },
+          "visual": "sun",
+          "dialogue_tree": "sun_symbol_tree"
+        }
+      ],
+      "exits": [
+        {
+          "id": "exit_jungle_return",
+          "label": "jungle path",
+          "x_pos": 66,
+          "y_pos": 452,
+          "width": 78,
+          "height": 155,
+          "walk_to": { "x": 82, "y": 498 },
+          "target_scene": "jungle_path",
+          "target_spawn": "from_temple"
+        }
+      ]
+    }
+  },
+  "dialogues": {
+    "guide_intro_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Guide",
+          "npc_text": "Good work, Alex. Look at me now. What am I doing?",
+          "npc_text_bg": "Добра работа, Алекс. Погледни ме сега. Какво правя?",
+          "options": [
+            {
+              "text": "You look at the map.",
+              "is_correct": false,
+              "feedback_bg": "Това звучи като навик. Когато действието се случва точно сега, използваме am/is/are + -ing."
+            },
+            {
+              "text": "You are looking at the map.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "You looking at the map.",
+              "is_correct": false,
+              "feedback_bg": "Липсва помощният глагол are. Правилната форма е: You are looking."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Guide",
+          "npc_text": "Exactly. The jungle path is open. Stay sharp, explorer.",
+          "npc_text_bg": "Точно така. Пътеката към джунглата е отворена. Бъди нащрек, изследователю.",
+          "options": [
+            {
+              "text": "To the jungle!",
+              "is_correct": true,
+              "action": { "type": "set_flag", "flag": "jungle_path_open" }
+            }
+          ]
+        }
+      }
+    },
+    "panther_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Guide",
+          "npc_text": "Read the clue: The panther sleeps during the day. Which sentence talks about its habit?",
+          "npc_text_bg": "Прочети подсказката: Пантерата спи през деня. Кое изречение говори за нейния навик?",
+          "options": [
+            {
+              "text": "The panther is sleeping during the day.",
+              "is_correct": false,
+              "feedback_bg": "Това описва действие точно сега. За навици и факти използваме Present Simple: sleeps."
+            },
+            {
+              "text": "The panther sleeps during the day.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "The panther sleep during the day.",
+              "is_correct": false,
+              "feedback_bg": "При he/she/it в Present Simple добавяме -s: the panther sleeps."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Guide",
+          "npc_text": "Right. It sleeps now, so we can sneak past quietly.",
+          "npc_text_bg": "Правилно. Сега тя спи, затова можем тихо да се промъкнем покрай нея.",
+          "options": [
+            {
+              "text": "Sneak past",
+              "is_correct": true,
+              "action": { "type": "set_flag", "flag": "panther_path_clear" }
+            }
+          ]
+        }
+      }
+    },
+    "sun_symbol_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Alex",
+          "npc_text": "The carving shows a sun above the gate. Which phrase is correct?",
+          "npc_text_bg": "Резбата показва слънце над портата. Кой израз е правилен?",
+          "options": [
+            {
+              "text": "the suns door",
+              "is_correct": false,
+              "feedback_bg": "Когато казваме, че вратата принадлежи на слънцето, използваме possessive 's: the sun's door."
+            },
+            {
+              "text": "the sun's door",
+              "is_correct": true,
+              "action": { "type": "set_flag", "flag": "sun_symbol_read" }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

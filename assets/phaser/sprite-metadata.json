@@ -1,0 +1,765 @@
+{
+  "frameWidth": 96,
+  "frameHeight": 128,
+  "columns": 8,
+  "hero": {
+    "file": "assets/phaser/hero-spritesheet.png",
+    "animations": {
+      "walkDown": [
+        0,
+        7
+      ],
+      "walkUp": [
+        8,
+        15
+      ],
+      "walkSide": [
+        16,
+        23
+      ],
+      "idleDown": 24,
+      "idleDownExpressions": {
+        "normal": 24,
+        "curious": 25,
+        "smile": 26,
+        "surprised": 27,
+        "thinking": 28,
+        "focused": 29
+      },
+      "idleUp": 32,
+      "idleSideExpressions": {
+        "normal": 40,
+        "curious": 41,
+        "smile": 42,
+        "surprised": 43,
+        "thinking": 44,
+        "focused": 45
+      }
+    },
+    "frames": [
+      {
+        "index": 0,
+        "bbox": [
+          6,
+          4,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.0
+      },
+      {
+        "index": 1,
+        "bbox": [
+          8,
+          2,
+          89,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 2,
+        "bbox": [
+          11,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 3,
+        "bbox": [
+          10,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.0
+      },
+      {
+        "index": 4,
+        "bbox": [
+          7,
+          4,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 5,
+        "bbox": [
+          8,
+          2,
+          89,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 6,
+        "bbox": [
+          11,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 7,
+        "bbox": [
+          10,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.0
+      },
+      {
+        "index": 8,
+        "bbox": [
+          6,
+          4,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.0
+      },
+      {
+        "index": 9,
+        "bbox": [
+          8,
+          2,
+          89,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 10,
+        "bbox": [
+          11,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 11,
+        "bbox": [
+          10,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.0
+      },
+      {
+        "index": 12,
+        "bbox": [
+          7,
+          4,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 13,
+        "bbox": [
+          8,
+          2,
+          89,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 14,
+        "bbox": [
+          11,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 15,
+        "bbox": [
+          10,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.0
+      },
+      {
+        "index": 16,
+        "bbox": [
+          11,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 50.5
+      },
+      {
+        "index": 17,
+        "bbox": [
+          12,
+          1,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 18,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 19,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 20,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 21,
+        "bbox": [
+          12,
+          1,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 22,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 23,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 24,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 25,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 26,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 27,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 28,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 29,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 30,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 31,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 32,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 33,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 34,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 35,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 36,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 37,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 38,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 39,
+        "bbox": [
+          9,
+          4,
+          88,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 40,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 41,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 42,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 43,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 44,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 45,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 46,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      },
+      {
+        "index": 47,
+        "bbox": [
+          12,
+          3,
+          90,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 51.0
+      }
+    ]
+  },
+  "guide": {
+    "file": "assets/phaser/guide-spritesheet.png",
+    "animations": {
+      "idle": [
+        0,
+        3
+      ],
+      "talk": [
+        4,
+        7
+      ],
+      "point": [
+        8,
+        11
+      ]
+    },
+    "frames": [
+      {
+        "index": 0,
+        "bbox": [
+          5,
+          8,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 1,
+        "bbox": [
+          5,
+          7,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 2,
+        "bbox": [
+          5,
+          7,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 3,
+        "bbox": [
+          5,
+          8,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 4,
+        "bbox": [
+          5,
+          8,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 5,
+        "bbox": [
+          5,
+          7,
+          93,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.0
+      },
+      {
+        "index": 6,
+        "bbox": [
+          5,
+          7,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 7,
+        "bbox": [
+          5,
+          8,
+          93,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.0
+      },
+      {
+        "index": 8,
+        "bbox": [
+          5,
+          8,
+          92,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 9,
+        "bbox": [
+          5,
+          7,
+          92,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 10,
+        "bbox": [
+          5,
+          7,
+          92,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 11,
+        "bbox": [
+          5,
+          8,
+          92,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 48.5
+      },
+      {
+        "index": 12,
+        "bbox": [
+          5,
+          8,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 13,
+        "bbox": [
+          5,
+          7,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 14,
+        "bbox": [
+          5,
+          7,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      },
+      {
+        "index": 15,
+        "bbox": [
+          5,
+          8,
+          94,
+          123
+        ],
+        "bottomGap": 5,
+        "centerX": 49.5
+      }
+    ]
+  }
+}

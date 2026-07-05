@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Base camp jungle scene</title>
+  <desc id="desc">A colorful jungle base camp with tents, a campfire, distant ruins, and a path into the trees.</desc>
+  <rect width="800" height="600" fill="#8bd8d1"/>
+  <circle cx="684" cy="88" r="58" fill="#f7c84a"/>
+  <path d="M0 214 C108 146 197 188 300 120 C420 42 520 148 640 94 C706 64 752 72 800 42 L800 600 L0 600 Z" fill="#67a874"/>
+  <path d="M0 294 C122 218 250 278 372 204 C472 144 596 222 800 148 L800 600 L0 600 Z" fill="#2f7d62"/>
+  <path d="M0 388 C110 342 246 362 352 328 C500 280 664 326 800 274 L800 600 L0 600 Z" fill="#a88c50"/>
+  <path d="M0 444 C105 474 210 438 334 462 C470 490 590 454 800 430 L800 600 L0 600 Z" fill="#d3ba68"/>
+  <path d="M658 421 C704 398 742 390 800 386 L800 600 L668 600 C704 536 700 478 658 421 Z" fill="#3f6f56"/>
+  <path d="M210 438 L300 286 L390 438 Z" fill="#9b7838"/>
+  <path d="M238 438 L300 330 L362 438 Z" fill="#f4df8f"/>
+  <rect x="268" y="398" width="60" height="40" fill="#684a30"/>
+  <path d="M83 506 C122 466 168 468 204 506" fill="none" stroke="#825a31" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="116" cy="506" r="17" fill="#ef6c3d"/>
+  <circle cx="146" cy="494" r="21" fill="#ffd35d"/>
+  <circle cx="177" cy="508" r="14" fill="#d94d39"/>
+  <path d="M528 402 L604 252 L680 402 Z" fill="#746854"/>
+  <rect x="559" y="402" width="66" height="62" fill="#625746"/>
+  <path d="M535 464 L650 464 L682 522 L500 522 Z" fill="#4d4740"/>
+  <path d="M430 515 C510 478 620 476 724 520" fill="none" stroke="#e8d486" stroke-width="36" stroke-linecap="round"/>
+  <path d="M456 166 L498 96 L540 166 Z" fill="#cfb363"/>
+  <rect x="474" y="166" width="48" height="42" fill="#9d854a"/>
+  <path d="M456 208 L540 208 L560 240 L436 240 Z" fill="#8a7444"/>
+  <path d="M41 345 C82 310 110 318 124 354" fill="none" stroke="#1d624f" stroke-width="18" stroke-linecap="round"/>
+  <path d="M760 358 C728 320 695 326 680 366" fill="none" stroke="#1d624f" stroke-width="18" stroke-linecap="round"/>
+</svg>

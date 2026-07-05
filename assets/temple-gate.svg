@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Sun temple gate</title>
+  <desc id="desc">A golden stone temple gate in the jungle with a bright sun symbol carved above the doorway.</desc>
+  <rect width="800" height="600" fill="#8ccac2"/>
+  <path d="M0 228 C120 166 210 210 334 150 C456 90 574 172 800 88 L800 600 L0 600 Z" fill="#357a5d"/>
+  <path d="M0 368 C110 312 230 344 346 292 C502 222 650 310 800 246 L800 600 L0 600 Z" fill="#205c49"/>
+  <path d="M210 444 L294 240 H506 L590 444 Z" fill="#b49b58"/>
+  <path d="M270 444 L326 292 H474 L530 444 Z" fill="#d1b86c"/>
+  <rect x="346" y="334" width="108" height="110" fill="#3d322b"/>
+  <path d="M324 292 H476 L458 250 H342 Z" fill="#8e7544"/>
+  <circle cx="400" cy="260" r="36" fill="#f6c748"/>
+  <path d="M400 204 L410 232 L440 224 L422 250 L448 266 L416 270 L424 300 L400 282 L376 300 L384 270 L352 266 L378 250 L360 224 L390 232 Z" fill="#c56e2c"/>
+  <path d="M240 444 H560 L620 540 H180 Z" fill="#9a864f"/>
+  <path d="M0 500 C118 532 260 492 400 520 C540 548 680 506 800 526 L800 600 L0 600 Z" fill="#4f754d"/>
+  <path d="M94 508 C192 458 316 462 404 506" fill="none" stroke="#dcc873" stroke-width="34" stroke-linecap="round"/>
+  <path d="M62 198 C130 126 226 132 286 198 C190 204 134 226 62 198 Z" fill="#5eb96d"/>
+  <path d="M520 190 C594 116 702 122 770 196 C666 202 596 226 520 190 Z" fill="#63bd73"/>
+  <rect x="248" y="320" width="34" height="82" fill="#826c42"/>
+  <rect x="518" y="320" width="34" height="82" fill="#826c42"/>
+  <path d="M248 320 L282 286 L316 320 Z" fill="#a99154"/>
+  <path d="M484 320 L518 286 L552 320 Z" fill="#a99154"/>
+</svg>
