@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm run test:assets && npm run test:browser",
-    "test:assets": "python3 tools/validate_character_sprites.py && node --check phaser-game.js",
+    "test": "npm run test:content && npm run test:assets && npm run test:browser",
+    "test:content": "node tools/validate-game-content.mjs",
+    "test:assets": "python3 tools/validate_character_sprites.py && node --check phaser-game.js && node --check phaser-content.js",
     "test:browser": "node tools/browser-smoke-test.mjs",
     "serve": "python3 -m http.server 9231"
   },
