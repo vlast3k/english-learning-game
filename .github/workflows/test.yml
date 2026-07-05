@@ -26,7 +26,11 @@ jobs:
         run: npm run test:engine
       - name: Validate assets and JavaScript
         run: npm run test:assets
-      - name: Run browser smoke test
-        run: npm run test:browser
+      - name: Run base browser smoke test
+        run: npm run test:browser:base
+        env:
+          BROWSER_CHANNEL: chrome
+      - name: Run Bond campaign browser test
+        run: npm run test:browser:bond
         env:
           BROWSER_CHANNEL: chrome
