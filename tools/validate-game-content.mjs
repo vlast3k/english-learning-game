@@ -280,12 +280,12 @@ let content = null;
 for (const file of scenarioFiles) {
   const parsed = JSON.parse(await readFile(path.join(SCENARIOS_DIR, file), "utf8"));
   validationResults.push(validateContent(parsed, file));
-  if (file === "camp-content.json") {
+  if (file === "james-bond-level-01-content.json") {
     content = parsed;
   }
 }
 if (!content) {
-  fail("camp-content.json must exist");
+  fail("james-bond-level-01-content.json must exist");
 }
 
 const sandbox = {
@@ -329,15 +329,15 @@ const stubGame = new sandbox.Phaser.Game({ scene: [StubScene] });
 const DataDrivenScene = stubGame.config.scene[0];
 const stubScene = new DataDrivenScene();
 stubScene.preload();
-if (stubScene.loadedJson?.key !== "campContent" || !stubScene.loadedJson.url.includes("camp-content.json")) {
-  fail("data-driven scene must preload camp-content.json");
+if (stubScene.loadedJson?.key !== "gameContent" || !stubScene.loadedJson.url.includes("james-bond-level-01-content.json")) {
+  fail("data-driven scene must preload james-bond-level-01-content.json by default");
 }
 stubScene.contentModel = content;
 if (stubScene.createObjectQuizzes() !== content.quizzes) {
-  fail("data-driven scene must return quizzes from camp content");
+  fail("data-driven scene must return quizzes from default content");
 }
-if (stubScene.getWordTranslation("Rope!") !== "въже") {
-  fail("data-driven scene must resolve translations from camp content");
+if (stubScene.getWordTranslation("Agent!") !== "агент") {
+  fail("data-driven scene must resolve translations from default content");
 }
 
 console.log(

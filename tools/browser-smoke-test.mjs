@@ -536,7 +536,7 @@ try {
   });
   page.on("pageerror", (error) => consoleErrors.push(error.message));
 
-  await page.goto(`${url}/phaser.html?test=${Date.now()}`, { waitUntil: "networkidle" });
+  await page.goto(`${url}/phaser.html?scenario=scenarios/camp-content.json&test=${Date.now()}`, { waitUntil: "networkidle" });
   await page.waitForSelector("canvas");
   await page.waitForFunction(() => window.phaserGame?.scene?.getScene("CampScene")?.hero?.sprite?.texture?.key === "heroSprite");
   await page.screenshot({ path: path.join(OUT_DIR, "initial.png"), fullPage: true });

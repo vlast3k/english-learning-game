@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const CONTENT_CACHE_KEY = "campContent";
-  const DEFAULT_CONTENT_URL = "scenarios/camp-content.json?v=20260705-level-intro-1";
+  const CONTENT_CACHE_KEY = "gameContent";
+  const DEFAULT_CONTENT_URL = "scenarios/james-bond-level-01-content.json?v=20260705-puzzle-eca-2";
   const ASSET_OVERRIDE_VERSION = "20260705-scenario-assets-1";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
 
@@ -13,7 +13,7 @@
     if (!scenario) {
       return DEFAULT_CONTENT_URL;
     }
-    return scenario.includes("?") ? scenario : `${scenario}?v=20260705-level-intro-1`;
+    return scenario.includes("?") ? scenario : `${scenario}?v=20260705-puzzle-eca-2`;
   }
 
   const CONTENT_URL = getContentUrl();
