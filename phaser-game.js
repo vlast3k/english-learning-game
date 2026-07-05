@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260705-guide-close-1";
+const ASSET_VERSION = "20260705-level-intro-1";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const REVEAL_TRANSLATIONS = new Map([
@@ -101,6 +101,8 @@ class CampScene extends Phaser.Scene {
     this.commandText = null;
     this.inventoryText = null;
     this.heroTween = null;
+    this.validatedItemTranslations = new Set();
+    this.validatedSceneIntroTranslations = new Set();
   }
 
   preload() {
@@ -138,6 +140,7 @@ class CampScene extends Phaser.Scene {
       }
     });
     this.input.on("pointermove", (pointer) => this.resetRevealIfPointerLeft(pointer));
+    this.time.delayedCall(280, () => this.openLevelIntro());
   }
 
   createCharacterAnimations() {
@@ -235,7 +238,19 @@ class CampScene extends Phaser.Scene {
         y: 424,
         walkTo: { x: 258, y: 464 },
         radius: 28,
-        intro: { text: "A long rope is lying on the ground. It looks strong.", bg: "Дълго въже лежи на земята. Изглежда здраво." },
+        intro: {
+          text: "A long rope is lying on the ground. It looks strong.",
+          bg: "Дълго въже лежи на земята. Изглежда здраво.",
+          translation_check: {
+            prompt: "Choose the Bulgarian translation before you pick it up.",
+            validating_text: "Validating...",
+            options: [
+              { text: "Дълго въже лежи на земята. Изглежда здраво.", isCorrect: true },
+              { text: "Къса пръчка лежи до огъня. Изглежда топла." },
+              { text: "Дълга карта виси над масата. Изглежда стара." },
+            ],
+          },
+        },
       },
       {
         id: "backpack",
@@ -246,7 +261,19 @@ class CampScene extends Phaser.Scene {
         y: 444,
         walkTo: { x: 170, y: 468 },
         radius: 31,
-        intro: { text: "A backpack is ready for the trail. It keeps supplies safe.", bg: "Раницата е готова за пътеката. Тя пази провизиите." },
+        intro: {
+          text: "A backpack is ready for the trail. It keeps supplies safe.",
+          bg: "Раницата е готова за пътеката. Тя пази провизиите.",
+          translation_check: {
+            prompt: "Choose the Bulgarian translation before you pick it up.",
+            validating_text: "Validating...",
+            options: [
+              { text: "Раницата е готова за пътеката. Тя пази провизиите.", isCorrect: true },
+              { text: "Картата е готова за масата. Тя пази огъня." },
+              { text: "Въжето е готово за сън. То свети през нощта." },
+            ],
+          },
+        },
       },
       {
         id: "map",
@@ -257,7 +284,19 @@ class CampScene extends Phaser.Scene {
         y: 386,
         walkTo: { x: 516, y: 456 },
         radius: 48,
-        intro: { text: "A map is hanging over the table. Alex is looking at it now.", bg: "Карта виси над масата. Алекс я гледа сега." },
+        intro: {
+          text: "A map is hanging over the table. Alex is looking at it now.",
+          bg: "Карта виси над масата. Алекс я гледа сега.",
+          translation_check: {
+            prompt: "Choose the Bulgarian translation before you pick it up.",
+            validating_text: "Validating...",
+            options: [
+              { text: "Карта виси над масата. Алекс я гледа сега.", isCorrect: true },
+              { text: "Раница лежи на земята. Алекс я носи сега." },
+              { text: "Казан виси над огъня. Водата ври бавно." },
+            ],
+          },
+        },
       },
       {
         id: "cauldron",
@@ -937,6 +976,10 @@ class CampScene extends Phaser.Scene {
       this.openObjectQuestion(hotspot, 0);
       return;
     }
+    if (this.validatedItemTranslations.has(hotspot.id)) {
+      this.openObjectQuestion(hotspot, 0);
+      return;
+    }
     this.faceHeroToward(hotspot.x, hotspot.y, "curious");
     this.showSpeechBubble({
       speaker: "Alex",
@@ -947,10 +990,247 @@ class CampScene extends Phaser.Scene {
         this.closeBubble();
         this.setCommand(`Looked at ${hotspot.label}`);
       },
-      options: [{ text: "Pick it up", action: () => {
+      options: this.getTranslationCheckOptions(hotspot).map((option) => ({
+        text: option.text,
+        action: () => this.handleTranslationCheckOption(hotspot, option),
+      })),
+    });
+  }
+
+  getTranslationCheckSource(target) {
+    return {
+      text: target.intro?.text || target.mission || "",
+      bg: target.intro?.bg || target.mission_bg || target.bg || "",
+      check: target.intro?.translation_check || target.translation_check || null,
+    };
+  }
+
+  getTranslationCheckOptions(target, previousOrder = null) {
+    const source = this.getTranslationCheckSource(target);
+    const check = source.check;
+    if (!Array.isArray(check?.options) || check.options.length === 0) {
+      return [{
+        text: source.bg,
+        isCorrect: true,
+      }];
+    }
+
+    const shuffled = [...check.options];
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      Phaser.Utils.Array.Shuffle(shuffled);
+      const order = shuffled.map((option) => option.text).join("|");
+      if (!previousOrder || order !== previousOrder) {
+        return shuffled;
+      }
+    }
+    shuffled.push(shuffled.shift());
+    return shuffled;
+  }
+
+  getShuffledChallengeOptions(options) {
+    if (!Array.isArray(options) || options.length < 2) {
+      return options || [];
+    }
+    const originalOrder = options.map((option) => option.text).join("|");
+    const isCorrectOption = (option) => option.isCorrect === true || option.is_correct === true;
+    const shuffled = [...options];
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      Phaser.Utils.Array.Shuffle(shuffled);
+      if (shuffled.map((option) => option.text).join("|") !== originalOrder && !isCorrectOption(shuffled[0])) {
+        return shuffled;
+      }
+    }
+
+    if (isCorrectOption(shuffled[0])) {
+      const correctOption = shuffled.shift();
+      shuffled.splice(Phaser.Math.Between(1, shuffled.length), 0, correctOption);
+    }
+    if (shuffled.map((option) => option.text).join("|") === originalOrder) {
+      const shiftBy = Phaser.Math.Between(1, shuffled.length - 1);
+      const rotated = [...shuffled.slice(shiftBy), ...shuffled.slice(0, shiftBy)];
+      if (isCorrectOption(rotated[0])) {
+        const correctOption = rotated.shift();
+        rotated.splice(Phaser.Math.Between(1, rotated.length), 0, correctOption);
+      }
+      return rotated;
+    }
+    return shuffled;
+  }
+
+  handleTranslationCheckOption(hotspot, option) {
+    if (option.isCorrect) {
+      this.validatedItemTranslations.add(hotspot.id);
+      this.closeBubble();
+      this.setCommand(`${hotspot.label} translation matched`);
+      this.time.delayedCall(120, () => this.openObjectQuestion(hotspot, 0));
+      return;
+    }
+
+    const previousOrder = this.activeBubble?.translationChoiceOrder || null;
+    this.showTranslationValidationPenalty(hotspot, previousOrder);
+  }
+
+  showTranslationValidationPenalty(hotspot, previousOrder, retryAction = null) {
+    const check = this.getTranslationCheckSource(hotspot).check || {};
+    this.closeBubble();
+    this.setCommand(`Checking ${hotspot.label} translation`);
+
+    const width = 520;
+    const height = 188;
+    const preferredX = hotspot.x > GAME_WIDTH * 0.55 ? hotspot.x - width - 42 : hotspot.x - width * 0.5;
+    const x = Phaser.Math.Clamp(preferredX, 32, GAME_WIDTH - width - 32);
+    const y = Phaser.Math.Clamp(hotspot.y - height - 74, 58, 340);
+    const bubble = this.add.container(x, y).setDepth(950);
+    const panel = this.add.graphics();
+    this.drawDialoguePanel(panel, width, height);
+    const title = this.add.text(32, 36, check.validating_text || "Validating...", {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: "25px",
+      fontStyle: "700",
+      color: "#123937",
+    }).setOrigin(0, 0.5);
+    const note = this.add.text(32, 74, check.retry_text || "Read the English sentence once more.", {
+      fontFamily: UI_FONT,
+      fontSize: "18px",
+      fontStyle: "700",
+      color: "#526763",
+    }).setOrigin(0, 0.5);
+    const bar = this.add.graphics();
+    const state = { progress: 0 };
+    const drawBar = () => {
+      bar.clear();
+      bar.fillStyle(0x4d3322, 0.18);
+      bar.fillRoundedRect(32, 112, width - 64, 24, 12);
+      bar.fillStyle(0xffedbd, 1);
+      bar.lineStyle(2, 0x9b7343, 0.72);
+      bar.fillRoundedRect(32, 112, width - 64, 24, 12);
+      bar.strokeRoundedRect(32, 112, width - 64, 24, 12);
+      bar.fillStyle(0x0f7a78, 0.95);
+      bar.fillRoundedRect(36, 116, Math.max(8, (width - 72) * state.progress), 16, 8);
+    };
+    drawBar();
+    bubble.add([panel, title, note, bar]);
+    bubble.isValidationPenalty = true;
+    this.activeBubble = bubble;
+    this.tweens.add({
+      targets: state,
+      progress: 1,
+      duration: 3000,
+      ease: "Sine.easeInOut",
+      onUpdate: drawBar,
+      onComplete: () => {
+        if (this.activeBubble === bubble) {
+          this.closeBubble();
+          if (retryAction) {
+            retryAction(previousOrder);
+          } else {
+            this.openObjectTranslationRetry(hotspot, previousOrder);
+          }
+        }
+      },
+    });
+  }
+
+  openObjectTranslationRetry(hotspot, previousOrder) {
+    this.faceHeroToward(hotspot.x, hotspot.y, "curious");
+    const options = this.getTranslationCheckOptions(hotspot, previousOrder);
+    this.showSpeechBubble({
+      speaker: "Alex",
+      text: hotspot.intro.text,
+      bg: hotspot.intro.bg,
+      anchor: { x: hotspot.x, y: hotspot.y - 40 },
+      onClose: () => {
         this.closeBubble();
-        this.time.delayedCall(120, () => this.openObjectQuestion(hotspot, 0));
-      }}],
+        this.setCommand(`Paused ${hotspot.label} translation`);
+      },
+      options: options.map((option) => ({
+        text: option.text,
+        action: () => this.handleTranslationCheckOption(hotspot, option),
+      })),
+    });
+  }
+
+  getLevelIntroPlan() {
+    return this.contentModel?.level_plan || this.camp?.level_plan || null;
+  }
+
+  getLevelIntroId() {
+    return this.contentModel?.scene_id || this.camp?.id || "camp";
+  }
+
+  createLevelIntroTarget(plan) {
+    return {
+      id: `level_intro:${this.getLevelIntroId()}`,
+      label: "mission",
+      x: GAME_WIDTH / 2,
+      y: 330,
+      mission: plan.mission,
+      mission_bg: plan.mission_bg,
+      translation_check: plan.translation_check,
+    };
+  }
+
+  openLevelIntro() {
+    const plan = this.getLevelIntroPlan();
+    if (!plan?.mission || this.activeBubble) {
+      return;
+    }
+    const sceneId = this.getLevelIntroId();
+    if (this.validatedSceneIntroTranslations.has(sceneId)) {
+      return;
+    }
+    this.setCommand("Read the mission");
+    this.faceHeroToward(GAME_WIDTH / 2, 220, "curious");
+    const target = this.createLevelIntroTarget(plan);
+    this.showSpeechBubble({
+      speaker: plan.title || "Mission",
+      text: plan.mission,
+      bg: plan.mission_bg,
+      anchor: { x: GAME_WIDTH / 2, y: 156 },
+      onClose: () => {
+        this.closeBubble();
+        this.setCommand("Mission paused");
+      },
+      options: this.getTranslationCheckOptions(target).map((option) => ({
+        text: option.text,
+        action: () => this.handleLevelIntroTranslationOption(target, option),
+      })),
+    });
+  }
+
+  handleLevelIntroTranslationOption(target, option) {
+    if (option.isCorrect) {
+      this.validatedSceneIntroTranslations.add(this.getLevelIntroId());
+      this.closeBubble();
+      this.setCommand("Mission understood");
+      return;
+    }
+    const previousOrder = this.activeBubble?.translationChoiceOrder || null;
+    this.showTranslationValidationPenalty(target, previousOrder, (retryPreviousOrder) => {
+      this.openLevelIntroTranslationRetry(retryPreviousOrder);
+    });
+  }
+
+  openLevelIntroTranslationRetry(previousOrder) {
+    const plan = this.getLevelIntroPlan();
+    if (!plan?.mission) {
+      return;
+    }
+    const target = this.createLevelIntroTarget(plan);
+    const options = this.getTranslationCheckOptions(target, previousOrder);
+    this.showSpeechBubble({
+      speaker: plan.title || "Mission",
+      text: plan.mission,
+      bg: plan.mission_bg,
+      anchor: { x: GAME_WIDTH / 2, y: 156 },
+      onClose: () => {
+        this.closeBubble();
+        this.setCommand("Mission paused");
+      },
+      options: options.map((option) => ({
+        text: option.text,
+        action: () => this.handleLevelIntroTranslationOption(target, option),
+      })),
     });
   }
 
@@ -990,8 +1270,9 @@ class CampScene extends Phaser.Scene {
         this.closeBubble();
         this.setCommand(`Paused ${hotspot.label} challenge`);
       },
-      options: question.options.map((option) => ({
+      options: this.getShuffledChallengeOptions(question.options).map((option) => ({
         text: option.text,
+        isCorrect: option.isCorrect,
         action: () => this.handleObjectQuizOption(hotspot, questionIndex, option),
       })),
     });
@@ -1060,8 +1341,9 @@ class CampScene extends Phaser.Scene {
       text: node.npc_text,
       bg: node.npc_text_bg,
       anchor: { x: this.guide.x, y: this.guide.y - 128 },
-      options: node.options.map((option) => ({
+      options: this.getShuffledChallengeOptions(node.options).map((option) => ({
         text: option.text,
+        isCorrect: option.is_correct,
         action: () => this.handleGuideOption(option),
       })),
     });
@@ -1091,7 +1373,9 @@ class CampScene extends Phaser.Scene {
   showSpeechBubble({ speaker, text, bg, anchor, options, onClose = null }) {
     this.closeBubble();
     const width = 660;
-    const optionHeight = 52;
+    const longChoice = options.some((option) => option.text.length > 58);
+    const optionHeight = longChoice ? 72 : 52;
+    const choiceHeight = longChoice ? 62 : 42;
     const feedbackReserve = 104;
     const speakerTitle = speaker ? `${speaker[0].toUpperCase()}${speaker.slice(1)}` : "";
     const textFlow = this.createRevealTextFlow(30, 61, text, width - 62, {
@@ -1132,14 +1416,18 @@ class CampScene extends Phaser.Scene {
     });
     const closeButton = onClose ? this.makeCloseButton(width - 51, 17, onClose) : null;
 
-    const choices = options.map((option, index) => this.makeChoice(
-      32,
-      choicesY + index * optionHeight,
-      width - 64,
-      42,
-      option.text,
-      option.action,
-    ));
+    const choices = options.map((option, index) => {
+      const choice = this.makeChoice(
+        32,
+        choicesY + index * optionHeight,
+        width - 64,
+        choiceHeight,
+        option.text,
+        option.action,
+      );
+      choice.choiceData = option;
+      return choice;
+    });
 
     bubble.add([panel, speakerRibbon, speakerBadge, textFlow, ...choices]);
     if (closeButton) {
@@ -1177,6 +1465,7 @@ class CampScene extends Phaser.Scene {
     };
     bubble.feedbackBg = feedbackBg;
     bubble.feedbackNote = feedbackNote;
+    bubble.translationChoiceOrder = options.map((option) => option.text).join("|");
     bubble.add([feedbackBg, feedbackNote]);
 
     this.activeBubble = bubble;
@@ -1439,11 +1728,11 @@ class CampScene extends Phaser.Scene {
     redraw("idle");
     const label = this.add.text(width / 2, height / 2, text, {
       fontFamily: ADVENTURE_FONT,
-      fontSize: text.length > 28 ? "17px" : "20px",
+      fontSize: text.length > 76 ? "15px" : text.length > 42 ? "17px" : text.length > 28 ? "18px" : "20px",
       fontStyle: "700",
       color: "#123937",
       align: "center",
-      wordWrap: { width: width - 70 },
+      wordWrap: { width: width - 42 },
     }).setOrigin(0.5);
     const hitPlate = this.add.zone(width / 2, height / 2, width, height)
       .setInteractive({ useHandCursor: true });
