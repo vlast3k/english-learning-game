@@ -2,6 +2,8 @@
 
 This repo is an English-learning adventure game prototype for kids. The current primary experience is the Phaser 3 point-and-click POC in `phaser.html` / `phaser-game.js`, not the older DOM prototype in `index.html` / `main.js`.
 
+The learning scope is defined in `curriculum-scope.md`
+
 ## Current Game
 
 - Theme: kid-friendly jungle camp adventure with vocabulary and grammar challenges.
