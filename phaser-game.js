@@ -288,10 +288,10 @@ class CampScene extends Phaser.Scene {
         label: "lantern",
         english: "lantern",
         bg: "фенер",
-        x: 330,
-        y: 372,
-        walkTo: { x: 340, y: 456 },
-        radius: 22,
+        x: 148,
+        y: 298,
+        walkTo: { x: 180, y: 448 },
+        radius: 20,
         scenery: true,
         description: { text: "A lantern is glowing on the table. It lights the camp at night.", bg: "Фенер свети на масата. Той осветява лагера през нощта." },
       },
@@ -300,10 +300,10 @@ class CampScene extends Phaser.Scene {
         label: "tent",
         english: "tent",
         bg: "палатка",
-        x: 120,
-        y: 362,
-        walkTo: { x: 160, y: 448 },
-        radius: 42,
+        x: 210,
+        y: 250,
+        walkTo: { x: 220, y: 448 },
+        radius: 50,
         scenery: true,
         description: { text: "The tent is ready for sleeping. The explorers are resting inside tonight.", bg: "Палатката е готова за спане. Изследователите почиват вътре тази нощ." },
       },
@@ -1107,23 +1107,10 @@ class CampScene extends Phaser.Scene {
     const preferredX = anchor.x > GAME_WIDTH * 0.55 ? anchor.x - width - 42 : anchor.x - width * 0.5;
     const x = Phaser.Math.Clamp(preferredX, 32, GAME_WIDTH - width - 32);
     const y = Phaser.Math.Clamp(anchor.y - height - 24, 58, 340);
-    const tailTipX = Phaser.Math.Clamp(anchor.x - x, 70, width - 44);
-    const tailBaseX = Phaser.Math.Clamp(tailTipX - 34, 52, width - 112);
     const bubble = this.add.container(x, y).setDepth(950);
 
     const panel = this.add.graphics();
     this.drawDialoguePanel(panel, width, height);
-
-    const tail = this.add.graphics();
-    tail.fillStyle(0xfff2cf, 0.98);
-    tail.lineStyle(3, 0x8e6d3e, 0.85);
-    tail.beginPath();
-    tail.moveTo(tailBaseX, height - 2);
-    tail.lineTo(tailTipX, height + 32);
-    tail.lineTo(tailBaseX + 64, height - 2);
-    tail.closePath();
-    tail.fillPath();
-    tail.strokePath();
 
     const speakerRibbon = this.add.graphics();
     const ribbonWidth = Phaser.Math.Clamp(speakerTitle.length * 16 + 40, 132, 236);
@@ -1154,7 +1141,7 @@ class CampScene extends Phaser.Scene {
       option.action,
     ));
 
-    bubble.add([panel, tail, speakerRibbon, speakerBadge, textFlow, ...choices]);
+    bubble.add([panel, speakerRibbon, speakerBadge, textFlow, ...choices]);
     if (closeButton) {
       bubble.add(closeButton);
     }
@@ -1308,7 +1295,7 @@ class CampScene extends Phaser.Scene {
     word.revealTween = this.tweens.add({
       targets: word.revealState,
       progress: 1,
-      duration: 2000,
+      duration: 1000,
       ease: "Sine.easeInOut",
       onUpdate: () => this.drawRevealProgress(word, word.revealState.progress),
       onComplete: () => {
@@ -1336,8 +1323,6 @@ class CampScene extends Phaser.Scene {
     const balloonX = Phaser.Math.Clamp(centerX - balloonWidth / 2, -8, maxLeft);
     const preferredBalloonY = word.y - balloonHeight - 5;
     const balloonY = Math.max(4, preferredBalloonY);
-    const showTail = preferredBalloonY >= 4;
-    const tailX = Phaser.Math.Clamp(centerX - balloonX, 10, balloonWidth - 10);
     const bg = this.add.graphics();
     bg.fillStyle(0x4d3322, 0.18);
     bg.fillRoundedRect(balloonX + 2, balloonY + 3, balloonWidth, balloonHeight, 9);
@@ -1345,21 +1330,6 @@ class CampScene extends Phaser.Scene {
     bg.lineStyle(2, 0x8b6336, 0.95);
     bg.fillRoundedRect(balloonX, balloonY, balloonWidth, balloonHeight, 9);
     bg.strokeRoundedRect(balloonX, balloonY, balloonWidth, balloonHeight, 9);
-    if (showTail) {
-      bg.fillStyle(0xfff4c4, 1);
-      bg.beginPath();
-      bg.moveTo(balloonX + tailX - 6, balloonY + balloonHeight - 1);
-      bg.lineTo(balloonX + tailX + 6, balloonY + balloonHeight - 1);
-      bg.lineTo(centerX, word.y - 1);
-      bg.closePath();
-      bg.fillPath();
-      bg.lineStyle(2, 0x8b6336, 0.78);
-      bg.beginPath();
-      bg.moveTo(balloonX + tailX - 6, balloonY + balloonHeight - 1);
-      bg.lineTo(centerX, word.y - 1);
-      bg.lineTo(balloonX + tailX + 6, balloonY + balloonHeight - 1);
-      bg.strokePath();
-    }
     text.setPosition(balloonX + paddingX, balloonY + paddingY - 1);
     word.translationBalloon = { bg, text };
     word.revealFlow.add([bg, text]);
@@ -1465,8 +1435,6 @@ class CampScene extends Phaser.Scene {
       bg.strokeRoundedRect(0, 0, width, height, 9);
       bg.lineStyle(1, 0xfffbef, hover ? 0.72 : 0.38);
       bg.strokeRoundedRect(8, 7, width - 16, height - 14, 7);
-      bg.fillStyle(0x0f7a78, hover || down ? 0.95 : 0.72);
-      bg.fillTriangle(17, height / 2, 29, 10, 29, height - 10);
     };
     redraw("idle");
     const label = this.add.text(width / 2, height / 2, text, {
