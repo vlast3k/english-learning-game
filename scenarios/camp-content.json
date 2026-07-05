@@ -2,6 +2,21 @@
   "schema_version": 1,
   "scene_id": "camp",
   "content_version": "2026-07-05",
+  "level_plan": {
+    "title": "Jungle Camp Mission",
+    "mission": "Find the camp gear first: backpack, rope, and map.",
+    "mission_bg": "Първо намери екипировката в лагера: раница, въже и карта.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        { "text": "Първо намери екипировката в лагера: раница, въже и карта.", "isCorrect": true },
+        { "text": "Първо запали фенера, после остави раницата и картата." },
+        { "text": "Първо намери палатката, казана и огъня в лагера." }
+      ]
+    }
+  },
   "translations": {
     "a": "един",
     "alex": "Алекс",
@@ -9,6 +24,7 @@
     "an": "един",
     "and": "и",
     "are": "са",
+    "at": "при",
     "backpack": "раница",
     "backpackes": "раници",
     "backpacks": "раници",
@@ -28,6 +44,7 @@
     "dinner": "вечеря",
     "explorers": "изследователи",
     "find": "намери",
+    "fire": "огън",
     "first": "първо",
     "for": "за",
     "found": "намери",
@@ -41,12 +58,14 @@
     "in": "в",
     "inside": "вътре",
     "is": "е",
+    "it": "то",
     "jungle": "джунгла",
     "keeps": "пази",
     "lantern": "фенер",
     "lights": "осветява",
     "long": "дълъг",
     "looking": "гледат",
+    "looks": "изглежда",
     "lying": "лежи",
     "map": "карта",
     "mapp": "карта",
@@ -61,6 +80,7 @@
     "question": "въпрос",
     "raises": "вдига",
     "ready": "готов",
+    "resting": "почиват",
     "right": "точно",
     "roap": "въже",
     "rop": "въже",
@@ -72,6 +92,7 @@
     "soup": "супа",
     "spelling": "правопис",
     "strong": "здраво",
+    "table": "маса",
     "supplies": "провизии",
     "tent": "палатка",
     "the": "the",
@@ -110,7 +131,17 @@
       "radius": 28,
       "intro": {
         "text": "A long rope is lying on the ground. It looks strong.",
-        "bg": "Дълго въже лежи на земята. Изглежда здраво."
+        "bg": "Дълго въже лежи на земята. Изглежда здраво.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Дълго въже лежи на земята. Изглежда здраво.", "isCorrect": true },
+            { "text": "Къса пръчка лежи до огъня. Изглежда топла." },
+            { "text": "Дълга карта виси над масата. Изглежда стара." }
+          ]
+        }
       },
       "learning": {
         "vocabulary_target": "rope",
@@ -133,7 +164,17 @@
       "radius": 31,
       "intro": {
         "text": "A backpack is ready for the trail. It keeps supplies safe.",
-        "bg": "Раницата е готова за пътеката. Тя пази провизиите."
+        "bg": "Раницата е готова за пътеката. Тя пази провизиите.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Раницата е готова за пътеката. Тя пази провизиите.", "isCorrect": true },
+            { "text": "Картата е готова за масата. Тя пази огъня." },
+            { "text": "Въжето е готово за сън. То свети през нощта." }
+          ]
+        }
       },
       "learning": {
         "vocabulary_target": "backpack",
@@ -156,7 +197,17 @@
       "radius": 48,
       "intro": {
         "text": "A map is hanging over the table. Alex is looking at it now.",
-        "bg": "Карта виси над масата. Алекс я гледа сега."
+        "bg": "Карта виси над масата. Алекс я гледа сега.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Карта виси над масата. Алекс я гледа сега.", "isCorrect": true },
+            { "text": "Раница лежи на земята. Алекс я носи сега." },
+            { "text": "Казан виси над огъня. Водата ври бавно." }
+          ]
+        }
       },
       "learning": {
         "vocabulary_target": "map",

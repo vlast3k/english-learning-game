@@ -178,9 +178,181 @@ async function openRopeChallenge(page) {
   await page.waitForFunction(() => Boolean(window.phaserGame.scene.getScene("CampScene").activeBubble));
 }
 
+async function validateTranslationGate(page) {
+  await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const rope = scene.hotspots.find((hotspot) => hotspot.id === "rope");
+    scene.closeBubble();
+    scene.learnedWords = scene.learnedWords.filter((word) => word !== "rope");
+    scene.validatedItemTranslations.delete("rope");
+    scene.openObjectIntro(rope);
+  });
+  await page.waitForFunction(() => Boolean(window.phaserGame.scene.getScene("CampScene").activeBubble));
+
+  const initial = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const rope = scene.hotspots.find((hotspot) => hotspot.id === "rope");
+    const correctText = rope.intro.translation_check.options.find((option) => option.isCorrect).text;
+    const choices = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .map((choice) => choice.label.text);
+    return {
+      choices,
+      correctText,
+      order: choices.join("|"),
+    };
+  });
+  if (initial.choices.length !== 3 || !initial.choices.includes(initial.correctText)) {
+    fail("translation gate should show three Bulgarian choices with the correct translation", initial);
+  }
+
+  await page.evaluate((correctText) => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const wrongChoice = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .find((choice) => choice.label.text !== correctText);
+    wrongChoice.hitPlate.emit("pointerdown");
+  }, initial.correctText);
+  await page.waitForFunction(() => window.phaserGame.scene.getScene("CampScene").activeBubble?.isValidationPenalty);
+  await page.screenshot({ path: path.join(OUT_DIR, "dialogue-translation-validating.png"), fullPage: true });
+
+  await page.waitForFunction(
+    (initialOrder) => {
+      const bubble = window.phaserGame.scene.getScene("CampScene").activeBubble;
+      return bubble && !bubble.isValidationPenalty && bubble.translationChoiceOrder !== initialOrder;
+    },
+    initial.order,
+    { timeout: 4500 },
+  );
+
+  const retry = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return {
+      choices: scene.activeBubble.list.filter((child) => child.hitPlate && child.label).map((choice) => choice.label.text),
+      order: scene.activeBubble.translationChoiceOrder,
+    };
+  });
+  if (retry.choices.length !== 3 || retry.order === initial.order) {
+    fail("wrong translation retry should reshuffle the same three choices", { initial, retry });
+  }
+
+  await page.evaluate((correctText) => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const correctChoice = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .find((choice) => choice.label.text === correctText);
+    correctChoice.hitPlate.emit("pointerdown");
+  }, initial.correctText);
+  await page.waitForFunction(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const flow = scene.activeBubble?.list.find((child) => Array.isArray(child.list) && child.list.some((item) => item.originalText));
+    return flow?.list.some((item) => item.originalText === "Rope");
+  });
+
+  const unlockedQuiz = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return {
+      validated: scene.validatedItemTranslations.has("rope"),
+      learnedWords: [...scene.learnedWords],
+    };
+  });
+  if (!unlockedQuiz.validated || unlockedQuiz.learnedWords.includes("rope")) {
+    fail("correct translation should unlock the quiz without retrieving the item yet", unlockedQuiz);
+  }
+  await page.evaluate(() => window.phaserGame.scene.getScene("CampScene").closeBubble());
+}
+
+async function validateLevelIntroGate(page) {
+  await page.waitForFunction(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return scene.activeBubble?.translationChoiceOrder;
+  });
+
+  const initial = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const plan = scene.contentModel.level_plan;
+    const correctText = plan.translation_check.options.find((option) => option.isCorrect).text;
+    const flow = scene.activeBubble.list.find((child) => Array.isArray(child.list) && child.list.some((item) => item.originalText));
+    const choices = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .map((choice) => choice.label.text);
+    return {
+      mission: flow?.list.filter((item) => item.originalText).map((item) => item.originalText).join(" "),
+      choices,
+      correctText,
+      order: choices.join("|"),
+    };
+  });
+  if (!initial.mission.includes("Find the camp gear first") || initial.choices.length !== 3 || !initial.choices.includes(initial.correctText)) {
+    fail("level intro should show the mission with three Bulgarian choices", initial);
+  }
+
+  await page.screenshot({ path: path.join(OUT_DIR, "level-intro.png"), fullPage: true });
+
+  await page.evaluate((correctText) => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const wrongChoice = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .find((choice) => choice.label.text !== correctText);
+    wrongChoice.hitPlate.emit("pointerdown");
+  }, initial.correctText);
+  await page.waitForFunction(() => window.phaserGame.scene.getScene("CampScene").activeBubble?.isValidationPenalty);
+
+  await page.waitForFunction(
+    (initialOrder) => {
+      const bubble = window.phaserGame.scene.getScene("CampScene").activeBubble;
+      return bubble && !bubble.isValidationPenalty && bubble.translationChoiceOrder !== initialOrder;
+    },
+    initial.order,
+    { timeout: 4500 },
+  );
+
+  const retry = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return {
+      choices: scene.activeBubble.list.filter((child) => child.hitPlate && child.label).map((choice) => choice.label.text),
+      order: scene.activeBubble.translationChoiceOrder,
+    };
+  });
+  if (retry.choices.length !== 3 || retry.order === initial.order) {
+    fail("wrong level intro translation should reshuffle the same three choices", { initial, retry });
+  }
+
+  await page.evaluate((correctText) => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const correctChoice = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .find((choice) => choice.label.text === correctText);
+    correctChoice.hitPlate.emit("pointerdown");
+  }, initial.correctText);
+
+  const completed = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return {
+      hasBubble: Boolean(scene.activeBubble),
+      validated: scene.validatedSceneIntroTranslations.has(scene.contentModel.scene_id),
+    };
+  });
+  if (completed.hasBubble || !completed.validated) {
+    fail("correct level intro translation should dismiss and mark the scene intro complete", completed);
+  }
+}
+
 async function validateDialogueUx(page) {
   await openRopeChallenge(page);
   await page.screenshot({ path: path.join(OUT_DIR, "dialogue-rope.png"), fullPage: true });
+
+  const challengeChoiceOrder = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const choices = scene.activeBubble.list.filter((child) => child.hitPlate && child.label);
+    return choices.map((choice) => ({
+      text: choice.label.text,
+      isCorrect: choice.choiceData?.isCorrect === true,
+    }));
+  });
+  if (challengeChoiceOrder[0]?.isCorrect) {
+    fail("challenge answers should be shuffled by the engine so the correct answer is not first", challengeChoiceOrder);
+  }
 
   const hasCloseButton = await page.evaluate(() => {
     const bubble = window.phaserGame.scene.getScene("CampScene").activeBubble;
@@ -310,8 +482,10 @@ async function validateDialogueUx(page) {
 
   await page.evaluate(() => {
     const scene = window.phaserGame.scene.getScene("CampScene");
-    const choices = scene.activeBubble.list.filter((child) => child.hitPlate);
-    choices[1].hitPlate.emit("pointerdown");
+    const wrongChoice = scene.activeBubble.list
+      .filter((child) => child.hitPlate && child.label)
+      .find((child) => child.choiceData?.isCorrect !== true);
+    wrongChoice.hitPlate.emit("pointerdown");
   });
   await page.waitForTimeout(120);
   await page.screenshot({ path: path.join(OUT_DIR, "dialogue-feedback.png"), fullPage: true });
@@ -373,6 +547,8 @@ try {
   if (guidePlacement.x < 570 || guidePlacement.x > 635 || guidePlacement.y < 430 || guidePlacement.y > 455) {
     fail("guide should stand next to the table, not in the bushes", guidePlacement);
   }
+  await validateLevelIntroGate(page);
+  await validateTranslationGate(page);
   await validateDialogueUx(page);
 
   const side = await sampleMove(page, "side-walk", 900, 470, { x: 360, y: 470 });
