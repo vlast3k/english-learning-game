@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "scene_id": "camp",
+  "content_version": "2026-07-05",
+  "translations": {
+    "a": "един",
+    "alex": "Алекс",
+    "am": "съм",
+    "an": "един",
+    "and": "и",
+    "are": "са",
+    "backpack": "раница",
+    "backpackes": "раници",
+    "backpacks": "раници",
+    "bakpack": "раница",
+    "best": "най-добро",
+    "boiling": "ври",
+    "burning": "гори",
+    "camp": "лагер",
+    "campfire": "огън",
+    "cauldron": "казан",
+    "challenge": "изпитание",
+    "checking": "проверява",
+    "checks": "проверява",
+    "choose": "избери",
+    "correct": "правилно",
+    "crackling": "пука",
+    "dinner": "вечеря",
+    "explorers": "изследователи",
+    "find": "намери",
+    "first": "първо",
+    "for": "за",
+    "found": "намери",
+    "gear": "екипировка",
+    "glowing": "свети",
+    "ground": "земя",
+    "guide": "водач",
+    "hand": "ръка",
+    "hangs": "виси",
+    "hanging": "виси",
+    "in": "в",
+    "inside": "вътре",
+    "is": "е",
+    "jungle": "джунгла",
+    "keeps": "пази",
+    "lantern": "фенер",
+    "lights": "осветява",
+    "long": "дълъг",
+    "looking": "гледат",
+    "lying": "лежи",
+    "map": "карта",
+    "mapp": "карта",
+    "mep": "карта",
+    "night": "нощ",
+    "now": "сега",
+    "on": "на",
+    "over": "над",
+    "path": "пътека",
+    "pick": "избери",
+    "plural": "множествено",
+    "question": "въпрос",
+    "raises": "вдига",
+    "ready": "готов",
+    "right": "точно",
+    "roap": "въже",
+    "rop": "въже",
+    "rope": "въже",
+    "safe": "безопасни",
+    "sentence": "изречение",
+    "sleeping": "спи",
+    "slowly": "бавно",
+    "soup": "супа",
+    "spelling": "правопис",
+    "strong": "здраво",
+    "supplies": "провизии",
+    "tent": "палатка",
+    "the": "the",
+    "then": "после",
+    "this": "този",
+    "to": "към",
+    "tonight": "тази нощ",
+    "tool": "инструмент",
+    "trail": "пътека",
+    "two": "две",
+    "warm": "топъл",
+    "water": "вода",
+    "what": "какво",
+    "where": "къде",
+    "which": "кое",
+    "with": "с",
+    "word": "дума"
+  },
+  "guide": {
+    "required_items": ["rope", "backpack", "map"],
+    "walk_to": { "x": 610, "y": 470 },
+    "locked_text": "Find the camp gear first: backpack, rope, and map.",
+    "locked_text_bg": "Първо намери екипировката в лагера: раница, въже и карта.",
+    "dialogue_start_node": "node_1"
+  },
+  "hotspots": [
+    {
+      "id": "rope",
+      "kind": "collectible",
+      "label": "rope",
+      "english": "rope",
+      "bg": "въже",
+      "x": 222,
+      "y": 424,
+      "walk_to": { "x": 258, "y": 464 },
+      "radius": 28,
+      "intro": {
+        "text": "A long rope is lying on the ground. It looks strong.",
+        "bg": "Дълго въже лежи на земята. Изглежда здраво."
+      },
+      "learning": {
+        "vocabulary_target": "rope",
+        "curriculum_source": "Blue Dot 1",
+        "curriculum_stage": "review",
+        "grammar_targets": ["articles a/an", "present continuous"],
+        "exercise_types": ["word choice", "sentence choice", "grammar gap-fill"]
+      },
+      "presentation": { "hero_expression": "curious", "portrait_frame": 1 }
+    },
+    {
+      "id": "backpack",
+      "kind": "collectible",
+      "label": "backpack",
+      "english": "backpack",
+      "bg": "раница",
+      "x": 128,
+      "y": 444,
+      "walk_to": { "x": 170, "y": 468 },
+      "radius": 31,
+      "intro": {
+        "text": "A backpack is ready for the trail. It keeps supplies safe.",
+        "bg": "Раницата е готова за пътеката. Тя пази провизиите."
+      },
+      "learning": {
+        "vocabulary_target": "backpack",
+        "curriculum_source": "Cambridge Pre A1 Starters",
+        "curriculum_stage": "review",
+        "grammar_targets": ["regular plurals", "verb be: statements", "prepositions of place"],
+        "exercise_types": ["word choice", "word choice", "sentence choice"]
+      },
+      "presentation": { "hero_expression": "smile", "portrait_frame": 4 }
+    },
+    {
+      "id": "map",
+      "kind": "collectible",
+      "label": "map",
+      "english": "map",
+      "bg": "карта",
+      "x": 526,
+      "y": 386,
+      "walk_to": { "x": 516, "y": 456 },
+      "radius": 48,
+      "intro": {
+        "text": "A map is hanging over the table. Alex is looking at it now.",
+        "bg": "Карта виси над масата. Алекс я гледа сега."
+      },
+      "learning": {
+        "vocabulary_target": "map",
+        "curriculum_source": "Cambridge Pre A1 Starters",
+        "curriculum_stage": "review",
+        "grammar_targets": ["where questions with be", "present continuous agreement"],
+        "exercise_types": ["word choice", "question choice", "grammar gap-fill"]
+      },
+      "presentation": { "hero_expression": "thinking", "portrait_frame": 5 }
+    },
+    {
+      "id": "cauldron",
+      "kind": "scenery",
+      "label": "cauldron",
+      "english": "cauldron",
+      "bg": "казан",
+      "x": 698,
+      "y": 392,
+      "walk_to": { "x": 630, "y": 468 },
+      "radius": 26,
+      "description": {
+        "text": "A cauldron hangs over the fire. The water is boiling slowly.",
+        "bg": "Казан виси над огъня. Водата ври бавно."
+      }
+    },
+    {
+      "id": "campfire",
+      "kind": "scenery",
+      "label": "campfire",
+      "english": "campfire",
+      "bg": "огън",
+      "x": 700,
+      "y": 452,
+      "walk_to": { "x": 630, "y": 480 },
+      "radius": 28,
+      "description": {
+        "text": "The campfire is burning. It keeps the camp warm tonight.",
+        "bg": "Лагерният огън гори. Той пази лагера топъл тази нощ."
+      }
+    },
+    {
+      "id": "lantern",
+      "kind": "scenery",
+      "label": "lantern",
+      "english": "lantern",
+      "bg": "фенер",
+      "x": 148,
+      "y": 298,
+      "walk_to": { "x": 180, "y": 448 },
+      "radius": 20,
+      "description": {
+        "text": "A lantern is glowing on the table. It lights the camp at night.",
+        "bg": "Фенер свети на масата. Той осветява лагера през нощта."
+      }
+    },
+    {
+      "id": "tent",
+      "kind": "scenery",
+      "label": "tent",
+      "english": "tent",
+      "bg": "палатка",
+      "x": 210,
+      "y": 250,
+      "walk_to": { "x": 220, "y": 448 },
+      "radius": 50,
+      "description": {
+        "text": "The tent is ready for sleeping. The explorers are resting inside tonight.",
+        "bg": "Палатката е готова за спане. Изследователите почиват вътре тази нощ."
+      }
+    }
+  ],
+  "quizzes": {
+    "rope": [
+      {
+        "id": "rope-spelling",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Rope challenge 1/3. Which spelling is correct for this camp tool?",
+        "bg": "Предизвикателство с въже 1/3. Кое изписване е правилно?",
+        "options": [
+          { "text": "rope", "isCorrect": true },
+          { "text": "roap", "feedback": "Почти, но oa тук не е правилно. Правилното изписване е rope." },
+          { "text": "rop", "feedback": "Липсва последната буква e. Правилно: rope." }
+        ]
+      },
+      {
+        "id": "rope-article",
+        "exercise_type": "sentence choice",
+        "grammar_target": "articles a/an",
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Rope challenge 2/3. Choose the best sentence.",
+        "bg": "Предизвикателство с въже 2/3. Избери най-доброто изречение.",
+        "options": [
+          { "text": "Alex found a rope.", "isCorrect": true },
+          { "text": "Alex found an rope.", "feedback": "Използваме an пред гласен звук. Rope започва със съгласен звук, затова е a rope." },
+          { "text": "Alex found rope a.", "feedback": "В английския статията идва преди съществителното: a rope." }
+        ]
+      },
+      {
+        "id": "rope-present-continuous",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "present continuous statements",
+        "difficulty": 2,
+        "curriculum_stage": "new",
+        "text": "Rope challenge 3/3. Right now, Alex ___ the rope.",
+        "bg": "Предизвикателство с въже 3/3. Точно сега Алекс ___ въжето.",
+        "options": [
+          { "text": "is checking", "isCorrect": true },
+          { "text": "checks", "feedback": "Checks е за навик. За действие точно сега използваме is + -ing." },
+          { "text": "checking", "feedback": "Липсва is. Правилно: Alex is checking." }
+        ]
+      }
+    ],
+    "backpack": [
+      {
+        "id": "backpack-spelling",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Backpack challenge 1/3. Which spelling is correct?",
+        "bg": "Предизвикателство с раница 1/3. Кое изписване е правилно?",
+        "options": [
+          { "text": "backpack", "isCorrect": true },
+          { "text": "bakpack", "feedback": "Липсва c след ba. Правилно: backpack." },
+          { "text": "backpak", "feedback": "Липсва c в края. Правилно: backpack." }
+        ]
+      },
+      {
+        "id": "backpack-plural",
+        "exercise_type": "word choice",
+        "grammar_target": "regular plurals",
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Backpack challenge 2/3. Pick the correct plural.",
+        "bg": "Предизвикателство с раница 2/3. Избери правилното множествено число.",
+        "options": [
+          { "text": "two backpacks", "isCorrect": true },
+          { "text": "two backpack", "feedback": "След two трябва множествено число: backpacks." },
+          { "text": "two backpackes", "feedback": "За backpack добавяме само -s: backpacks." }
+        ]
+      },
+      {
+        "id": "backpack-be-place",
+        "exercise_type": "sentence choice",
+        "grammar_target": "verb be with prepositions of place",
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Backpack challenge 3/3. Choose the best sentence.",
+        "bg": "Предизвикателство с раница 3/3. Избери най-доброто изречение.",
+        "options": [
+          { "text": "The backpack is on the ground.", "isCorrect": true },
+          { "text": "The backpack are on the ground.", "feedback": "Backpack е единствено число, затова използваме is." },
+          { "text": "The backpack on the ground.", "feedback": "Липсва глаголът is." }
+        ]
+      }
+    ],
+    "map": [
+      {
+        "id": "map-spelling",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Map challenge 1/3. Which spelling is correct?",
+        "bg": "Предизвикателство с карта 1/3. Кое изписване е правилно?",
+        "options": [
+          { "text": "map", "isCorrect": true },
+          { "text": "mapp", "feedback": "Има само едно p. Правилно: map." },
+          { "text": "mep", "feedback": "Средната буква е a. Правилно: map." }
+        ]
+      },
+      {
+        "id": "map-where-question",
+        "exercise_type": "question choice",
+        "grammar_target": "where questions with be",
+        "difficulty": 2,
+        "curriculum_stage": "review",
+        "text": "Map challenge 2/3. Choose the correct question.",
+        "bg": "Предизвикателство с карта 2/3. Избери правилния въпрос.",
+        "options": [
+          { "text": "Where is the map?", "isCorrect": true },
+          { "text": "Where the map is?", "feedback": "Въпросът има ред: Where + is + subject." },
+          { "text": "Where are the map?", "feedback": "Map е единствено число, затова е is." }
+        ]
+      },
+      {
+        "id": "map-present-continuous-agreement",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "present continuous subject-verb agreement",
+        "difficulty": 2,
+        "curriculum_stage": "new",
+        "text": "Map challenge 3/3. Alex and the guide ___ looking at the map.",
+        "bg": "Предизвикателство с карта 3/3. Алекс и водачът ___ гледат картата.",
+        "options": [
+          { "text": "are", "isCorrect": true },
+          { "text": "is", "feedback": "Alex and the guide са двама, затова използваме are." },
+          { "text": "am", "feedback": "Am се използва само с I." }
+        ]
+      }
+    ]
+  }
+}
