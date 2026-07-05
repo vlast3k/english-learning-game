@@ -13,9 +13,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm test
+      - name: Validate game content
+        run: npm run test:content
+      - name: Validate assets and JavaScript
+        run: npm run test:assets
+      - name: Run browser smoke test
+        run: npm run test:browser
         env:
           BROWSER_CHANNEL: chrome
