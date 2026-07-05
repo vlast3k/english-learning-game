@@ -27,20 +27,39 @@ jobs:
       - name: Validate assets and JavaScript
         run: npm run test:assets
       - name: Run base browser smoke test
-        run: npm run test:browser:base
+        id: base_browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:browser:base 2>&1 | tee base-browser.log
         env:
           BROWSER_CHANNEL: chrome
+      - name: Upload base browser log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-browser-log
+          path: base-browser.log
+          retention-days: 1
       - name: Run Bond campaign browser test
+        id: bond_browser
+        continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
           npm run test:browser:bond 2>&1 | tee bond-browser.log
         env:
           BROWSER_CHANNEL: chrome
-      - name: Upload Bond browser failure log
-        if: failure()
+      - name: Upload Bond browser log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bond-browser-log
           path: bond-browser.log
           retention-days: 1
+      - name: Check browser test results
+        if: always()
+        run: |
+          test "${{ steps.base_browser.outcome }}" = "success"
+          test "${{ steps.bond_browser.outcome }}" = "success"
