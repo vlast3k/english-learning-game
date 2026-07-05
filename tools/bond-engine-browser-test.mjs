@@ -79,10 +79,11 @@ try {
     }
     engine.emit("guide.completed", { target: "director" });
     const beforeExit = engine.getSnapshot();
+    const inventoryBeforeExit = [...scene.learnedWords];
     engine.emit("exit.reached", { target: "training_door" });
     return {
       puzzles: beforeExit.state.puzzles,
-      inventory: [...scene.learnedWords],
+      inventory: inventoryBeforeExit,
       flag: scene.flags.training_door_open,
     };
   });
