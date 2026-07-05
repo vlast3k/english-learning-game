@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-01",
+  "content_version": "2026-07-05",
+  "level_plan": {
+    "title": "Briefing at Headquarters",
+    "mission": "The hero arrives at a friendly secret-agent headquarters to earn a junior agent license.",
+    "mission_bg": "Героят пристига в приятелска централа за тайни агенти, за да спечели лиценз за младши агент.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        { "text": "Героят пристига в приятелска централа за тайни агенти, за да спечели лиценз за младши агент.", "isCorrect": true },
+        { "text": "Директорът пристига на световната карта, за да отвори стара врата." },
+        { "text": "Героят попълва семеен формуляр, за да намери раница и въже." }
+      ]
+    },
+    "plan_hotspot_id": "mission_screen",
+    "grammar_targets": [
+      "verb be: I am",
+      "verb be: he/she/it is",
+      "verb be: they are",
+      "identity questions: Who is this?",
+      "identity questions: What is it?"
+    ],
+    "vocabulary_targets": [
+      "name",
+      "family",
+      "friend",
+      "brother",
+      "sister",
+      "young",
+      "old",
+      "good",
+      "bad",
+      "boy",
+      "girl",
+      "man",
+      "woman"
+    ],
+    "flow": [
+      "View the mission screen to understand the plan.",
+      "Collect the agent badge by answering name and be questions.",
+      "Collect the dossier clue by identifying people in pictures.",
+      "Collect the profile form by completing family and friend sentences.",
+      "Talk to the director to unlock the training door."
+    ]
+  },
+  "assets": {
+    "background": "assets/james-bond/level-01-briefing/generated/briefing-room-background.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "guide_spritesheet_source": "assets/james-bond/level-01-briefing/generated/director-guide-source-panel.png",
+    "dossier_pictures": "assets/james-bond/level-01-briefing/generated/agent-dossier-pictures.png",
+    "interactive_props": "assets/james-bond/level-01-briefing/generated/interactive-props.png"
+  },
+  "hero_start": { "x": 260, "y": 500 },
+  "hud": {
+    "status_text": "Briefing in progress"
+  },
+  "navigation": {
+    "walkable_polygon": [
+      { "x": 38, "y": 356 },
+      { "x": 1002, "y": 356 },
+      { "x": 1014, "y": 566 },
+      { "x": 18, "y": 566 }
+    ],
+    "clearance": 30,
+    "obstacles": [
+      { "id": "briefing_table", "x1": 420, "y1": 398, "x2": 802, "y2": 514 },
+      { "id": "front_chair", "x1": 588, "y1": 474, "x2": 680, "y2": 566 },
+      { "id": "scanner_station", "x1": 26, "y1": 290, "x2": 128, "y2": 426 },
+      { "id": "plant", "x1": 138, "y1": 306, "x2": 230, "y2": 430 },
+      { "id": "right_cabinets", "x1": 842, "y1": 302, "x2": 1000, "y2": 448 }
+    ]
+  },
+  "translations": {
+    "a": "един",
+    "agent": "агент",
+    "alex": "Алекс",
+    "am": "съм",
+    "an": "един",
+    "and": "и",
+    "are": "са",
+    "asks": "пита",
+    "at": "при",
+    "about": "за",
+    "agents": "агенти",
+    "answer": "отговор",
+    "approval": "одобрение",
+    "arrives": "пристига",
+    "badge": "значка",
+    "bad": "лош",
+    "be": "съм/е/са",
+    "big": "голям",
+    "board": "дъска",
+    "boy": "момче",
+    "briefing": "брифинг",
+    "brother": "брат",
+    "check": "проверка",
+    "choose": "избери",
+    "closed": "затворен",
+    "clue": "следа",
+    "collect": "събери",
+    "complete": "попълни",
+    "correct": "правилно",
+    "director": "директор",
+    "director's": "на директора",
+    "door": "врата",
+    "dossier": "досие",
+    "earn": "спечели",
+    "family": "семейство",
+    "father": "баща",
+    "final": "последен",
+    "file": "папка",
+    "folder": "папка",
+    "form": "формуляр",
+    "friend": "приятел",
+    "friendly": "приятелски",
+    "get": "вземи",
+    "girl": "момиче",
+    "good": "добър",
+    "he": "той",
+    "headquarters": "централа",
+    "hero": "герой",
+    "identity": "самоличност",
+    "i": "аз",
+    "is": "е",
+    "it": "то",
+    "junior": "младши",
+    "label": "етикет",
+    "license": "лиценз",
+    "man": "мъж",
+    "map": "карта",
+    "means": "означава",
+    "mission": "мисия",
+    "mother": "майка",
+    "name": "име",
+    "need": "имам нужда",
+    "needs": "има нужда",
+    "next": "следващ",
+    "old": "стар",
+    "on": "на",
+    "person": "човек",
+    "plan": "план",
+    "profile": "профил",
+    "ready": "готов",
+    "read": "прочети",
+    "scanner": "скенер",
+    "screen": "екран",
+    "secret": "таен",
+    "she": "тя",
+    "shows": "показва",
+    "sister": "сестра",
+    "stays": "остава",
+    "still": "още",
+    "subjects": "субекти",
+    "suspects": "заподозрени",
+    "table": "маса",
+    "the": "the",
+    "they": "те",
+    "this": "това",
+    "together": "заедно",
+    "training": "тренировка",
+    "what": "какво",
+    "wall": "стена",
+    "who": "кой",
+    "woman": "жена",
+    "world": "свят",
+    "young": "млад",
+    "you": "ти",
+    "your": "твой"
+  },
+  "guide": {
+    "speaker": "Director",
+    "position": { "x": 870, "y": 470 },
+    "required_items": ["agent_badge", "dossier_clue", "profile_form"],
+    "walk_to": { "x": 826, "y": 506 },
+    "locked_text": "Collect your agent badge, dossier clue, and profile form first.",
+    "locked_text_bg": "Първо вземи агентската значка, следата от досието и профилния формуляр.",
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Director",
+          "npc_text": "Final check. Who are you?",
+          "npc_text_bg": "Последна проверка. Кой си ти?",
+          "options": [
+            {
+              "text": "I am Agent Alex.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "He is Agent Alex.",
+              "is_correct": false,
+              "feedback_bg": "Когато говориш за себе си, използвай I am."
+            },
+            {
+              "text": "They are Agent Alex.",
+              "is_correct": false,
+              "feedback_bg": "They are е за повече от един човек."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Director",
+          "npc_text": "Good. What is it on the big screen?",
+          "npc_text_bg": "Добре. Какво е това на големия екран?",
+          "options": [
+            {
+              "text": "It is the mission plan.",
+              "is_correct": true,
+              "action": {
+                "type": "set_flag",
+                "flag": "training_door_open",
+                "status_text": "Training door open",
+                "toast": "Mission 01 ready!"
+              }
+            },
+            {
+              "text": "They is the mission plan.",
+              "is_correct": false,
+              "feedback_bg": "They върви с are, но тук говорим за едно нещо: It is."
+            },
+            {
+              "text": "It are the mission plan.",
+              "is_correct": false,
+              "feedback_bg": "It е единствено число, затова използваме is."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "training_door",
+    "label": "training door",
+    "x": 58,
+    "y": 300,
+    "zone": { "width": 96, "height": 150 },
+    "walk_to": { "x": 126, "y": 432 },
+    "required_flag": "training_door_open",
+    "command": "Walk to training door",
+    "locked_speaker": "Alex",
+    "locked_text": "The scanner stays closed. I need the director's approval first.",
+    "locked_text_bg": "Скенерът остава затворен. Първо ми трябва одобрението на директора.",
+    "unlocked_command": "The training door is open!",
+    "unlocked_status": "Training door open",
+    "unlocked_toast": "Next mission would load here."
+  },
+  "hotspots": [
+    {
+      "id": "agent_badge",
+      "kind": "collectible",
+      "label": "agent badge",
+      "english": "badge",
+      "bg": "значка",
+      "x": 126,
+      "y": 170,
+      "walk_to": { "x": 154, "y": 448 },
+      "radius": 38,
+      "intro": {
+        "text": "An agent badge is ready on the wall. It needs your name.",
+        "bg": "Агентска значка е готова на стената. Тя има нужда от твоето име.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Агентска значка е готова на стената. Тя има нужда от твоето име.", "isCorrect": true },
+            { "text": "Световна карта е готова на стената. Тя има нужда от мисия." },
+            { "text": "Профилен формуляр е на масата. Той има нужда от семейна папка." }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "name",
+        "curriculum_source": "James Bond Level 01",
+        "curriculum_stage": "new",
+        "grammar_targets": ["verb be: I am", "verb be: it is", "identity question: What is it?"],
+        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+      },
+      "presentation": { "hero_expression": "smile", "portrait_frame": 1 }
+    },
+    {
+      "id": "dossier_clue",
+      "kind": "collectible",
+      "label": "dossier board",
+      "english": "dossier",
+      "bg": "досие",
+      "x": 292,
+      "y": 190,
+      "walk_to": { "x": 306, "y": 414 },
+      "radius": 72,
+      "intro": {
+        "text": "The dossier board shows agents and suspects. Who is this?",
+        "bg": "Дъската с досиета показва агенти и заподозрени. Кой е това?",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Дъската с досиета показва агенти и заподозрени. Кой е това?", "isCorrect": true },
+            { "text": "Скенерът показва значка и врата. Какво е това?" },
+            { "text": "Масата за брифинг показва семейство и приятели. Къде е това?" }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "boy/girl/man/woman",
+        "curriculum_source": "James Bond Level 01",
+        "curriculum_stage": "new",
+        "grammar_targets": ["verb be: he is", "verb be: she is", "identity question: Who is this?"],
+        "exercise_types": ["picture-to-word", "sentence choice", "grammar gap-fill"]
+      },
+      "presentation": { "hero_expression": "curious", "portrait_frame": 3 }
+    },
+    {
+      "id": "profile_form",
+      "kind": "collectible",
+      "label": "profile form",
+      "english": "profile",
+      "bg": "профил",
+      "x": 560,
+      "y": 348,
+      "walk_to": { "x": 454, "y": 526 },
+      "radius": 42,
+      "intro": {
+        "text": "A profile form is on the briefing table. Complete the family file.",
+        "bg": "Профилен формуляр е на масата за брифинг. Попълни семейната папка.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Профилен формуляр е на масата за брифинг. Попълни семейната папка.", "isCorrect": true },
+            { "text": "Агентска значка е до скенера. Попълни тайния екран." },
+            { "text": "Дъската с досиета е на стената. Попълни тренировъчната врата." }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "family/friend/brother/sister",
+        "curriculum_source": "James Bond Level 01",
+        "curriculum_stage": "new",
+        "grammar_targets": ["verb be: they are", "yes/no questions with be", "identity words"],
+        "exercise_types": ["word choice", "sentence choice", "grammar gap-fill"]
+      },
+      "presentation": { "hero_expression": "thinking", "portrait_frame": 5 }
+    },
+    {
+      "id": "mission_screen",
+      "kind": "scenery",
+      "label": "mission screen",
+      "english": "mission screen",
+      "bg": "екран на мисията",
+      "x": 690,
+      "y": 192,
+      "walk_to": { "x": 674, "y": 368 },
+      "radius": 78,
+      "interaction": "view",
+      "description": {
+        "text": "This is the mission plan. First get the badge, then read the dossier and complete the profile.",
+        "bg": "Това е планът на мисията. Първо вземи значката, после прочети досието и попълни профила."
+      }
+    },
+    {
+      "id": "briefing_table",
+      "kind": "scenery",
+      "label": "briefing table",
+      "english": "table",
+      "bg": "маса",
+      "x": 700,
+      "y": 430,
+      "walk_to": { "x": 826, "y": 526 },
+      "radius": 62,
+      "interaction": "view",
+      "description": {
+        "text": "The briefing table is big. The profile folder is on the table.",
+        "bg": "Масата за брифинг е голяма. Профилната папка е на масата."
+      }
+    },
+    {
+      "id": "world_map",
+      "kind": "scenery",
+      "label": "world map",
+      "english": "map",
+      "bg": "карта",
+      "x": 940,
+      "y": 170,
+      "walk_to": { "x": 820, "y": 386 },
+      "radius": 48,
+      "interaction": "view",
+      "description": {
+        "text": "A world map is on the wall. The next mission is still secret.",
+        "bg": "Световна карта е на стената. Следващата мисия още е тайна."
+      }
+    }
+  ],
+  "quizzes": {
+    "agent_badge": [
+      {
+        "id": "badge-name-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Badge challenge 1/3. Which word means the person label on a badge?",
+        "bg": "Предизвикателство със значка 1/3. Коя дума означава етикета на човека върху значка?",
+        "options": [
+          { "text": "name", "isCorrect": true },
+          { "text": "table", "feedback": "Table е предмет. На значката пише име: name." },
+          { "text": "door", "feedback": "Door е врата. Тук търсим name." }
+        ]
+      },
+      {
+        "id": "badge-i-am",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "verb be: I am",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Badge challenge 2/3. I ___ Agent Alex.",
+        "bg": "Предизвикателство със значка 2/3. Аз ___ агент Алекс.",
+        "options": [
+          { "text": "am", "isCorrect": true },
+          { "text": "is", "feedback": "Is е за he/she/it. С I използваме am." },
+          { "text": "are", "feedback": "Are е за you/we/they. С I използваме am." }
+        ]
+      },
+      {
+        "id": "badge-what-is-it",
+        "exercise_type": "sentence choice",
+        "grammar_target": "identity question: What is it?",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Badge challenge 3/3. Choose the best answer.",
+        "bg": "Предизвикателство със значка 3/3. Избери най-добрия отговор.",
+        "options": [
+          { "text": "It is a badge.", "isCorrect": true },
+          { "text": "He is a badge.", "feedback": "He е за момче или мъж. Badge е предмет, затова: It is a badge." },
+          { "text": "They is a badge.", "feedback": "They не върви с is. За един предмет: It is a badge." }
+        ]
+      }
+    ],
+    "dossier_clue": [
+      {
+        "id": "dossier-who-question",
+        "exercise_type": "question choice",
+        "grammar_target": "identity question: Who is this?",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Dossier challenge 1/3. Which question asks about a person?",
+        "bg": "Предизвикателство с досие 1/3. Кой въпрос пита за човек?",
+        "options": [
+          { "text": "Who is this?", "isCorrect": true },
+          { "text": "What is it?", "feedback": "What is it? пита за предмет. За човек питаме: Who is this?" },
+          { "text": "Where is this?", "feedback": "Where пита за място. За човек питаме: Who is this?" }
+        ]
+      },
+      {
+        "id": "dossier-boy-girl",
+        "exercise_type": "sentence choice",
+        "grammar_target": "verb be: he/she is",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Dossier challenge 2/3. Choose the best sentence for a boy.",
+        "bg": "Предизвикателство с досие 2/3. Избери най-доброто изречение за момче.",
+        "options": [
+          { "text": "He is a boy.", "isCorrect": true },
+          { "text": "She is a boy.", "feedback": "She е за момиче или жена. За момче използваме He." },
+          { "text": "They is a boy.", "feedback": "They е за повече от един човек и не върви с is." }
+        ]
+      },
+      {
+        "id": "dossier-old-young",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "verb be: she is",
+        "difficulty": 2,
+        "curriculum_stage": "new",
+        "text": "Dossier challenge 3/3. She ___ a good agent.",
+        "bg": "Предизвикателство с досие 3/3. Тя ___ добър агент.",
+        "options": [
+          { "text": "is", "isCorrect": true },
+          { "text": "am", "feedback": "Am се използва с I. С she използваме is." },
+          { "text": "are", "feedback": "Are е за you/we/they. С she използваме is." }
+        ]
+      }
+    ],
+    "profile_form": [
+      {
+        "id": "profile-family-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Profile challenge 1/3. Which word means brother, sister, mother, and father together?",
+        "bg": "Предизвикателство с профил 1/3. Коя дума означава брат, сестра, майка и баща заедно?",
+        "options": [
+          { "text": "family", "isCorrect": true },
+          { "text": "friend", "feedback": "Friend е приятел. Brother and sister are family." },
+          { "text": "badge", "feedback": "Badge е значка. Тук търсим family." }
+        ]
+      },
+      {
+        "id": "profile-they-are",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "verb be: they are",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Profile challenge 2/3. They ___ brother and sister.",
+        "bg": "Предизвикателство с профил 2/3. Те ___ брат и сестра.",
+        "options": [
+          { "text": "are", "isCorrect": true },
+          { "text": "is", "feedback": "They е за повече от един човек, затова използваме are." },
+          { "text": "am", "feedback": "Am се използва само с I." }
+        ]
+      },
+      {
+        "id": "profile-are-they",
+        "exercise_type": "question choice",
+        "grammar_target": "yes/no questions with be",
+        "difficulty": 2,
+        "curriculum_stage": "new",
+        "text": "Profile challenge 3/3. Choose the correct question.",
+        "bg": "Предизвикателство с профил 3/3. Избери правилния въпрос.",
+        "options": [
+          { "text": "Are they friends?", "isCorrect": true },
+          { "text": "Is they friends?", "feedback": "They върви с are: Are they friends?" },
+          { "text": "They are friends?", "feedback": "За въпрос поставяме Are пред they." }
+        ]
+      }
+    ]
+  }
+}
