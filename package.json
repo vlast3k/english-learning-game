@@ -4,10 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm run test:content && npm run test:assets && npm run test:browser",
+    "test": "npm run test:content && npm run test:engine && npm run test:assets && npm run test:browser",
     "test:content": "node tools/validate-game-content.mjs",
-    "test:assets": "python3 tools/validate_character_sprites.py && node --check phaser-game.js && node --check phaser-content.js",
-    "test:browser": "node tools/browser-smoke-test.mjs",
+    "test:engine": "node tools/validate-game-engine.mjs",
+    "test:assets": "python3 tools/validate_character_sprites.py && node --check phaser-game.js && node --check phaser-content.js && node --check game-engine/runtime.js && node --check game-engine/phaser-bridge.js",
+    "test:browser": "npm run test:browser:base && npm run test:browser:bond",
+    "test:browser:base": "node tools/run-browser-smoke-test.mjs",
+    "test:browser:bond": "node tools/bond-engine-browser-test.mjs",
     "serve": "python3 -m http.server 9231"
   },
   "devDependencies": {
