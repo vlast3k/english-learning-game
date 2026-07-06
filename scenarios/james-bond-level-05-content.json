@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "james-bond-level-05",
-  "content_version": "2026-07-06",
+  "content_version": "2026-07-06-q-lab-png-1",
   "level_plan": {
     "title": "Q's Lab",
     "mission": "The hero visits Q's lab to check their spy gadgets and learn how to use have, has, and possessives.",
@@ -47,15 +47,15 @@
     ]
   },
   "assets": {
-    "background": "assets/phaser/camp-bg-painted.png",
+    "background": "assets/james-bond/level-05-q-lab/generated/q-lab-background.png",
     "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
     "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
     "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
-    "interactive_props": "assets/james-bond/level-04-animal-trail/interactive-props.svg"
+    "interactive_props": "assets/james-bond/level-05-q-lab/generated/interactive-props.png"
   },
   "presentation": {
     "character_scale_multiplier": 1.72,
-    "guide_scale_multiplier": 1.9
+    "guide_scale_multiplier": 1.72
   },
   "hero_start": { "x": 244, "y": 512 },
   "hud": {
@@ -102,9 +102,9 @@
     ],
     "clearance": 28,
     "obstacles": [
-      { "id": "left_bush", "x1": 0, "y1": 312, "x2": 180, "y2": 450 },
-      { "id": "camp_table", "x1": 384, "y1": 384, "x2": 652, "y2": 514 },
-      { "id": "right_trees", "x1": 812, "y1": 282, "x2": 1000, "y2": 450 }
+      { "id": "left_cabinets", "x1": 0, "y1": 266, "x2": 92, "y2": 418 },
+      { "id": "gadget_table", "x1": 354, "y1": 318, "x2": 884, "y2": 462 },
+      { "id": "security_door_frame", "x1": 892, "y1": 164, "x2": 1016, "y2": 430 }
     ]
   },
   "translations": {
@@ -224,9 +224,9 @@
   },
   "guide": {
     "speaker": "Agent Q",
-    "position": { "x": 820, "y": 430 },
+    "position": { "x": 800, "y": 430 },
     "required_items": ["gadget_watch", "gadget_glasses", "gadget_jacket"],
-    "walk_to": { "x": 750, "y": 460 },
+    "walk_to": { "x": 760, "y": 462 },
     "locked_text": "Verify the watch, glasses, and jacket first.",
     "locked_text_bg": "Първо провери часовника, очилата и якето.",
     "completed_messages": [
@@ -289,9 +289,9 @@
     "id": "security_door",
     "label": "security door",
     "x": 950,
-    "y": 330,
-    "zone": { "width": 110, "height": 170 },
-    "walk_to": { "x": 880, "y": 460 },
+    "y": 260,
+    "zone": { "width": 118, "height": 278 },
+    "walk_to": { "x": 882, "y": 462 },
     "required_flag": "security_door_open",
     "command": "Walk to security door",
     "locked_speaker": "Alex",
@@ -314,14 +314,14 @@
       "label": "briefing board",
       "english": "board",
       "bg": "дъска",
-      "x": 180,
-      "y": 350,
-      "walk_to": { "x": 230, "y": 440 },
-      "radius": 35,
+      "x": 190,
+      "y": 168,
+      "walk_to": { "x": 226, "y": 438 },
+      "radius": 92,
       "interaction": "view",
       "scene_icon": {
         "texture": "interactiveProps",
-        "frame": { "x": 768, "y": 0, "width": 256, "height": 256 },
+        "frame": { "x": 1152, "y": 0, "width": 384, "height": 512 },
         "size": 74
       },
       "description": {
@@ -335,10 +335,10 @@
       "label": "spy watch",
       "english": "watch",
       "bg": "часовник",
-      "x": 350,
-      "y": 390,
-      "walk_to": { "x": 350, "y": 460 },
-      "radius": 30,
+      "x": 472,
+      "y": 318,
+      "walk_to": { "x": 430, "y": 462 },
+      "radius": 38,
       "intro": {
         "text": "You find Q's watch. I have a small watch on my hand.",
         "bg": "Намираш часовника на Q. Аз имам малък часовник на ръката си.",
@@ -363,7 +363,7 @@
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 512, "y": 0, "width": 256, "height": 256 }
+          "frame": { "x": 0, "y": 0, "width": 384, "height": 512 }
         }
       },
       "presentation": { "hero_expression": "happy", "portrait_frame": 4 }
@@ -374,10 +374,10 @@
       "label": "x-ray glasses",
       "english": "glasses",
       "bg": "очила",
-      "x": 520,
-      "y": 390,
-      "walk_to": { "x": 520, "y": 460 },
-      "radius": 30,
+      "x": 585,
+      "y": 318,
+      "walk_to": { "x": 560, "y": 462 },
+      "radius": 38,
       "intro": {
         "text": "These are his glasses. Do you have glasses to see in the dark?",
         "bg": "Това са неговите очила. Имаш ли очила, за да виждаш в тъмното?",
@@ -402,7 +402,7 @@
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 768, "y": 0, "width": 256, "height": 256 }
+          "frame": { "x": 384, "y": 0, "width": 384, "height": 512 }
         }
       },
       "presentation": { "hero_expression": "focused", "portrait_frame": 2 }
@@ -413,10 +413,10 @@
       "label": "stealth jacket",
       "english": "jacket",
       "bg": "яке",
-      "x": 650,
-      "y": 390,
-      "walk_to": { "x": 650, "y": 460 },
-      "radius": 30,
+      "x": 705,
+      "y": 318,
+      "walk_to": { "x": 700, "y": 462 },
+      "radius": 42,
       "intro": {
         "text": "He has a big jacket. He doesn't have boots in his car.",
         "bg": "Той има голямо яке. Той няма ботуши в своята кола.",
@@ -441,7 +441,7 @@
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 0, "y": 256, "width": 256, "height": 256 }
+          "frame": { "x": 768, "y": 0, "width": 384, "height": 512 }
         }
       },
       "presentation": { "hero_expression": "thinking", "portrait_frame": 3 }

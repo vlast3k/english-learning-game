@@ -4,32 +4,45 @@
     "type": "background",
     "size": "1024x576",
     "path": "assets/james-bond/level-05-q-lab/generated/q-lab-background.png",
-    "style": "painted kid-friendly spy laboratory, full of gadgets and technology, bright, no text",
-    "prompt": "2D point and click cartoon adventure background, futuristic high tech agent laboratory, camp table, wall panels with blueprint schematics, warm colors, no text, safe for kids"
+    "style": "warm hand-painted Junior Agent Spy Academy gadget laboratory, readable point-and-click zones, no readable text",
+    "prompt_file": "assets/james-bond/level-05-q-lab/prompts/q-lab-background.md",
+    "hotspot_alignment": {
+      "briefing_board": { "x": 190, "y": 168 },
+      "gadget_watch": { "x": 472, "y": 318 },
+      "gadget_glasses": { "x": 585, "y": 318 },
+      "gadget_jacket": { "x": 705, "y": 318 },
+      "agent_q": { "x": 800, "y": 430 },
+      "security_door": { "x": 950, "y": 260 }
+    }
   },
   {
     "id": "agent_q_spritesheet",
     "type": "guide_spritesheet",
-    "path": "assets/james-bond/level-05-q-lab/generated/agent-q-spritesheet.png",
-    "style": "cartoon scientist guide character, white lab coat, friendly look",
-    "prompt": "character spritesheet, friendly scientist guide, 2D cartoon style, white lab coat, standing idle animation frames, transparent background"
+    "size": "768x660",
+    "frame_size": "192x220",
+    "layout": "4x3",
+    "path": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "style": "reuse existing polished guide sheet until a matching-quality Agent Q sheet is produced",
+    "decision": "The dedicated PR guide art was rejected. Reusing a proven bitmap guide avoids lowering scene quality."
   },
   {
-    "id": "gadget_watch",
-    "type": "prop",
+    "id": "q_lab_interactive_props",
+    "type": "prop_atlas",
+    "size": "1536x1024",
+    "cell_size": "384x512",
+    "layout": "4x2",
     "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
-    "style": "spy watch, glowing hologram screen, cartoon style"
-  },
-  {
-    "id": "gadget_glasses",
-    "type": "prop",
-    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
-    "style": "x-ray glasses, red lenses, high tech frame"
-  },
-  {
-    "id": "gadget_jacket",
-    "type": "prop",
-    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
-    "style": "sleek agent stealth jacket, dark blue with glowing lights"
+    "style": "painted parchment inventory atlas matching existing spy prop PNGs",
+    "prompt_file": "assets/james-bond/level-05-q-lab/prompts/interactive-props.md",
+    "cells": [
+      { "id": "gadget_watch", "x": 0, "y": 0 },
+      { "id": "gadget_glasses", "x": 384, "y": 0 },
+      { "id": "gadget_jacket", "x": 768, "y": 0 },
+      { "id": "briefing_board", "x": 1152, "y": 0 },
+      { "id": "agent_hat", "x": 0, "y": 512 },
+      { "id": "spy_boots", "x": 384, "y": 512 },
+      { "id": "compact_car", "x": 768, "y": 512 },
+      { "id": "security_door", "x": 1152, "y": 512 }
+    ]
   }
 ]
