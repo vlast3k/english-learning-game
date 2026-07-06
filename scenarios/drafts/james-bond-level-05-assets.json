@@ -3,46 +3,33 @@
     "id": "q_lab_background",
     "type": "background",
     "size": "1024x576",
-    "path": "assets/james-bond/level-05-q-lab/generated/q-lab-background.svg",
-    "style": "painted kid-friendly gadget laboratory matching the established Phaser backgrounds",
-    "prompt_file": "assets/james-bond/level-05-q-lab/prompts/q-lab-background.md",
-    "hotspot_alignment": {
-      "briefing_board": { "x": 294, "y": 205 },
-      "gadget_watch": { "x": 535, "y": 365 },
-      "gadget_glasses": { "x": 650, "y": 365 },
-      "gadget_jacket": { "x": 760, "y": 365 },
-      "agent_q": { "x": 835, "y": 486 },
-      "security_door": { "x": 950, "y": 286 }
-    }
+    "path": "assets/james-bond/level-05-q-lab/generated/q-lab-background.png",
+    "style": "painted kid-friendly spy laboratory, full of gadgets and technology, bright, no text",
+    "prompt": "2D point and click cartoon adventure background, futuristic high tech agent laboratory, camp table, wall panels with blueprint schematics, warm colors, no text, safe for kids"
   },
   {
     "id": "agent_q_spritesheet",
     "type": "guide_spritesheet",
-    "size": "768x660",
-    "frame_size": "192x220",
-    "layout": "4x3",
-    "path": "assets/james-bond/level-05-q-lab/generated/agent-q-spritesheet.svg",
-    "style": "friendly original inventor guide with gray hair, lab coat, teal vest",
-    "prompt_file": "assets/james-bond/level-05-q-lab/prompts/agent-q-spritesheet.md"
+    "path": "assets/james-bond/level-05-q-lab/generated/agent-q-spritesheet.png",
+    "style": "cartoon scientist guide character, white lab coat, friendly look",
+    "prompt": "character spritesheet, friendly scientist guide, 2D cartoon style, white lab coat, standing idle animation frames, transparent background"
   },
   {
-    "id": "q_lab_interactive_props",
-    "type": "prop_atlas",
-    "size": "1536x1024",
-    "cell_size": "384x512",
-    "layout": "4x2",
-    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.svg",
-    "style": "storybook laboratory inventory props on parchment",
-    "prompt_file": "assets/james-bond/level-05-q-lab/prompts/interactive-props.md",
-    "cells": [
-      { "id": "gadget_watch", "x": 0, "y": 0 },
-      { "id": "gadget_glasses", "x": 384, "y": 0 },
-      { "id": "gadget_jacket", "x": 768, "y": 0 },
-      { "id": "briefing_board", "x": 1152, "y": 0 },
-      { "id": "agent_hat", "x": 0, "y": 512 },
-      { "id": "spy_boots", "x": 384, "y": 512 },
-      { "id": "compact_car", "x": 768, "y": 512 },
-      { "id": "security_door", "x": 1152, "y": 512 }
-    ]
+    "id": "gadget_watch",
+    "type": "prop",
+    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
+    "style": "spy watch, glowing hologram screen, cartoon style"
+  },
+  {
+    "id": "gadget_glasses",
+    "type": "prop",
+    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
+    "style": "x-ray glasses, red lenses, high tech frame"
+  },
+  {
+    "id": "gadget_jacket",
+    "type": "prop",
+    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
+    "style": "sleek agent stealth jacket, dark blue with glowing lights"
   }
 ]
