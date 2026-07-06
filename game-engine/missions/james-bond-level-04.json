@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-04",
+  "mission_puzzle": "level04_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level04_understand_mission",
+      "title": "Read the animal field board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level04.mission_understood"]
+    },
+    {
+      "id": "level04_animal_report",
+      "title": "Read the animal report",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level04_understand_mission", "status": "completed" },
+      "produces": ["level04.animal_report_collected"]
+    },
+    {
+      "id": "level04_meat_bowl",
+      "title": "Check what the animal eats",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level04_understand_mission", "status": "completed" },
+      "produces": ["level04.meat_bowl_collected"]
+    },
+    {
+      "id": "level04_trail_camera",
+      "title": "Check the trail camera",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level04_understand_mission", "status": "completed" },
+      "produces": ["level04.trail_camera_collected"]
+    },
+    {
+      "id": "level04_ranger_check",
+      "title": "Pass Ranger Nadia's animal check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level04_animal_report", "status": "completed" },
+          { "puzzle": "level04_meat_bowl", "status": "completed" },
+          { "puzzle": "level04_trail_camera", "status": "completed" }
+        ]
+      },
+      "produces": ["level04.ranger_approved"]
+    },
+    {
+      "id": "level04_quiet_gate",
+      "title": "Pass through the base gate",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level04_ranger_check", "status": "completed" },
+      "produces": ["level04.complete", "level05.unlocked"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level04-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-04" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level04_understand_mission" }]
+    },
+    {
+      "id": "level04-collect-animal_report",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "animal_report" },
+      "condition": { "puzzle": "level04_animal_report", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "animal_report" },
+        { "type": "puzzle.complete", "puzzle": "level04_animal_report" },
+        { "type": "ui.vocab.show", "hotspot": "animal_report" }
+      ]
+    },
+    {
+      "id": "level04-collect-meat_bowl",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "meat_bowl" },
+      "condition": { "puzzle": "level04_meat_bowl", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "meat_bowl" },
+        { "type": "puzzle.complete", "puzzle": "level04_meat_bowl" },
+        { "type": "ui.vocab.show", "hotspot": "meat_bowl" }
+      ]
+    },
+    {
+      "id": "level04-collect-trail_camera",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "trail_camera" },
+      "condition": { "puzzle": "level04_trail_camera", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "trail_camera" },
+        { "type": "puzzle.complete", "puzzle": "level04_trail_camera" },
+        { "type": "ui.vocab.show", "hotspot": "trail_camera" }
+      ]
+    },
+    {
+      "id": "level04-ranger-opens-gate",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "ranger_nadia" },
+      "condition": { "puzzle": "level04_ranger_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level04_ranger_check" },
+        { "type": "flag.set", "flag": "quiet_gate_open", "value": true },
+        { "type": "ui.status.set", "text": "Base gate open" },
+        { "type": "ui.toast", "text": "Use it in the morning!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level04-quiet-gate-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "quiet_gate" },
+      "condition": { "not": { "puzzle": "level04_ranger_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The gate is closed. I need Ranger Nadia's animal check first.",
+          "bg": "Портата е затворена. Първо ми трябва проверката на рейнджър Надя за животното."
+        }
+      ]
+    },
+    {
+      "id": "level04-complete-animal-trail",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "quiet_gate" },
+      "condition": { "puzzle": "level04_ranger_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level04_quiet_gate" },
+        { "type": "fact.set", "fact": "level04.complete", "value": true },
+        { "type": "fact.set", "fact": "level05.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to Q's Lab" },
+        { "type": "ui.toast", "text": "Mission 05 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-05-content.json", "delay_ms": 450 }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "animal_report": { "puzzle_id": "level04_animal_report" },
+      "meat_bowl": { "puzzle_id": "level04_meat_bowl" },
+      "trail_camera": { "puzzle_id": "level04_trail_camera" }
+    },
+    "guide": { "id": "ranger_nadia", "puzzle_id": "level04_ranger_check" },
+    "exit": {
+      "id": "quiet_gate",
+      "puzzle_id": "level04_quiet_gate",
+      "requires_puzzle": "level04_ranger_check"
+    }
+  }
+}

@@ -59,8 +59,14 @@ function collectTranslatableTexts(content) {
   const texts = [];
   texts.push({ pathLabel: "level_plan.mission", text: content.level_plan.mission });
   for (const hotspot of content.hotspots) {
+    if (hotspot.locked_text) {
+      texts.push({ pathLabel: `${hotspot.id}.locked_text`, text: hotspot.locked_text });
+    }
     if (hotspot.kind === "collectible") {
       texts.push({ pathLabel: `${hotspot.id}.intro.text`, text: hotspot.intro.text });
+      if (hotspot.inventory?.detail?.text) {
+        texts.push({ pathLabel: `${hotspot.id}.inventory.detail.text`, text: hotspot.inventory.detail.text });
+      }
     } else {
       texts.push({ pathLabel: `${hotspot.id}.description.text`, text: hotspot.description.text });
     }
@@ -71,6 +77,11 @@ function collectTranslatableTexts(content) {
     }
   }
   texts.push({ pathLabel: "guide.locked_text", text: content.guide.locked_text });
+  for (const [index, message] of (content.guide.completed_messages || []).entries()) {
+    if (message.text) {
+      texts.push({ pathLabel: `guide.completed_messages[${index}].text`, text: message.text });
+    }
+  }
   if (content.guide.dialogue_tree) {
     for (const [nodeId, node] of Object.entries(content.guide.dialogue_tree.nodes)) {
       texts.push({ pathLabel: `guide.dialogue_tree.nodes.${nodeId}.npc_text`, text: node.npc_text });
@@ -78,6 +89,24 @@ function collectTranslatableTexts(content) {
   }
   if (content.exit_marker?.locked_text) {
     texts.push({ pathLabel: "exit_marker.locked_text", text: content.exit_marker.locked_text });
+  }
+  for (const [index, prompt] of (content.state_prompts || []).entries()) {
+    if (prompt.status_text) {
+      texts.push({ pathLabel: `state_prompts[${index}].status_text`, text: prompt.status_text });
+    }
+    if (prompt.command_text) {
+      texts.push({ pathLabel: `state_prompts[${index}].command_text`, text: prompt.command_text });
+    }
+  }
+  if (content.assistant) {
+    if (content.assistant.complete_text) {
+      texts.push({ pathLabel: "assistant.complete_text", text: content.assistant.complete_text });
+    }
+    for (const [puzzleId, hint] of Object.entries(content.assistant.hints || {})) {
+      if (hint.text) {
+        texts.push({ pathLabel: `assistant.hints.${puzzleId}.text`, text: hint.text });
+      }
+    }
   }
   return texts;
 }
@@ -104,6 +133,32 @@ function validateTranslationCheck(translationCheck, pathLabel) {
   }
   for (const [optionIndex, option] of translationCheck.options.entries()) {
     requireString(option.text, `${pathLabel}.options[${optionIndex}].text`);
+  }
+}
+
+function validateInventoryPresentation(hotspot, pathLabel) {
+  if (!hotspot.inventory) {
+    return;
+  }
+  if (hotspot.inventory.detail !== undefined) {
+    requireString(hotspot.inventory.detail?.text, `${pathLabel}.inventory.detail.text`);
+    requireString(hotspot.inventory.detail?.bg, `${pathLabel}.inventory.detail.bg`);
+  }
+  if (hotspot.inventory.icon !== undefined) {
+    const icon = hotspot.inventory.icon;
+    requireString(icon.texture || icon.source, `${pathLabel}.inventory.icon.texture`);
+    const frame = icon.frame;
+    if (!frame || typeof frame !== "object") {
+      fail(`${pathLabel}.inventory.icon.frame must be an object`);
+    }
+    for (const field of ["x", "y", "width", "height"]) {
+      if (!Number.isFinite(frame[field])) {
+        fail(`${pathLabel}.inventory.icon.frame.${field} must be numeric`);
+      }
+    }
+    if (frame.width <= 0 || frame.height <= 0) {
+      fail(`${pathLabel}.inventory.icon.frame must have positive width and height`);
+    }
   }
 }
 
@@ -148,6 +203,7 @@ function validateContent(content, fileLabel) {
         hotspot.intro?.translation_check,
         `${fileLabel}.${hotspot.id}.intro.translation_check`,
       );
+      validateInventoryPresentation(hotspot, `${fileLabel}.${hotspot.id}`);
       requireString(hotspot.learning?.vocabulary_target, `${fileLabel}.${hotspot.id}.learning.vocabulary_target`);
       requireString(hotspot.learning?.curriculum_source, `${fileLabel}.${hotspot.id}.learning.curriculum_source`);
       if (!Array.isArray(hotspot.learning?.grammar_targets) || hotspot.learning.grammar_targets.length === 0) {
@@ -239,6 +295,24 @@ function validateContent(content, fileLabel) {
     requireString(content.exit_marker.locked_text_bg, `${fileLabel}.exit_marker.locked_text_bg`);
     requirePoint(content.exit_marker, `${fileLabel}.exit_marker`);
     requirePoint(content.exit_marker.walk_to, `${fileLabel}.exit_marker.walk_to`);
+  }
+
+  if (content.assistant !== undefined) {
+    requireString(content.assistant.speaker, `${fileLabel}.assistant.speaker`);
+    if (content.assistant.complete_text !== undefined) {
+      requireString(content.assistant.complete_text, `${fileLabel}.assistant.complete_text`);
+      requireString(content.assistant.complete_bg, `${fileLabel}.assistant.complete_bg`);
+    }
+    if (content.assistant.fallback_bg !== undefined) {
+      requireString(content.assistant.fallback_bg, `${fileLabel}.assistant.fallback_bg`);
+    }
+    if (!content.assistant.hints || typeof content.assistant.hints !== "object") {
+      fail(`${fileLabel}.assistant.hints must be an object`);
+    }
+    for (const [puzzleId, hint] of Object.entries(content.assistant.hints)) {
+      requireString(hint.text, `${fileLabel}.assistant.hints.${puzzleId}.text`);
+      requireString(hint.bg, `${fileLabel}.assistant.hints.${puzzleId}.bg`);
+    }
   }
 
   if (content.guide.dialogue_tree) {

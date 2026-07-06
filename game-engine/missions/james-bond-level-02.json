@@ -1,1 +1,256 @@
-{"schema_version":1,"campaign_id":"junior-agent-spy-academy","storage_key":"english-game:junior-agent-spy-academy","scene_id":"james-bond-level-02","mission_puzzle":"level02_understand_mission","debug":{"enabled":true},"initial_state":{"facts":{},"inventory":[],"counters":{},"puzzles":{}},"puzzles":[{"id":"level02_understand_mission","title":"Understand the safe flat mission","type":"mission_briefing","requires":null,"produces":["level02.mission_understood"]},{"id":"level02_phone_clue","title":"Report the phone on the desk","type":"learning_puzzle","requires":{"puzzle":"level02_understand_mission","status":"completed"},"produces":["level02.phone_clue_collected"]},{"id":"level02_camera_clue","title":"Find the camera behind the curtain","type":"learning_puzzle","requires":{"puzzle":"level02_understand_mission","status":"completed"},"produces":["level02.camera_clue_collected"]},{"id":"level02_hidden_bag","title":"Find the bag under the chair","type":"learning_puzzle","requires":{"puzzle":"level02_understand_mission","status":"completed"},"produces":["level02.hidden_bag_collected"]},{"id":"level02_director_check","title":"Pass the director room check","type":"gate","requires":{"all":[{"puzzle":"level02_phone_clue","status":"completed"},{"puzzle":"level02_camera_clue","status":"completed"},{"puzzle":"level02_hidden_bag","status":"completed"}]},"produces":["level02.director_approved"]},{"id":"level02_complete_surveillance","title":"Complete the safe flat watch","type":"scene_exit","critical":true,"final":true,"requires":{"puzzle":"level02_director_check","status":"completed"},"produces":["level02.complete"]}],"rules":[{"id":"level02-mission-understood","once":true,"event":{"type":"mission.understood","target":"james-bond-level-02"},"actions":[{"type":"puzzle.complete","puzzle":"level02_understand_mission"}]},{"id":"level02-collect-phone_clue","once":true,"event":{"type":"collectible.completed","target":"phone_clue"},"condition":{"puzzle":"level02_phone_clue","status":"available"},"actions":[{"type":"inventory.add","item":"phone_clue"},{"type":"puzzle.complete","puzzle":"level02_phone_clue"},{"type":"ui.vocab.show","hotspot":"phone_clue"}]},{"id":"level02-collect-camera_clue","once":true,"event":{"type":"collectible.completed","target":"camera_clue"},"condition":{"puzzle":"level02_camera_clue","status":"available"},"actions":[{"type":"inventory.add","item":"camera_clue"},{"type":"puzzle.complete","puzzle":"level02_camera_clue"},{"type":"ui.vocab.show","hotspot":"camera_clue"}]},{"id":"level02-collect-hidden_bag","once":true,"event":{"type":"collectible.completed","target":"hidden_bag"},"condition":{"puzzle":"level02_hidden_bag","status":"available"},"actions":[{"type":"inventory.add","item":"hidden_bag"},{"type":"puzzle.complete","puzzle":"level02_hidden_bag"},{"type":"ui.vocab.show","hotspot":"hidden_bag"}]},{"id":"level02-director-approved","once":true,"event":{"type":"guide.completed","target":"director"},"condition":{"puzzle":"level02_director_check","status":"available"},"actions":[{"type":"puzzle.complete","puzzle":"level02_director_check"},{"type":"flag.set","flag":"safe_flat_door_open","value":true},{"type":"ui.status.set","text":"Safe flat door open"},{"type":"ui.toast","text":"Surveillance report accepted!"},{"type":"exit.refresh"}]},{"id":"level02-safe-flat-door-locked","priority":10,"event":{"type":"exit.reached","target":"safe_flat_door"},"condition":{"not":{"puzzle":"level02_director_check","status":"completed"}},"stop_propagation":true,"actions":[{"type":"dialog.show","speaker":"Alex","text":"The door stays closed. I need the director's safe flat check first.","bg":"Вратата остава затворена. Първо ми трябва проверката на директора за тайния апартамент."}]},{"id":"level02-complete-surveillance","priority":20,"once":true,"event":{"type":"exit.reached","target":"safe_flat_door"},"condition":{"puzzle":"level02_director_check","status":"completed"},"actions":[{"type":"puzzle.complete","puzzle":"level02_complete_surveillance"},{"type":"fact.set","fact":"level02.complete","value":true},{"type":"campaign.complete","fact":"campaign.levels_01_02_complete","status_text":"Missions 01 and 02 complete","toast":"Excellent work, Agent Alex!"}]}],"bindings":{"hotspots":{"phone_clue":{"puzzle_id":"level02_phone_clue"},"camera_clue":{"puzzle_id":"level02_camera_clue"},"hidden_bag":{"puzzle_id":"level02_hidden_bag"}},"guide":{"id":"director","puzzle_id":"level02_director_check"},"exit":{"id":"safe_flat_door","puzzle_id":"level02_complete_surveillance","requires_puzzle":"level02_director_check"}}}
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-02",
+  "mission_puzzle": "level02_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level02_understand_mission",
+      "title": "Understand the apartment mission",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level02.mission_understood"]
+    },
+    {
+      "id": "level02_phone_clue",
+      "title": "Report the phone on the desk",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level02_understand_mission", "status": "completed" },
+      "produces": ["level02.phone_clue_collected"]
+    },
+    {
+      "id": "level02_camera_clue",
+      "title": "Find the camera behind the curtain",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level02_understand_mission", "status": "completed" },
+      "produces": ["level02.camera_clue_collected"]
+    },
+    {
+      "id": "level02_hidden_bag",
+      "title": "Find the bag under the chair",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level02_understand_mission", "status": "completed" },
+      "produces": ["level02.hidden_bag_collected"]
+    },
+    {
+      "id": "level02_director_check",
+      "title": "Pass the director room check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level02_phone_clue", "status": "completed" },
+          { "puzzle": "level02_camera_clue", "status": "completed" },
+          { "puzzle": "level02_hidden_bag", "status": "completed" }
+        ]
+      },
+      "produces": ["level02.director_approved"]
+    },
+    {
+      "id": "level02_enter_village_path",
+      "title": "Enter the friendly village path",
+      "type": "scene_exit",
+      "critical": true,
+      "requires": { "puzzle": "level02_director_check", "status": "completed" },
+      "produces": ["level02.village_path_entered", "level03.unlocked"]
+    },
+    {
+      "id": "level02_send_village_plan",
+      "title": "Send the village supply plan",
+      "type": "learning_puzzle",
+      "requires": {
+        "all": [
+          { "puzzle": "level02_understand_mission", "status": "completed" },
+          { "fact": "level02.return_unlocked", "equals": true }
+        ]
+      },
+      "produces": ["level02.village_plan_sent"]
+    },
+    {
+      "id": "level02_complete_village_loop",
+      "title": "Finish the village plan and open the animal trail",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level02_send_village_plan", "status": "completed" },
+      "produces": ["level02.return_complete", "level03.complete", "level04.unlocked"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level02-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-02" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level02_understand_mission" }]
+    },
+    {
+      "id": "level02-collect-phone_clue",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "phone_clue" },
+      "condition": { "puzzle": "level02_phone_clue", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "phone_clue" },
+        { "type": "puzzle.complete", "puzzle": "level02_phone_clue" },
+        { "type": "ui.vocab.show", "hotspot": "phone_clue" }
+      ]
+    },
+    {
+      "id": "level02-collect-camera_clue",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "camera_clue" },
+      "condition": { "puzzle": "level02_camera_clue", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "camera_clue" },
+        { "type": "puzzle.complete", "puzzle": "level02_camera_clue" },
+        { "type": "ui.vocab.show", "hotspot": "camera_clue" }
+      ]
+    },
+    {
+      "id": "level02-collect-hidden_bag",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "hidden_bag" },
+      "condition": { "puzzle": "level02_hidden_bag", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "hidden_bag" },
+        { "type": "puzzle.complete", "puzzle": "level02_hidden_bag" },
+        { "type": "ui.vocab.show", "hotspot": "hidden_bag" }
+      ]
+    },
+    {
+      "id": "level02-director-approved",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "director" },
+      "condition": { "puzzle": "level02_director_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level02_director_check" },
+        { "type": "flag.set", "flag": "safe_flat_door_open", "value": true },
+        { "type": "ui.status.set", "text": "Village path open" },
+        { "type": "ui.toast", "text": "Mission 03 unlocked!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level02-send-village-plan",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "supply_message" },
+      "condition": { "puzzle": "level02_send_village_plan", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "supply_message" },
+        { "type": "puzzle.complete", "puzzle": "level02_send_village_plan" },
+        { "type": "fact.set", "fact": "level02.village_plan_sent", "value": true },
+        { "type": "ui.vocab.show", "hotspot": "supply_message" },
+        { "type": "flag.set", "flag": "final_report_ready", "value": true },
+        { "type": "ui.status.set", "text": "Village supply plan sent" },
+        { "type": "ui.toast", "text": "Village support plan ready!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level02-safe-flat-door-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "safe_flat_door" },
+      "condition": { "not": { "puzzle": "level02_director_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The door stays closed. I need the director's apartment check first.",
+          "bg": "Вратата остава затворена. Първо ми трябва проверката на директора за тайния апартамент."
+        }
+      ]
+    },
+    {
+      "id": "level02-final-report-locked",
+      "priority": 15,
+      "event": { "type": "exit.reached", "target": "safe_flat_door" },
+      "condition": {
+        "all": [
+          { "fact": "level02.return_unlocked", "equals": true },
+          { "not": { "puzzle": "level02_send_village_plan", "status": "completed" } }
+        ]
+      },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The report is not ready. I need to send the village plan first.",
+          "bg": "Докладът не е готов. Първо трябва да изпратя плана за селото."
+        }
+      ]
+    },
+    {
+      "id": "level02-complete-village-loop",
+      "priority": 18,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "safe_flat_door" },
+      "condition": {
+        "all": [
+          { "fact": "level02.return_unlocked", "equals": true },
+          { "puzzle": "level02_send_village_plan", "status": "completed" }
+        ]
+      },
+      "stop_propagation": true,
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level02_complete_village_loop" },
+        { "type": "fact.set", "fact": "level03.complete", "value": true },
+        { "type": "fact.set", "fact": "level04.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to the animal trail" },
+        { "type": "ui.toast", "text": "Mission 04 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-04-content.json", "delay_ms": 450 }
+      ]
+    },
+    {
+      "id": "level02-enter-village-path",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "safe_flat_door" },
+      "condition": {
+        "all": [
+          { "puzzle": "level02_director_check", "status": "completed" },
+          { "not": { "fact": "level02.return_unlocked", "equals": true } }
+        ]
+      },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level02_enter_village_path" },
+        { "type": "fact.set", "fact": "level03.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to the friendly village" },
+        { "type": "ui.toast", "text": "Mission 03 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-03-content.json", "delay_ms": 450 }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "phone_clue": { "puzzle_id": "level02_phone_clue" },
+      "camera_clue": { "puzzle_id": "level02_camera_clue" },
+      "hidden_bag": { "puzzle_id": "level02_hidden_bag" },
+      "supply_message": { "puzzle_id": "level02_send_village_plan" }
+    },
+    "guide": { "id": "director", "puzzle_id": "level02_director_check" },
+    "exit": {
+      "id": "safe_flat_door",
+      "puzzle_id": "level02_complete_village_loop",
+      "requires_puzzle": "level02_director_check",
+      "states": [
+        {
+          "when": { "fact": "level02.return_unlocked", "equals": true },
+          "requires_puzzle": "level02_send_village_plan"
+        },
+        {
+          "requires_puzzle": "level02_director_check"
+        }
+      ]
+    }
+  }
+}

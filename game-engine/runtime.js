@@ -466,7 +466,7 @@
         case "puzzle.complete": {
           const changed = graph.complete(action.puzzle);
           if (changed) {
-            bus.emit("puzzle.completed", { target: action.puzzle, puzzle_id: action.puzzle });
+            bus.emit({ type: "puzzle.completed", target: action.puzzle, puzzle_id: action.puzzle });
           }
           return;
         }
@@ -490,7 +490,11 @@
           bridge?.showDialog?.(action);
           return;
         case "event.emit":
-          bus.emit(action.event, { ...(action.payload || {}), target: action.target });
+          bus.emit({
+            ...(action.payload || {}),
+            type: action.event,
+            target: action.target,
+          });
           return;
         case "scene.transition":
           state.persist();
@@ -561,8 +565,11 @@
       return this.runtime.eventBus.on(type, listener);
     }
 
-    emit(type, payload = {}) {
-      return this.runtime.emit(type, payload);
+    emit(typeOrEvent, payload = {}) {
+      if (typeOrEvent && typeof typeOrEvent === "object") {
+        return this.runtime.emit(typeOrEvent.type, typeOrEvent);
+      }
+      return this.runtime.emit(typeOrEvent, payload);
     }
   }
 

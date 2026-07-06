@@ -1,0 +1,584 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-05",
+  "content_version": "2026-07-06",
+  "level_plan": {
+    "title": "Q's Lab",
+    "mission": "The hero visits Q's lab to check their spy gadgets and learn how to use have, has, and possessives.",
+    "mission_bg": "Героят посещава лабораторията на Q, за да провери своите шпионски джаджи и да се научи да използва have, has и притежателни форми.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        { "text": "Героят посещава лабораторията на Q, за да провери своите шпионски джаджи и да се научи да използва have, has и притежателни форми.", "isCorrect": true },
+        { "text": "Героят изучава навиците на животно и намира най-доброто време, за да мине през портата на базата." },
+        { "text": "Героят посещава приятелски селски лагер, за да научи какво правят приятелите." }
+      ]
+    },
+    "plan_hotspot_id": "briefing_board",
+    "grammar_targets": [
+      "have/has statements: I have, He has",
+      "have/has negative: doesn't have",
+      "have/has question: Do you have?",
+      "possessives: Q's watch, his jacket"
+    ],
+    "vocabulary_targets": [
+      "watch",
+      "glasses",
+      "hat",
+      "jacket",
+      "boots",
+      "clothes",
+      "car",
+      "bike",
+      "small",
+      "big",
+      "find",
+      "carry"
+    ],
+    "flow": [
+      "Read the briefing board in Q's lab.",
+      "Collect the spy watch clue.",
+      "Collect the x-ray glasses clue.",
+      "Collect the stealth jacket clue.",
+      "Talk to Agent Q for the final gear check.",
+      "Exit Q's lab through the security door."
+    ]
+  },
+  "assets": {
+    "background": "assets/phaser/camp-bg-painted.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "interactive_props": "assets/james-bond/level-04-animal-trail/interactive-props.svg"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.72,
+    "guide_scale_multiplier": 1.9
+  },
+  "hero_start": { "x": 244, "y": 512 },
+  "hud": {
+    "status_text": "Q's Lab training in progress"
+  },
+  "assistant": {
+    "speaker": "Helper",
+    "complete_text": "Excellent laboratory work, Agent Alex.",
+    "complete_bg": "Отлична работа в лабораторията, агент Алекс.",
+    "fallback_bg": "Провери следващата задача.",
+    "hints": {
+      "level05_understand_mission": {
+        "text": "Read the briefing board first.",
+        "bg": "Първо прочети дъската за брифинг."
+      },
+      "level05_gadget_watch": {
+        "text": "Find Q's watch.",
+        "bg": "Намери часовника на Q."
+      },
+      "level05_gadget_glasses": {
+        "text": "Check the x-ray glasses.",
+        "bg": "Провери рентгеновите очила."
+      },
+      "level05_gadget_jacket": {
+        "text": "Check the stealth jacket.",
+        "bg": "Провери стелт якето."
+      },
+      "level05_q_approval": {
+        "text": "Talk to Agent Q.",
+        "bg": "Говори с Agent Q."
+      },
+      "level05_lab_exit": {
+        "text": "Use the security door.",
+        "bg": "Използвай секретната врата."
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      { "x": 18, "y": 346 },
+      { "x": 1006, "y": 346 },
+      { "x": 1016, "y": 566 },
+      { "x": 12, "y": 566 }
+    ],
+    "clearance": 28,
+    "obstacles": [
+      { "id": "left_bush", "x1": 0, "y1": 312, "x2": 180, "y2": 450 },
+      { "id": "camp_table", "x1": 384, "y1": 384, "x2": 652, "y2": 514 },
+      { "id": "right_trees", "x1": 812, "y1": 282, "x2": 1000, "y2": 450 }
+    ]
+  },
+  "translations": {
+    "about": "относно/за",
+    "agent": "агент",
+    "alex": "Алекс",
+    "an": "един",
+    "and": "и",
+    "are": "са",
+    "approval": "одобрение",
+    "big": "голям",
+    "bike": "велосипед",
+    "board": "дъска",
+    "boots": "ботуши",
+    "briefing": "брифинг",
+    "bulgarian": "български",
+    "car": "кола",
+    "carry": "нося",
+    "challenge": "предизвикателство",
+    "check": "проверка",
+    "choose": "избери",
+    "clothes": "дрехи",
+    "clothing": "облекло",
+    "complete": "завърши/попълни",
+    "dark": "тъмнина",
+    "day": "ден",
+    "do": "правя/ли",
+    "does": "прави/ли",
+    "doesn't": "не",
+    "door": "врата",
+    "eats": "яде",
+    "excellent": "отличен",
+    "english": "английски",
+    "exercise": "упражнение",
+    "exit": "изход",
+    "false": "невярно",
+    "find": "намери",
+    "first": "първо",
+    "gadget": "джаджа",
+    "gadgets": "джаджи",
+    "gate": "порта",
+    "glasses": "очила",
+    "good": "добре",
+    "grammar": "граматика",
+    "hand": "ръка",
+    "has": "има",
+    "have": "имам",
+    "he": "той",
+    "hero": "герой",
+    "his": "негов",
+    "how": "как",
+    "i": "аз",
+    "in": "в",
+    "is": "е",
+    "iscorrect": "е вярно",
+    "it": "то",
+    "jacket": "яке",
+    "lab": "лаборатория",
+    "laboratory": "лаборатория",
+    "learn": "научи",
+    "let's": "нека",
+    "locked": "заключен",
+    "more": "още",
+    "my": "мой",
+    "need": "нуждая се",
+    "negative": "отрицателен",
+    "no": "не",
+    "on": "на",
+    "once": "веднъж",
+    "open": "отворен",
+    "options": [
+      "опции",
+      "избори"
+    ],
+    "plan": "план",
+    "possessives": "притежателни",
+    "q": "Q",
+    "q's": "на Q",
+    "read": "прочети",
+    "ray": "лъч",
+    "retry": "опитай пак",
+    "says": "казва",
+    "security": "сигурност",
+    "see": "виждам",
+    "sentence": "изречение",
+    "she": "тя",
+    "small": "малък",
+    "spy": "шпионин",
+    "stealth": "стелт",
+    "status": "статус",
+    "text": "текст",
+    "them": "тях",
+    "their": "техен",
+    "these": "тези",
+    "this": "това",
+    "to": "за да",
+    "toast": "съобщение",
+    "training": "обучение",
+    "translation": "превод",
+    "true": "вярно",
+    "unlocked": "отключен",
+    "use": "използвай",
+    "validating": "проверка",
+    "verify": "провери",
+    "visits": "посещава",
+    "warm": "топъл",
+    "watch": "часовник",
+    "watches": "часовници",
+    "what": "какво",
+    "who": "кой",
+    "which": "кой",
+    "with": "със",
+    "work": "работа",
+    "x": "рентгенов",
+    "yes": "да",
+    "you": "ти"
+  },
+  "guide": {
+    "speaker": "Agent Q",
+    "position": { "x": 820, "y": 430 },
+    "required_items": ["gadget_watch", "gadget_glasses", "gadget_jacket"],
+    "walk_to": { "x": 750, "y": 460 },
+    "locked_text": "Verify the watch, glasses, and jacket first.",
+    "locked_text_bg": "Първо провери часовника, очилата и якето.",
+    "completed_messages": [
+      {
+        "text": "The security door is open. Use it to complete the training!",
+        "bg": "Секретната врата е отворена. Използвай я, за да завършиш обучението!"
+      }
+    ],
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Agent Q",
+          "npc_text": "Let's check the gear. Who has the watch?",
+          "npc_text_bg": "Нека проверим екипировката. Кой има часовника?",
+          "options": [
+            {
+              "text": "I have the watch.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "He have the watch.",
+              "is_correct": false,
+              "feedback_bg": "С he използваме has, но тук часовникът е в теб."
+            },
+            {
+              "text": "They has the watch.",
+              "is_correct": false,
+              "feedback_bg": "С they използваме have, но часовникът е в теб."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Agent Q",
+          "npc_text": "Good. What about his jacket?",
+          "npc_text_bg": "Добре. Ами неговото яке?",
+          "options": [
+            {
+              "text": "He has a big jacket.",
+              "is_correct": true
+            },
+            {
+              "text": "He doesn't have a jacket.",
+              "is_correct": false,
+              "feedback_bg": "Той има яке - stealth jacket."
+            },
+            {
+              "text": "She has his jacket.",
+              "is_correct": false,
+              "feedback_bg": "Якето е негово (his jacket) и той го носи."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "security_door",
+    "label": "security door",
+    "x": 950,
+    "y": 330,
+    "zone": { "width": 110, "height": 170 },
+    "walk_to": { "x": 880, "y": 460 },
+    "required_flag": "security_door_open",
+    "command": "Walk to security door",
+    "locked_speaker": "Alex",
+    "locked_text": "The security door is locked. I need Agent Q's approval first.",
+    "locked_text_bg": "Секретната врата е заключена. Първо ми трябва одобрението на Agent Q.",
+    "unlocked_command": "The security door is unlocked!",
+    "unlocked_status": "Security door open",
+    "unlocked_toast": "You completed Q's training!",
+    "scene_icon": {
+      "texture": "interactiveProps",
+      "frame": { "x": 1152, "y": 512, "width": 384, "height": 512 },
+      "size": 58,
+      "offset_y": -10
+    }
+  },
+  "hotspots": [
+    {
+      "id": "briefing_board",
+      "kind": "scenery",
+      "label": "briefing board",
+      "english": "board",
+      "bg": "дъска",
+      "x": 180,
+      "y": 350,
+      "walk_to": { "x": 230, "y": 440 },
+      "radius": 35,
+      "interaction": "view",
+      "scene_icon": {
+        "texture": "interactiveProps",
+        "frame": { "x": 768, "y": 0, "width": 256, "height": 256 },
+        "size": 74
+      },
+      "description": {
+        "text": "The board says: Q has a watch, glasses, and a jacket. Verify them first.",
+        "bg": "Дъската казва: Q има часовник, очила и яке. Първо ги провери."
+      }
+    },
+    {
+      "id": "gadget_watch",
+      "kind": "collectible",
+      "label": "spy watch",
+      "english": "watch",
+      "bg": "часовник",
+      "x": 350,
+      "y": 390,
+      "walk_to": { "x": 350, "y": 460 },
+      "radius": 30,
+      "intro": {
+        "text": "You find Q's watch. I have a small watch on my hand.",
+        "bg": "Намираш часовника на Q. Аз имам малък часовник на ръката си.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Намираш часовника на Q. Аз имам малък часовник на ръката си.", "isCorrect": true },
+            { "text": "Това са неговите очила и той ги носи." },
+            { "text": "Тя няма кожени ботуши в своята кола." }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "watch/small",
+        "curriculum_source": "James Bond Level 05",
+        "curriculum_stage": "new",
+        "grammar_targets": ["have: I have", "possessive: Q's"],
+        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": { "x": 512, "y": 0, "width": 256, "height": 256 }
+        }
+      },
+      "presentation": { "hero_expression": "happy", "portrait_frame": 4 }
+    },
+    {
+      "id": "gadget_glasses",
+      "kind": "collectible",
+      "label": "x-ray glasses",
+      "english": "glasses",
+      "bg": "очила",
+      "x": 520,
+      "y": 390,
+      "walk_to": { "x": 520, "y": 460 },
+      "radius": 30,
+      "intro": {
+        "text": "These are his glasses. Do you have glasses to see in the dark?",
+        "bg": "Това са неговите очила. Имаш ли очила, за да виждаш в тъмното?",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Това са неговите очила. Имаш ли очила, за да виждаш в тъмното?", "isCorrect": true },
+            { "text": "Той има яке, но то няма големи копчета." },
+            { "text": "Аз имам малък часовник на ръката си." }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "glasses",
+        "curriculum_source": "James Bond Level 05",
+        "curriculum_stage": "new",
+        "grammar_targets": ["have question: Do you have", "possessive adjective: his"],
+        "exercise_types": ["word choice", "grammar gap-fill", "short answer"]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": { "x": 768, "y": 0, "width": 256, "height": 256 }
+        }
+      },
+      "presentation": { "hero_expression": "focused", "portrait_frame": 2 }
+    },
+    {
+      "id": "gadget_jacket",
+      "kind": "collectible",
+      "label": "stealth jacket",
+      "english": "jacket",
+      "bg": "яке",
+      "x": 650,
+      "y": 390,
+      "walk_to": { "x": 650, "y": 460 },
+      "radius": 30,
+      "intro": {
+        "text": "He has a big jacket. He doesn't have boots in his car.",
+        "bg": "Той има голямо яке. Той няма ботуши в своята кола.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Той има голямо яке. Той няма ботуши в своята кола.", "isCorrect": true },
+            { "text": "Намираш часовника на Q и той е малък." },
+            { "text": "Очилата са на масата до неговата синя раница." }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "jacket/boots/car",
+        "curriculum_source": "James Bond Level 05",
+        "curriculum_stage": "new",
+        "grammar_targets": ["has: He has", "have negative: doesn't have", "possessive adjective: his"],
+        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": { "x": 0, "y": 256, "width": 256, "height": 256 }
+        }
+      },
+      "presentation": { "hero_expression": "thinking", "portrait_frame": 3 }
+    }
+  ],
+  "quizzes": {
+    "gadget_watch": [
+      {
+        "id": "watch-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Watch challenge 1/3. What is this spy gadget?",
+        "bg": "Предизвикателство с часовник 1/3. Каква е тази шпионска джаджа?",
+        "options": [
+          { "text": "watch", "isCorrect": true },
+          { "text": "car", "feedback": "Car е кола. Джаджата е watch." },
+          { "text": "bike", "feedback": "Bike е велосипед. Джаджата е watch." }
+        ]
+      },
+      {
+        "id": "watch-have",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "have: I have",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Watch challenge 2/3. I ___ a small watch.",
+        "bg": "Предизвикателство с часовник 2/3. Аз ___ малък часовник.",
+        "options": [
+          { "text": "have", "isCorrect": true },
+          { "text": "has", "feedback": "С I използваме have." },
+          { "text": "am", "feedback": "Тук говорим за притежание: have." }
+        ]
+      },
+      {
+        "id": "watch-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "possessive: Q's",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Watch challenge 3/3. Choose the true sentence about Q's watch.",
+        "bg": "Предизвикателство с часовник 3/3. Избери вярното изречение за часовника на Q.",
+        "options": [
+          { "text": "This is Q's watch.", "isCorrect": true },
+          { "text": "This is Q watch.", "feedback": "Трябва ни possessive 's: Q's." },
+          { "text": "These are Q's watches.", "feedback": "Часовникът е един, използваме This is." }
+        ]
+      }
+    ],
+    "gadget_glasses": [
+      {
+        "id": "glasses-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Glasses challenge 1/3. What are these x-ray gadgets?",
+        "bg": "Предизвикателство с очила 1/3. Какви са тези рентгенови джаджи?",
+        "options": [
+          { "text": "glasses", "isCorrect": true },
+          { "text": "boots", "feedback": "Boots са ботуши. Джаджите са glasses." },
+          { "text": "clothes", "feedback": "Clothes са дрехи. Джаджите са glasses." }
+        ]
+      },
+      {
+        "id": "glasses-do-you-have",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "have question: Do you have?",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Glasses challenge 2/3. ___ you have glasses?",
+        "bg": "Предизвикателство с очила 2/3. ___ очила имаш ти?",
+        "options": [
+          { "text": "Do", "isCorrect": true },
+          { "text": "Does", "feedback": "С you използваме Do." },
+          { "text": "Are", "feedback": "За въпрос с have използваме спомагателния глагол Do." }
+        ]
+      },
+      {
+        "id": "glasses-short-answer",
+        "exercise_type": "short answer",
+        "grammar_target": "short answer: Yes, I do",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Glasses challenge 3/3. Do you have glasses to see?",
+        "bg": "Предизвикателство с очила 3/3. Имаш ли очила, за да виждаш?",
+        "options": [
+          { "text": "Yes, I do.", "isCorrect": true },
+          { "text": "Yes, I have.", "feedback": "На въпрос с Do отговаряме с do: Yes, I do." },
+          { "text": "No, I doesn't.", "feedback": "С I използваме do или don't." }
+        ]
+      }
+    ],
+    "gadget_jacket": [
+      {
+        "id": "jacket-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Jacket challenge 1/3. What is this warm clothing?",
+        "bg": "Предизвикателство с яке 1/3. Кое е това топло облекло?",
+        "options": [
+          { "text": "jacket", "isCorrect": true },
+          { "text": "hat", "feedback": "Hat е шапка. Дрехата е jacket." },
+          { "text": "bike", "feedback": "Bike е велосипед. Дрехата е jacket." }
+        ]
+      },
+      {
+        "id": "jacket-has",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "has: He has",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Jacket challenge 2/3. He ___ a big jacket.",
+        "bg": "Предизвикателство с яке 2/3. Той ___ голямо яке.",
+        "options": [
+          { "text": "has", "isCorrect": true },
+          { "text": "have", "feedback": "С he използваме has." },
+          { "text": "is", "feedback": "Тук говорим за притежание: He has." }
+        ]
+      },
+      {
+        "id": "jacket-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "have negative: doesn't have",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Jacket challenge 3/3. Choose the true negative sentence.",
+        "bg": "Предизвикателство с яке 3/3. Избери вярното отрицателно изречение.",
+        "options": [
+          { "text": "He doesn't have boots.", "isCorrect": true },
+          { "text": "He don't have boots.", "feedback": "С he използваме doesn't." },
+          { "text": "He doesn't has boots.", "feedback": "След doesn't глаголът е в основна форма: have." }
+        ]
+      }
+    ]
+  }
+}

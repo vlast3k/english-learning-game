@@ -2,18 +2,29 @@
   "use strict";
 
   const CONTENT_CACHE_KEY = "gameContent";
-  const DEFAULT_CONTENT_URL = "scenarios/james-bond-level-01-content.json?v=20260705-puzzle-eca-2";
-  const ASSET_OVERRIDE_VERSION = "20260705-scenario-assets-1";
+  const DEFAULT_CONTENT_URL = "scenarios/james-bond-level-01-content.json?v=20260706-level03-art-1";
+  const ASSET_OVERRIDE_VERSION = "20260706-level03-art-1";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
+  const LEVEL_SCENARIOS = {
+    1: "scenarios/james-bond-level-01-content.json",
+    2: "scenarios/james-bond-level-02-content.json",
+    3: "scenarios/james-bond-level-03-content.json",
+    4: "scenarios/james-bond-level-04-content.json",
+    5: "scenarios/james-bond-level-05-content.json",
+  };
 
   function getContentUrl() {
     const locationSearch = window.location?.search || "";
     const params = new URLSearchParams(locationSearch);
     const scenario = params.get("scenario");
+    const level = params.get("level");
     if (!scenario) {
+      if (LEVEL_SCENARIOS[level]) {
+        return `${LEVEL_SCENARIOS[level]}?v=${ASSET_OVERRIDE_VERSION}`;
+      }
       return DEFAULT_CONTENT_URL;
     }
-    return scenario.includes("?") ? scenario : `${scenario}?v=20260705-puzzle-eca-2`;
+    return scenario.includes("?") ? scenario : `${scenario}?v=${ASSET_OVERRIDE_VERSION}`;
   }
 
   const CONTENT_URL = getContentUrl();
@@ -55,6 +66,12 @@
         const assets = CONTENT_MANIFEST?.assets || {};
         const originalImage = this.load.image.bind(this.load);
         const originalSpritesheet = this.load.spritesheet.bind(this.load);
+        if (assets.interactive_props) {
+          originalImage("interactiveProps", versionedScenarioAsset(assets.interactive_props));
+        }
+        if (assets.inventory_icons) {
+          originalImage("inventoryIcons", versionedScenarioAsset(assets.inventory_icons));
+        }
         this.load.image = (key, url, ...args) => {
           if (key === "campBg" && assets.background) {
             return originalImage(key, versionedScenarioAsset(assets.background), ...args);
@@ -88,6 +105,19 @@
         this.applyDataDrivenSceneConfig();
       }
 
+      getCharacterScale(y) {
+        const baseScale = super.getCharacterScale(y);
+        const multiplier = this.contentModel?.presentation?.character_scale_multiplier;
+        return baseScale * (Number.isFinite(multiplier) ? multiplier : 1);
+      }
+
+      getGuideCharacterScale(y) {
+        const baseScale = super.getCharacterScale(y);
+        const multiplier = this.contentModel?.presentation?.guide_scale_multiplier
+          ?? this.contentModel?.presentation?.character_scale_multiplier;
+        return baseScale * (Number.isFinite(multiplier) ? multiplier : 1);
+      }
+
       applyDataDrivenSceneConfig() {
         const content = this.contentModel;
         if (!content) {
@@ -99,8 +129,24 @@
         if (content.guide?.position && this.guide) {
           this.guide.setPosition(content.guide.position.x, content.guide.position.y);
           this.guide.setDepth(Math.round(content.guide.position.y));
-          this.guide.setScale(this.getCharacterScale(content.guide.position.y));
+          this.guide.setScale(this.getGuideCharacterScale(content.guide.position.y));
           this.guide.zone?.setPosition(content.guide.position.x, content.guide.position.y - 62);
+        }
+        if (content.guide?.role_label && this.guide) {
+          if (!this.guide.roleLabel) {
+            this.guide.roleLabel = this.add.text(0, 0, content.guide.role_label, {
+              fontFamily: ADVENTURE_FONT,
+              fontSize: "15px",
+              fontStyle: "700",
+              color: "#173837",
+              backgroundColor: "rgba(255,251,239,0.94)",
+              padding: { x: 8, y: 4 },
+            }).setOrigin(0.5).setDepth(900);
+          }
+          this.guide.roleLabel
+            .setText(content.guide.role_label)
+            .setPosition(this.guide.x, this.guide.y - 172)
+            .setVisible(true);
         }
         if (content.hero_start && this.hero) {
           this.hero.setPosition(content.hero_start.x, content.hero_start.y);
@@ -128,6 +174,27 @@
         this.navClearance = navigation.clearance ?? 30;
       }
 
+      createHotspotSceneIcon(hotspot) {
+        const configuredIcon = hotspot.scene_icon;
+        if (!configuredIcon?.texture || !configuredIcon?.frame || !this.textures.exists(configuredIcon.texture)) {
+          return null;
+        }
+        const frameKey = this.ensureInventoryIconFrame?.(hotspot, {
+          texture: configuredIcon.texture,
+          frame: configuredIcon.frame,
+        });
+        if (!frameKey) {
+          return null;
+        }
+        const icon = this.add.image(0, configuredIcon.offset_y || 0, configuredIcon.texture, frameKey)
+          .setOrigin(0.5)
+          .setAlpha(configuredIcon.alpha ?? 0.96);
+        const frame = this.textures.getFrame(configuredIcon.texture, frameKey);
+        const maxSize = configuredIcon.size || Math.max(36, Math.min(76, hotspot.radius * 1.4));
+        icon.setScale(Math.min(maxSize / frame.width, maxSize / frame.height));
+        return icon;
+      }
+
       createHotspots() {
         if (!this.contentModel?.hotspots) {
           super.createHotspots();
@@ -148,10 +215,13 @@
             color: "#173837",
             backgroundColor: "rgba(255,251,239,0.93)",
             padding: { x: 7, y: 4 },
-          }).setOrigin(0.5).setAlpha(0);
+          }).setOrigin(0.5).setAlpha(hotspot.label_visible ? 1 : 0);
 
-          marker.add([glow, label]);
+          const sceneIcon = this.createHotspotSceneIcon(hotspot);
+          marker.add(sceneIcon ? [glow, sceneIcon, label] : [glow, label]);
           hotspot.glow = glow;
+          hotspot.sceneIcon = sceneIcon;
+          hotspot.labelText = label;
           this.drawHotspotGlow(hotspot, false);
 
           const zone = this.add.zone(
@@ -162,7 +232,7 @@
           ).setDepth(850).setInteractive({ useHandCursor: true });
 
           zone.on("pointerover", () => label.setAlpha(1));
-          zone.on("pointerout", () => label.setAlpha(0));
+          zone.on("pointerout", () => label.setAlpha(hotspot.label_visible ? 1 : 0));
           zone.on("pointerdown", () => {
             this.closeBubble();
             this.setCommand(`Look at ${hotspot.label}`);
@@ -196,6 +266,11 @@
 
         const marker = this.add.container(x, y).setDepth(540).setSize(76, 76);
         const glow = this.add.graphics();
+        const sceneIcon = this.createHotspotSceneIcon({
+          id: exit.id || "exit",
+          radius: 42,
+          scene_icon: exit.scene_icon,
+        });
         glow.fillStyle(0xf4c44e, 0.92);
         glow.fillRoundedRect(-18, -18, 36, 36, 8);
         glow.lineStyle(4, 0xfff7d0, 1);
@@ -212,7 +287,8 @@
           backgroundColor: "rgba(255,251,239,0.93)",
           padding: { x: 7, y: 4 },
         }).setOrigin(0.5);
-        marker.add([glow, label]);
+        marker.add(sceneIcon ? [glow, sceneIcon, label] : [glow, label]);
+        marker.sceneIcon = sceneIcon;
 
         const zone = this.add.zone(x, y, exit.zone?.width ?? 96, exit.zone?.height ?? 118)
           .setDepth(850)

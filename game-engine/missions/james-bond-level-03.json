@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-03",
+  "mission_puzzle": "level03_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level03_understand_mission",
+      "title": "Read the friendly village welcome board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level03.mission_understood"]
+    },
+    {
+      "id": "level03_bread_note",
+      "title": "Learn what the cook makes",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level03_understand_mission", "status": "completed" },
+      "produces": ["level03.bread_note_collected"]
+    },
+    {
+      "id": "level03_football_clue",
+      "title": "Learn what the children play",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level03_understand_mission", "status": "completed" },
+      "produces": ["level03.football_clue_collected"]
+    },
+    {
+      "id": "level03_teacher_map",
+      "title": "Read the teacher's map",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level03_understand_mission", "status": "completed" },
+      "produces": ["level03.teacher_map_collected"]
+    },
+    {
+      "id": "level03_village_list",
+      "title": "Receive the village list",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level03_bread_note", "status": "completed" },
+          { "puzzle": "level03_football_clue", "status": "completed" },
+          { "puzzle": "level03_teacher_map", "status": "completed" }
+        ]
+      },
+      "produces": ["level03.village_list_ready"]
+    },
+    {
+      "id": "level03_return_to_map_room",
+      "title": "Return to the map room with the village list",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level03_village_list", "status": "completed" },
+      "produces": ["level03.returned_with_list", "level02.return_unlocked"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level03-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-03" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level03_understand_mission" }]
+    },
+    {
+      "id": "level03-collect-bread_note",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "bread_note" },
+      "condition": { "puzzle": "level03_bread_note", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "bread_note" },
+        { "type": "puzzle.complete", "puzzle": "level03_bread_note" },
+        { "type": "ui.vocab.show", "hotspot": "bread_note" }
+      ]
+    },
+    {
+      "id": "level03-collect-football_clue",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "football_clue" },
+      "condition": { "puzzle": "level03_football_clue", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "football_clue" },
+        { "type": "puzzle.complete", "puzzle": "level03_football_clue" },
+        { "type": "ui.vocab.show", "hotspot": "football_clue" }
+      ]
+    },
+    {
+      "id": "level03-collect-teacher_map",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "teacher_map" },
+      "condition": { "puzzle": "level03_teacher_map", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "teacher_map" },
+        { "type": "puzzle.complete", "puzzle": "level03_teacher_map" },
+        { "type": "ui.vocab.show", "hotspot": "teacher_map" }
+      ]
+    },
+    {
+      "id": "level03-teacher-gives-list",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "teacher" },
+      "condition": { "puzzle": "level03_village_list", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level03_village_list" },
+        { "type": "flag.set", "flag": "map_room_path_open", "value": true },
+        { "type": "ui.status.set", "text": "Village list ready" },
+        { "type": "ui.toast", "text": "Return to the map room!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level03-map-room-path-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "map_room_path" },
+      "condition": { "not": { "puzzle": "level03_village_list", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I need the village list first.",
+          "bg": "Първо ми трябва списъкът от селото."
+        }
+      ]
+    },
+    {
+      "id": "level03-return-to-map-room",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "map_room_path" },
+      "condition": { "puzzle": "level03_village_list", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level03_return_to_map_room" },
+        { "type": "fact.set", "fact": "level02.return_unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Returning to the map room" },
+        { "type": "ui.toast", "text": "Take the village list back!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-02-content.json", "delay_ms": 450 }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "bread_note": { "puzzle_id": "level03_bread_note" },
+      "football_clue": { "puzzle_id": "level03_football_clue" },
+      "teacher_map": { "puzzle_id": "level03_teacher_map" }
+    },
+    "guide": { "id": "teacher", "puzzle_id": "level03_village_list" },
+    "exit": {
+      "id": "map_room_path",
+      "puzzle_id": "level03_return_to_map_room",
+      "requires_puzzle": "level03_village_list"
+    }
+  }
+}

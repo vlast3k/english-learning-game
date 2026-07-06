@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260705-puzzle-eca-1";
+  const ENGINE_ASSET_VERSION = "20260706-level03-art-1";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
 
   function loadJson(url) {
@@ -47,6 +47,231 @@
         return this.getEngineConfig()?.bindings?.exit || {};
       }
 
+      bridgeValuesEqual(actual, expected) {
+        return expected === undefined ? Boolean(actual) : actual === expected;
+      }
+
+      bridgeGetPath(source, path) {
+        if (!path) {
+          return source;
+        }
+        return String(path).split(".").reduce((value, key) => value?.[key], source);
+      }
+
+      bridgeConditionMatches(condition, event = {}) {
+        if (!condition) {
+          return true;
+        }
+        if (typeof condition === "boolean") {
+          return condition;
+        }
+        if (Array.isArray(condition)) {
+          return condition.every((entry) => this.bridgeConditionMatches(entry, event));
+        }
+        if (condition.all) {
+          return condition.all.every((entry) => this.bridgeConditionMatches(entry, event));
+        }
+        if (condition.any) {
+          return condition.any.some((entry) => this.bridgeConditionMatches(entry, event));
+        }
+        if (condition.not) {
+          return !this.bridgeConditionMatches(condition.not, event);
+        }
+        const snapshot = this.gameEngine?.getSnapshot().state;
+        if (condition.fact) {
+          return this.bridgeValuesEqual(snapshot?.facts?.[condition.fact], condition.equals);
+        }
+        if (condition.inventory_contains) {
+          return snapshot?.inventory?.includes(condition.inventory_contains) || false;
+        }
+        if (condition.inventory_missing) {
+          return !(snapshot?.inventory?.includes(condition.inventory_missing));
+        }
+        if (condition.counter) {
+          const actual = snapshot?.counters?.[condition.counter] || 0;
+          if (condition.at_least !== undefined) {
+            return actual >= condition.at_least;
+          }
+          if (condition.at_most !== undefined) {
+            return actual <= condition.at_most;
+          }
+          return this.bridgeValuesEqual(actual, condition.equals);
+        }
+        if (condition.puzzle) {
+          return this.gameEngine?.getPuzzleStatus(condition.puzzle) === (condition.status || "completed");
+        }
+        if (condition.event) {
+          return this.bridgeValuesEqual(this.bridgeGetPath(event, condition.event), condition.equals);
+        }
+        return false;
+      }
+
+      getExitRequiredPuzzleForState() {
+        const binding = this.getExitBinding();
+        for (const state of binding.states || []) {
+          if (this.bridgeConditionMatches(state.when)) {
+            return state.requires_puzzle;
+          }
+        }
+        return this.contentModel?.exit_marker?.requires_puzzle || binding.requires_puzzle;
+      }
+
+      getStateEntry(entries) {
+        for (const entry of entries || []) {
+          if (this.bridgeConditionMatches(entry.when)) {
+            return entry;
+          }
+        }
+        return null;
+      }
+
+      getExitPresentationForState() {
+        const exit = this.contentModel?.exit_marker || {};
+        return { ...exit, ...(this.getStateEntry(exit.states) || {}) };
+      }
+
+      getAssistantHint() {
+        if (!this.gameEngine) {
+          return super.getAssistantHint();
+        }
+        const snapshot = this.gameEngine.getSnapshot();
+        const missionPuzzle = this.gameEngine.config.mission_puzzle;
+        const missionNode = missionPuzzle ? this.findAssistantPuzzle(snapshot, missionPuzzle) : null;
+        if (missionNode && missionNode.status !== "completed") {
+          return this.buildAssistantHint(missionNode.id, snapshot);
+        }
+
+        const learningPuzzle = snapshot.available.find((node) =>
+          node.type === "learning_puzzle" && this.isAssistantPuzzleVisible(node.id));
+        if (learningPuzzle) {
+          return this.buildAssistantHint(learningPuzzle.id, snapshot);
+        }
+
+        const gate = snapshot.puzzles.find((node) => node.type === "gate" && node.status !== "completed");
+        if (gate?.status === "available") {
+          return this.buildAssistantHint(gate.id, snapshot);
+        }
+        const missingGatePuzzle = this.getFirstMissingAssistantPuzzle(gate, snapshot);
+        if (missingGatePuzzle) {
+          return this.buildAssistantHint(missingGatePuzzle, snapshot);
+        }
+
+        const openExit = snapshot.available.find((node) => node.type === "scene_exit");
+        if (openExit) {
+          return this.buildAssistantHint(openExit.id, snapshot);
+        }
+        const lockedExit = snapshot.puzzles.find((node) => node.type === "scene_exit" && node.status === "locked");
+        const missingExitPuzzle = this.getFirstMissingAssistantPuzzle(lockedExit, snapshot);
+        if (missingExitPuzzle) {
+          return this.buildAssistantHint(missingExitPuzzle, snapshot);
+        }
+
+        const fallback = snapshot.available.find((node) => node.status !== "completed")
+          || snapshot.puzzles.find((node) => node.status !== "completed");
+        if (fallback) {
+          return this.buildAssistantHint(fallback.id, snapshot);
+        }
+
+        const assistant = this.contentModel?.assistant || {};
+        return {
+          speaker: assistant.speaker || "Helper",
+          text: assistant.complete_text || "Great work. Explore the scene.",
+          bg: assistant.complete_bg || "Чудесна работа. Разгледай сцената.",
+        };
+      }
+
+      findAssistantPuzzle(snapshot, puzzleId) {
+        return snapshot.puzzles.find((node) => node.id === puzzleId) || null;
+      }
+
+      getFirstMissingAssistantPuzzle(node, snapshot) {
+        if (!node?.missing) {
+          return null;
+        }
+        return this.flattenMissingPuzzleIds(node.missing)
+          .find((puzzleId) => this.findAssistantPuzzle(snapshot, puzzleId)?.status !== "completed") || null;
+      }
+
+      flattenMissingPuzzleIds(entries) {
+        if (!Array.isArray(entries)) {
+          return [];
+        }
+        const ids = [];
+        for (const entry of entries) {
+          if (entry?.puzzle) {
+            ids.push(entry.puzzle);
+          }
+          if (Array.isArray(entry?.any)) {
+            ids.push(...this.flattenMissingPuzzleIds(entry.any));
+          }
+          if (Array.isArray(entry?.all)) {
+            ids.push(...this.flattenMissingPuzzleIds(entry.all));
+          }
+        }
+        return ids;
+      }
+
+      isAssistantPuzzleVisible(puzzleId) {
+        const hotspot = this.getAssistantHotspotForPuzzle(puzzleId);
+        return !hotspot || this.isHotspotVisibleForState(hotspot);
+      }
+
+      getAssistantHotspotForPuzzle(puzzleId) {
+        const hotspotBindings = this.getEngineConfig()?.bindings?.hotspots || {};
+        const hotspotId = Object.entries(hotspotBindings)
+          .find(([_id, binding]) => binding?.puzzle_id === puzzleId)?.[0];
+        return this.hotspots?.find((hotspot) => hotspot.id === hotspotId) || null;
+      }
+
+      buildAssistantHint(puzzleId, snapshot) {
+        const assistant = this.contentModel?.assistant || {};
+        const configured = assistant.hints?.[puzzleId];
+        if (configured?.text && configured?.bg) {
+          return {
+            speaker: assistant.speaker || configured.speaker || "Helper",
+            text: configured.text,
+            bg: configured.bg,
+          };
+        }
+        const text = this.getAssistantFallbackText(puzzleId, snapshot);
+        return {
+          speaker: assistant.speaker || "Helper",
+          text,
+          bg: assistant.fallback_bg || "Провери следващата задача.",
+        };
+      }
+
+      getAssistantFallbackText(puzzleId, snapshot) {
+        const missionPuzzle = this.gameEngine?.config?.mission_puzzle;
+        if (puzzleId === missionPuzzle) {
+          const planId = this.contentModel?.level_plan?.plan_hotspot_id;
+          const planHotspot = this.hotspots?.find((hotspot) => hotspot.id === planId);
+          return `Read the ${planHotspot?.label || "mission plan"} first.`;
+        }
+        const hotspot = this.getAssistantHotspotForPuzzle(puzzleId);
+        if (hotspot) {
+          return `Go to the ${hotspot.label}.`;
+        }
+        if (puzzleId === this.getGuidePuzzleId()) {
+          return `Talk to ${this.contentModel?.guide?.speaker || "the guide"}.`;
+        }
+        const exitNode = this.findAssistantPuzzle(snapshot, puzzleId);
+        if (exitNode?.type === "scene_exit") {
+          return `Use the ${this.getExitPresentationForState().label || "exit"}.`;
+        }
+        return this.findAssistantPuzzle(snapshot, puzzleId)?.title || "Check the next mission step.";
+      }
+
+      isHotspotVisibleForState(hotspot) {
+        if (hotspot.visible_when && !this.bridgeConditionMatches(hotspot.visible_when)) {
+          return false;
+        }
+        if (hotspot.hidden_when && this.bridgeConditionMatches(hotspot.hidden_when)) {
+          return false;
+        }
+        return true;
+      }
+
       create() {
         super.create();
         this.initializePuzzleEngine();
@@ -57,6 +282,7 @@
         if (!config || !root.EnglishGameEngine?.create) {
           return;
         }
+        this.resetPuzzleEngineStorageForDev(config);
         const bridge = this.createPuzzleEngineBridge();
         this.gameEngine = root.EnglishGameEngine.create(config, {
           content: this.contentModel,
@@ -66,6 +292,18 @@
         this.restorePuzzleEngineState(bridge);
         this.gameEngine.emit("scene.started", { target: this.contentModel.scene_id });
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.gameEngine?.destroy());
+      }
+
+      resetPuzzleEngineStorageForDev(config) {
+        const params = new URLSearchParams(root.location?.search || "");
+        if (!["1", "true", "yes"].includes((params.get("reset") || "").toLowerCase())) {
+          return;
+        }
+        try {
+          root.sessionStorage?.removeItem(config.storage_key);
+        } catch (_error) {
+          // If storage is unavailable, the runtime will fall back to memory storage.
+        }
       }
 
       createPuzzleEngineBridge() {
@@ -103,6 +341,7 @@
             this.showVocabBubble(hotspot, alreadyRetrieved);
           },
           refreshExit: () => this.refreshEngineExitMarker(),
+          refreshHotspots: () => this.refreshEngineHotspots(),
           showDialog: (action) => this.showSpeechBubble({
             speaker: action.speaker || "Alex",
             text: action.text || "That path is not ready yet.",
@@ -128,7 +367,22 @@
             this.flags[name.slice(5)] = value;
           }
         }
+        this.applyEngineStatePrompt();
+        this.refreshEngineHotspots();
         this.refreshEngineExitMarker();
+      }
+
+      applyEngineStatePrompt() {
+        const prompt = this.getStateEntry(this.contentModel?.state_prompts);
+        if (!prompt) {
+          return;
+        }
+        if (prompt.status_text) {
+          this.statusText?.setText(prompt.status_text);
+        }
+        if (prompt.command_text) {
+          this.setCommand(prompt.command_text);
+        }
       }
 
       transitionToEngineScenario(action) {
@@ -157,7 +411,11 @@
         if (!exit || !this.exitMarker?.engineGlow) {
           return;
         }
-        const requiredPuzzle = exit.requires_puzzle || this.getExitBinding().requires_puzzle;
+        const presentation = this.getExitPresentationForState();
+        if (this.exitMarker.label && presentation.label) {
+          this.exitMarker.label.setText(presentation.label);
+        }
+        const requiredPuzzle = this.getExitRequiredPuzzleForState();
         const unlocked = requiredPuzzle
           ? this.gameEngine?.getPuzzleStatus(requiredPuzzle) === "completed"
           : Boolean(this.flags[exit.required_flag]);
@@ -173,19 +431,47 @@
         glow.strokePath();
       }
 
+      refreshEngineHotspots() {
+        for (const hotspot of this.hotspots || []) {
+          const visible = this.isHotspotVisibleForState(hotspot);
+          hotspot.marker?.setVisible(visible);
+          hotspot.zone?.setVisible(visible);
+          if (visible) {
+            hotspot.zone?.setInteractive?.({ useHandCursor: true });
+          } else {
+            hotspot.zone?.disableInteractive?.();
+          }
+        }
+      }
+
       openObjectIntro(hotspot) {
         const puzzleId = this.getHotspotPuzzleId(hotspot);
         if (this.gameEngine && puzzleId && this.gameEngine.getPuzzleStatus(puzzleId) === "locked") {
           this.showSpeechBubble({
             speaker: "Alex",
-            text: "I need to understand the mission briefing first.",
-            bg: "Първо трябва да разбера брифинга за мисията.",
+            text: hotspot.locked_text || "I need to understand the mission briefing first.",
+            bg: hotspot.locked_text_bg || "Първо трябва да разбера брифинга за мисията.",
             anchor: { x: hotspot.x, y: hotspot.y - 40 },
             options: [{ text: "OK", action: () => this.closeBubble() }],
           });
           return;
         }
         super.openObjectIntro(hotspot);
+      }
+
+      openSceneryBubble(hotspot) {
+        const missionPuzzle = this.gameEngine?.config?.mission_puzzle;
+        const planHotspotId = this.contentModel?.level_plan?.plan_hotspot_id;
+        if (
+          this.gameEngine
+          && missionPuzzle
+          && hotspot.id === planHotspotId
+          && this.gameEngine.getPuzzleStatus(missionPuzzle) !== "completed"
+        ) {
+          this.openLevelIntro();
+          return;
+        }
+        super.openSceneryBubble(hotspot);
       }
 
       handleLevelIntroTranslationOption(target, option) {
@@ -219,7 +505,13 @@
         }
         const marker = this.add.container(x, y).setDepth(540).setSize(76, 76);
         const glow = this.add.graphics();
-        const label = this.add.text(0, 42, exit.label, {
+        const presentation = this.getExitPresentationForState();
+        const sceneIcon = this.createHotspotSceneIcon?.({
+          id: exit.id || "exit",
+          radius: 42,
+          scene_icon: presentation.scene_icon || exit.scene_icon,
+        });
+        const label = this.add.text(0, 42, presentation.label || exit.label, {
           fontFamily: ADVENTURE_FONT,
           fontSize: "14px",
           fontStyle: "700",
@@ -227,15 +519,18 @@
           backgroundColor: "rgba(255,251,239,0.93)",
           padding: { x: 7, y: 4 },
         }).setOrigin(0.5);
-        marker.add([glow, label]);
+        marker.add(sceneIcon ? [glow, sceneIcon, label] : [glow, label]);
         marker.engineGlow = glow;
+        marker.label = label;
+        marker.sceneIcon = sceneIcon;
         const zone = this.add.zone(x, y, exit.zone?.width ?? 96, exit.zone?.height ?? 118)
           .setDepth(850)
           .setInteractive({ useHandCursor: true });
         zone.on("pointerdown", () => {
           this.closeBubble();
-          this.setCommand(exit.command || `Walk to ${exit.label}`);
-          const walkTo = exit.walk_to || { x, y };
+          const currentExit = this.getExitPresentationForState();
+          this.setCommand(currentExit.command || `Walk to ${currentExit.label || exit.label}`);
+          const walkTo = currentExit.walk_to || exit.walk_to || { x, y };
           this.walkHeroTo(walkTo.x, walkTo.y, () => {
             this.gameEngine.emit("exit.reached", {
               target: exit.id,
@@ -272,7 +567,18 @@
             return;
           }
           if (status === "completed") {
-            this.flashToast("Director check already complete.");
+            const message = this.getStateEntry(guide.completed_messages);
+            if (message?.text) {
+              this.showSpeechBubble({
+                speaker: guide.speaker || "Guide",
+                text: message.text,
+                bg: message.bg || guide.locked_text_bg,
+                anchor: { x: this.guide.x, y: this.guide.y - 128 },
+                options: [{ text: "OK", action: () => this.closeBubble() }],
+              });
+              return;
+            }
+            this.flashToast(guide.completed_toast || `${guide.speaker || "Guide"} check already complete.`);
             return;
           }
           this.openGuideQuestion(guide.dialogue_start_node);

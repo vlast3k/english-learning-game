@@ -1,0 +1,35 @@
+[
+  {
+    "id": "q_lab_background",
+    "type": "background",
+    "size": "1024x576",
+    "path": "assets/james-bond/level-05-q-lab/generated/q-lab-background.png",
+    "style": "painted kid-friendly spy laboratory, full of gadgets and technology, bright, no text",
+    "prompt": "2D point and click cartoon adventure background, futuristic high tech agent laboratory, camp table, wall panels with blueprint schematics, warm colors, no text, safe for kids"
+  },
+  {
+    "id": "agent_q_spritesheet",
+    "type": "guide_spritesheet",
+    "path": "assets/james-bond/level-05-q-lab/generated/agent-q-spritesheet.png",
+    "style": "cartoon scientist guide character, white lab coat, friendly look",
+    "prompt": "character spritesheet, friendly scientist guide, 2D cartoon style, white lab coat, standing idle animation frames, transparent background"
+  },
+  {
+    "id": "gadget_watch",
+    "type": "prop",
+    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
+    "style": "spy watch, glowing hologram screen, cartoon style"
+  },
+  {
+    "id": "gadget_glasses",
+    "type": "prop",
+    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
+    "style": "x-ray glasses, red lenses, high tech frame"
+  },
+  {
+    "id": "gadget_jacket",
+    "type": "prop",
+    "path": "assets/james-bond/level-05-q-lab/generated/interactive-props.png",
+    "style": "sleek agent stealth jacket, dark blue with glowing lights"
+  }
+]

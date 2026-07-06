@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-05",
+  "mission_puzzle": "level05_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level05_understand_mission",
+      "title": "Read the laboratory briefing board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level05.mission_understood"]
+    },
+    {
+      "id": "level05_gadget_watch",
+      "title": "Check the spy watch",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level05_understand_mission", "status": "completed" },
+      "produces": ["level05.gadget_watch_collected"]
+    },
+    {
+      "id": "level05_gadget_glasses",
+      "title": "Check the x-ray glasses",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level05_understand_mission", "status": "completed" },
+      "produces": ["level05.gadget_glasses_collected"]
+    },
+    {
+      "id": "level05_gadget_jacket",
+      "title": "Check the stealth jacket",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level05_understand_mission", "status": "completed" },
+      "produces": ["level05.gadget_jacket_collected"]
+    },
+    {
+      "id": "level05_q_approval",
+      "title": "Pass Agent Q's gear check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level05_gadget_watch", "status": "completed" },
+          { "puzzle": "level05_gadget_glasses", "status": "completed" },
+          { "puzzle": "level05_gadget_jacket", "status": "completed" }
+        ]
+      },
+      "produces": ["level05.q_approved"]
+    },
+    {
+      "id": "level05_lab_exit",
+      "title": "Pass through the security door",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level05_q_approval", "status": "completed" },
+      "produces": ["level05.complete", "campaign.levels_01_to_05_complete"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level05-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-05" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level05_understand_mission" }]
+    },
+    {
+      "id": "level05-collect-gadget_watch",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "gadget_watch" },
+      "condition": { "puzzle": "level05_gadget_watch", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "gadget_watch" },
+        { "type": "puzzle.complete", "puzzle": "level05_gadget_watch" },
+        { "type": "ui.vocab.show", "hotspot": "gadget_watch" }
+      ]
+    },
+    {
+      "id": "level05-collect-gadget_glasses",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "gadget_glasses" },
+      "condition": { "puzzle": "level05_gadget_glasses", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "gadget_glasses" },
+        { "type": "puzzle.complete", "puzzle": "level05_gadget_glasses" },
+        { "type": "ui.vocab.show", "hotspot": "gadget_glasses" }
+      ]
+    },
+    {
+      "id": "level05-collect-gadget_jacket",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "gadget_jacket" },
+      "condition": { "puzzle": "level05_gadget_jacket", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "gadget_jacket" },
+        { "type": "puzzle.complete", "puzzle": "level05_gadget_jacket" },
+        { "type": "ui.vocab.show", "hotspot": "gadget_jacket" }
+      ]
+    },
+    {
+      "id": "level05-q-approved",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "agent_q" },
+      "condition": { "puzzle": "level05_q_approval", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level05_q_approval" },
+        { "type": "flag.set", "flag": "security_door_open", "value": true },
+        { "type": "ui.status.set", "text": "Security door open" },
+        { "type": "ui.toast", "text": "You are approved to leave!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level05-security-door-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "security_door" },
+      "condition": { "not": { "puzzle": "level05_q_approval", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The security door is locked. I need Agent Q's approval first.",
+          "bg": "Секретната врата е заключена. Първо ми трябва одобрението на Agent Q."
+        }
+      ]
+    },
+    {
+      "id": "level05-complete-q-lab",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "security_door" },
+      "condition": { "puzzle": "level05_q_approval", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level05_lab_exit" },
+        { "type": "fact.set", "fact": "level05.complete", "value": true },
+        {
+          "type": "campaign.complete",
+          "fact": "campaign.levels_01_to_05_complete",
+          "status_text": "Missions 01 to 05 complete",
+          "toast": "Excellent spy work, Agent Alex!"
+        }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "gadget_watch": { "puzzle_id": "level05_gadget_watch" },
+      "gadget_glasses": { "puzzle_id": "level05_gadget_glasses" },
+      "gadget_jacket": { "puzzle_id": "level05_gadget_jacket" }
+    },
+    "guide": { "id": "agent_q", "puzzle_id": "level05_q_approval" },
+    "exit": {
+      "id": "security_door",
+      "puzzle_id": "level05_lab_exit",
+      "requires_puzzle": "level05_q_approval"
+    }
+  }
+}

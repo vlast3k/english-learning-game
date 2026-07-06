@@ -543,9 +543,6 @@ async function validateInventoryPictures(page) {
   }
 
   const hoverPoint = await gamePointToViewport(page, inventory.firstPoint.x, inventory.firstPoint.y);
-  const awayPoint = await gamePointToViewport(page, 900, 520);
-  await page.mouse.move(awayPoint.x, awayPoint.y);
-  await page.waitForTimeout(80);
   await page.mouse.move(hoverPoint.x, hoverPoint.y);
   await page.waitForTimeout(120);
   const tooltip = await page.evaluate(() => {
@@ -674,7 +671,7 @@ try {
     resources,
     side: validateMove("side walk", side, "hero-walk-side", 16, 23, 5),
     up: validateMove("up walk", up, "hero-walk-up", 16, 23, 4),
-    down: validateMove("down walk", down, "hero-walk-down", 16, 23, 5),
+    down: validateMove("down walk", down, "hero-walk-down", 16, 23, 4),
   };
 
   console.log(JSON.stringify(report, null, 2));

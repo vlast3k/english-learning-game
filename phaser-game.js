@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260705-level-intro-1";
+const ASSET_VERSION = "20260706-level03-art-1";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const REVEAL_TRANSLATIONS = new Map([
@@ -26,6 +26,7 @@ const REVEAL_TRANSLATIONS = new Map([
   ["for", "за"],
   ["found", "намери"],
   ["gear", "екипировка"],
+  ["get", "вземи"],
   ["ground", "земя"],
   ["guide", "водач"],
   ["hand", "ръка"],
@@ -52,6 +53,7 @@ const REVEAL_TRANSLATIONS = new Map([
   ["the", "the"],
   ["then", "после"],
   ["this", "този"],
+  ["talk", "говори"],
   ["to", "към"],
   ["tool", "инструмент"],
   ["two", "две"],
@@ -59,6 +61,8 @@ const REVEAL_TRANSLATIONS = new Map([
   ["where", "къде"],
   ["which", "кое"],
   ["with", "с"],
+  ["use", "използвай"],
+  ["walk", "върви"],
   ["word", "дума"],
   ["boiling", "ври"],
   ["burning", "гори"],
@@ -100,6 +104,9 @@ class CampScene extends Phaser.Scene {
     this.activeBubble = null;
     this.commandText = null;
     this.inventoryText = null;
+    this.inventoryItems = null;
+    this.inventoryTooltip = null;
+    this.assistantButton = null;
     this.heroTween = null;
     this.validatedItemTranslations = new Set();
     this.validatedSceneIntroTranslations = new Set();
@@ -168,8 +175,8 @@ class CampScene extends Phaser.Scene {
     if (!this.anims.exists("guide-idle")) {
       this.anims.create({
         key: "guide-idle",
-        frames: this.anims.generateFrameNumbers("guideSprite", { start: 0, end: 3 }),
-        frameRate: 4,
+        frames: this.anims.generateFrameNumbers("guideSprite", { start: 0, end: 0 }),
+        frameRate: 1,
         repeat: -1,
       });
       this.anims.create({
@@ -189,23 +196,37 @@ class CampScene extends Phaser.Scene {
 
   createHud() {
     const hudBg = this.add.graphics().setDepth(900);
+    hudBg.fillStyle(0x0b1d18, 0.22);
+    hudBg.fillRoundedRect(22, 20, 190, 96, 10);
     hudBg.fillStyle(0xfffbef, 0.9);
     hudBg.lineStyle(2, 0x173837, 0.18);
-    hudBg.fillRoundedRect(18, 16, 224, 58, 8);
-    hudBg.strokeRoundedRect(18, 16, 224, 58, 8);
+    hudBg.fillRoundedRect(18, 16, 190, 96, 10);
+    hudBg.strokeRoundedRect(18, 16, 190, 96, 10);
+    hudBg.fillStyle(0x174846, 0.96);
+    hudBg.fillRoundedRect(30, 26, 142, 28, 7);
+    hudBg.fillStyle(0xf0b74f, 1);
+    hudBg.fillRoundedRect(30, 26, 8, 28, 4);
+    hudBg.lineStyle(1, 0xfff2cf, 0.42);
+    hudBg.strokeRoundedRect(43, 31, 120, 17, 5);
+    hudBg.fillStyle(0x8d5b2f, 0.78);
+    hudBg.fillRoundedRect(34, 68, 154, 32, 8);
+    hudBg.fillStyle(0xffe4a3, 0.3);
+    hudBg.fillRoundedRect(39, 72, 144, 22, 7);
 
-    this.add.text(34, 27, "INVENTORY", {
+    this.add.text(51, 30, "FIELD KIT", {
       fontFamily: UI_FONT,
       fontSize: "13px",
       fontStyle: "700",
-      color: "#526763",
+      color: "#fff4cf",
     }).setDepth(901);
 
-    this.inventoryText = this.add.text(34, 47, "Empty", {
+    this.inventoryText = this.add.text(41, 72, "Empty", {
       fontFamily: UI_FONT,
       fontSize: "16px",
-      color: "#173837",
+      fontStyle: "700",
+      color: "#fff4cf",
     }).setDepth(901);
+    this.inventoryItems = this.add.container(56, 84).setDepth(902);
 
     this.statusText = this.add.text(GAME_WIDTH - 32, 24, "Prepare for the jungle", {
       fontFamily: UI_FONT,
@@ -225,6 +246,83 @@ class CampScene extends Phaser.Scene {
       fontStyle: "700",
       color: "#fff6d4",
     }).setOrigin(0.5).setDepth(901);
+
+    this.createAssistantButton();
+  }
+
+  createAssistantButton() {
+    const x = GAME_WIDTH - 52;
+    const y = 82;
+    const button = this.add.container(x, y).setDepth(905).setSize(48, 48);
+    const bg = this.add.graphics();
+    const icon = this.add.text(0, -1, "?", {
+      fontFamily: ADVENTURE_FONT,
+      fontSize: "28px",
+      fontStyle: "700",
+      color: "#fff4cf",
+    }).setOrigin(0.5);
+    const hitPlate = this.add.zone(0, 0, 54, 54).setInteractive({ useHandCursor: true });
+    const redraw = (state = "idle") => {
+      const hover = state === "hover";
+      const down = state === "down";
+      bg.clear();
+      bg.fillStyle(0x0b1d18, down ? 0.34 : 0.24);
+      bg.fillCircle(3, 4, 24);
+      bg.fillStyle(down ? 0x0f6a68 : hover ? 0x178f86 : 0x174846, 0.98);
+      bg.lineStyle(3, hover || down ? 0xf0b74f : 0xfff2cf, hover || down ? 1 : 0.78);
+      bg.fillCircle(0, 0, 23);
+      bg.strokeCircle(0, 0, 23);
+      bg.lineStyle(1, 0xfff2cf, hover ? 0.65 : 0.36);
+      bg.strokeCircle(0, 0, 15);
+    };
+    redraw();
+    hitPlate.on("pointerover", () => {
+      redraw("hover");
+      this.setCommand("Ask helper");
+    });
+    hitPlate.on("pointerout", () => redraw("idle"));
+    hitPlate.on("pointerdown", () => {
+      redraw("down");
+      this.openAssistantBubble();
+    });
+    hitPlate.on("pointerup", () => redraw("hover"));
+    button.add([bg, icon, hitPlate]);
+    this.assistantButton = button;
+  }
+
+  openAssistantBubble() {
+    const hint = this.getAssistantHint();
+    this.showSpeechBubble({
+      speaker: hint.speaker || this.contentModel?.assistant?.speaker || "Helper",
+      text: hint.text,
+      bg: hint.bg,
+      anchor: hint.anchor || { x: GAME_WIDTH - 84, y: 156 },
+      onClose: () => this.closeBubble(),
+      options: [{ text: "OK", action: () => this.closeBubble() }],
+    });
+    if (this.activeBubble) {
+      this.activeBubble.assistantHint = hint;
+    }
+  }
+
+  getAssistantHint() {
+    const missingGear = ["rope", "backpack", "map"].filter((word) => !this.learnedWords.includes(word));
+    if (missingGear.length > 0) {
+      return {
+        text: `Get the ${missingGear.join(", ")} first.`,
+        bg: `Първо вземи: ${missingGear.join(", ")}.`,
+      };
+    }
+    if (!this.flags.jungle_path_open) {
+      return {
+        text: "Talk to the guide.",
+        bg: "Говори с водача.",
+      };
+    }
+    return {
+      text: "Use the jungle path.",
+      bg: "Използвай пътеката към джунглата.",
+    };
   }
 
   createHotspots() {
@@ -1333,6 +1431,275 @@ class CampScene extends Phaser.Scene {
     });
   }
 
+  openInventoryDetail(hotspot) {
+    const detail = this.getInventoryDetail(hotspot);
+    this.setCommand(`Look at ${hotspot.label}`);
+    this.showSpeechBubble({
+      speaker: hotspot.label,
+      text: detail.text,
+      bg: detail.bg,
+      anchor: { x: 140, y: 126 },
+      options: [{ text: "OK", action: () => this.closeBubble() }],
+    });
+  }
+
+  getInventoryDetail(hotspot) {
+    const configuredDetail = hotspot.inventory?.detail || hotspot.detail || hotspot.details;
+    return {
+      text: configuredDetail?.text || hotspot.intro?.text || `This is ${hotspot.english || hotspot.label}.`,
+      bg: configuredDetail?.bg || hotspot.intro?.bg || hotspot.bg || "",
+    };
+  }
+
+  showInventoryTooltip(slot, hotspot) {
+    this.hideInventoryTooltip();
+    const label = this.add.text(0, 0, hotspot.label, {
+      fontFamily: UI_FONT,
+      fontSize: "14px",
+      fontStyle: "700",
+      color: "#173837",
+    }).setOrigin(0.5);
+    const paddingX = 10;
+    const width = Math.ceil(label.width + paddingX * 2);
+    const height = 28;
+    const x = Phaser.Math.Clamp(this.inventoryItems.x + slot.x, 42, 220);
+    const y = this.inventoryItems.y + slot.y + 38;
+    const tooltip = this.add.container(x, y).setDepth(980);
+    const bg = this.add.graphics();
+    bg.fillStyle(0x4d3322, 0.16);
+    bg.fillRoundedRect(-width / 2 + 2, -height / 2 + 3, width, height, 8);
+    bg.fillStyle(0xfff4c4, 1);
+    bg.lineStyle(2, 0x8b6336, 0.94);
+    bg.fillRoundedRect(-width / 2, -height / 2, width, height, 8);
+    bg.strokeRoundedRect(-width / 2, -height / 2, width, height, 8);
+    tooltip.add([bg, label]);
+    this.inventoryTooltip = tooltip;
+  }
+
+  hideInventoryTooltip() {
+    if (this.inventoryTooltip) {
+      this.inventoryTooltip.destroy();
+      this.inventoryTooltip = null;
+    }
+  }
+
+  createInventorySlot(hotspot, index) {
+    const slotSize = 44;
+    const slot = this.add.container(index * 50, 0)
+      .setSize(slotSize, slotSize);
+    const bg = this.add.graphics();
+    const redraw = (state) => {
+      const hover = state === "hover";
+      const down = state === "down";
+      bg.clear();
+      bg.fillStyle(0x2c1c13, 0.32);
+      bg.fillRoundedRect(-slotSize / 2 + 3, -slotSize / 2 + 4, slotSize, slotSize, 9);
+      bg.fillStyle(down ? 0xf0bd55 : hover ? 0xffd77a : 0xffedbd, 1);
+      bg.lineStyle(3, hover || down ? 0xf0b74f : 0x9b7343, hover || down ? 1 : 0.86);
+      bg.fillRoundedRect(-slotSize / 2, -slotSize / 2, slotSize, slotSize, 8);
+      bg.strokeRoundedRect(-slotSize / 2, -slotSize / 2, slotSize, slotSize, 8);
+      bg.lineStyle(1, 0xfffbef, hover ? 0.76 : 0.42);
+      bg.strokeRoundedRect(-slotSize / 2 + 6, -slotSize / 2 + 6, slotSize - 12, slotSize - 12, 6);
+      bg.fillStyle(0x7b4d25, 0.52);
+      bg.fillCircle(-slotSize / 2 + 7, -slotSize / 2 + 7, 2.4);
+      bg.fillCircle(slotSize / 2 - 7, -slotSize / 2 + 7, 2.4);
+    };
+    redraw("idle");
+
+    const icon = this.createInventoryIcon(hotspot, 35);
+    const hitPlate = this.add.zone(0, 0, slotSize, slotSize)
+      .setInteractive({ useHandCursor: true });
+    slot.add([bg, icon, hitPlate]);
+    slot.bg = bg;
+    slot.icon = icon;
+    slot.hitPlate = hitPlate;
+    slot.hotspot = hotspot;
+    slot.isInventorySlot = true;
+
+    hitPlate.on("pointerover", () => {
+      slot.hoverState = "hover";
+      redraw("hover");
+      this.showInventoryTooltip(slot, hotspot);
+    });
+    hitPlate.on("pointerout", () => {
+      slot.hoverState = "idle";
+      redraw("idle");
+      this.hideInventoryTooltip();
+    });
+    hitPlate.on("pointerdown", () => {
+      slot.hoverState = "down";
+      redraw("down");
+      this.hideInventoryTooltip();
+      this.openInventoryDetail(hotspot);
+    });
+    hitPlate.on("pointerup", () => {
+      slot.hoverState = "hover";
+      redraw("hover");
+    });
+    return slot;
+  }
+
+  createEmptyInventorySlot(itemId, index) {
+    const slotSize = 44;
+    const slot = this.add.container(index * 50, 0)
+      .setSize(slotSize, slotSize);
+    const bg = this.add.graphics();
+    bg.fillStyle(0x2c1c13, 0.22);
+    bg.fillRoundedRect(-slotSize / 2 + 3, -slotSize / 2 + 4, slotSize, slotSize, 9);
+    bg.fillStyle(0x4f3928, 0.58);
+    bg.lineStyle(2, 0xe2b661, 0.48);
+    bg.fillRoundedRect(-slotSize / 2, -slotSize / 2, slotSize, slotSize, 8);
+    bg.strokeRoundedRect(-slotSize / 2, -slotSize / 2, slotSize, slotSize, 8);
+    bg.lineStyle(2, 0xffefba, 0.2);
+    bg.strokeRoundedRect(-slotSize / 2 + 7, -slotSize / 2 + 7, slotSize - 14, slotSize - 14, 6);
+    bg.fillStyle(0xffefba, 0.68);
+    bg.fillRoundedRect(-6, -2, 12, 13, 3);
+    bg.lineStyle(3, 0xffefba, 0.5);
+    bg.beginPath();
+    bg.arc(0, -3, 8, Math.PI, 0);
+    bg.strokePath();
+    const label = this.add.text(0, 3, "?", {
+      fontFamily: UI_FONT,
+      fontSize: "18px",
+      fontStyle: "800",
+      color: "#4f3928",
+    }).setOrigin(0.5);
+    slot.add([bg, label]);
+    slot.itemId = itemId;
+    slot.isEmptyInventorySlot = true;
+    return slot;
+  }
+
+  createInventoryIcon(hotspot, maxSize) {
+    const spec = this.getInventoryIconSpec(hotspot);
+    if (spec && this.textures.exists(spec.texture)) {
+      const frameKey = this.ensureInventoryIconFrame(hotspot, spec);
+      if (frameKey) {
+        const image = this.add.image(0, 0, spec.texture, frameKey).setOrigin(0.5);
+        const frame = this.textures.getFrame(spec.texture, frameKey);
+        const scale = Math.min(maxSize / frame.width, maxSize / frame.height);
+        image.setScale(scale);
+        return image;
+      }
+    }
+    return this.createFallbackInventoryIcon(hotspot, maxSize);
+  }
+
+  getInventoryIconSpec(hotspot) {
+    const configuredIcon = hotspot.inventory?.icon || hotspot.icon;
+    if (configuredIcon?.texture && configuredIcon?.frame) {
+      return { texture: configuredIcon.texture, frame: configuredIcon.frame };
+    }
+    if (configuredIcon?.source && configuredIcon?.frame) {
+      return { texture: configuredIcon.source, frame: configuredIcon.frame };
+    }
+    if (!this.textures.exists("campBg")) {
+      return null;
+    }
+    const texture = this.textures.get("campBg");
+    const source = texture.getSourceImage();
+    const scaleX = source.width / GAME_WIDTH;
+    const scaleY = source.height / GAME_HEIGHT;
+    const sourceSize = Math.max(58, hotspot.radius * 2.25 * Math.max(scaleX, scaleY));
+    const centerX = hotspot.x * scaleX;
+    const centerY = hotspot.y * scaleY;
+    return {
+      texture: "campBg",
+      frame: {
+        x: Math.round(Phaser.Math.Clamp(centerX - sourceSize / 2, 0, source.width - sourceSize)),
+        y: Math.round(Phaser.Math.Clamp(centerY - sourceSize / 2, 0, source.height - sourceSize)),
+        width: Math.round(sourceSize),
+        height: Math.round(sourceSize),
+      },
+    };
+  }
+
+  ensureInventoryIconFrame(hotspot, spec) {
+    const texture = this.textures.get(spec.texture);
+    const frame = spec.frame;
+    if (!texture || !frame) {
+      return null;
+    }
+    const source = texture.getSourceImage();
+    const width = Math.round(frame.width);
+    const height = Math.round(frame.height);
+    const x = Math.round(Phaser.Math.Clamp(frame.x, 0, Math.max(0, source.width - width)));
+    const y = Math.round(Phaser.Math.Clamp(frame.y, 0, Math.max(0, source.height - height)));
+    if (width <= 0 || height <= 0) {
+      return null;
+    }
+    const frameKey = `inventory-${hotspot.id}`;
+    if (!texture.has(frameKey)) {
+      texture.add(frameKey, 0, x, y, Math.min(width, source.width - x), Math.min(height, source.height - y));
+    }
+    return frameKey;
+  }
+
+  createFallbackInventoryIcon(hotspot, maxSize) {
+    const icon = this.add.container(0, 0).setSize(maxSize, maxSize);
+    const art = this.add.graphics();
+    const id = hotspot.id;
+    if (id.includes("rope")) {
+      art.lineStyle(4, 0x8d5b2f, 1);
+      art.strokeCircle(0, 0, 9);
+      art.strokeCircle(7, -1, 9);
+      art.lineStyle(2, 0xffd98a, 0.86);
+      art.strokeCircle(0, 0, 5);
+    } else if (id.includes("backpack") || id.includes("bag")) {
+      art.fillStyle(0x375d76, 1);
+      art.fillRoundedRect(-12, -6, 24, 20, 6);
+      art.lineStyle(3, 0x9a6a32, 1);
+      art.strokeRoundedRect(-12, -6, 24, 20, 6);
+      art.lineStyle(3, 0x273946, 1);
+      art.beginPath();
+      art.arc(0, -6, 8, Math.PI, 0);
+      art.strokePath();
+    } else if (id.includes("map") || id.includes("form") || id.includes("dossier")) {
+      art.fillStyle(0xf5d894, 1);
+      art.fillRoundedRect(-12, -14, 24, 28, 3);
+      art.lineStyle(2, 0x8b6336, 1);
+      art.strokeRoundedRect(-12, -14, 24, 28, 3);
+      art.lineStyle(2, 0x0f7a78, 0.8);
+      art.beginPath();
+      art.moveTo(-7, -5);
+      art.lineTo(0, -9);
+      art.lineTo(8, -4);
+      art.strokePath();
+    } else if (id.includes("badge")) {
+      art.fillStyle(0xf4c44e, 1);
+      art.fillCircle(0, -2, 11);
+      art.lineStyle(3, 0x6b4b20, 1);
+      art.strokeCircle(0, -2, 11);
+      art.fillStyle(0xfffbef, 1);
+      art.fillRoundedRect(-8, 8, 16, 9, 3);
+    } else if (id.includes("phone")) {
+      art.fillStyle(0x1e2b2d, 1);
+      art.fillRoundedRect(-13, -10, 26, 20, 4);
+      art.fillStyle(0xffefba, 0.9);
+      for (let row = 0; row < 3; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          art.fillCircle(-6 + col * 6, -4 + row * 5, 1.5);
+        }
+      }
+    } else if (id.includes("camera")) {
+      art.fillStyle(0x283136, 1);
+      art.fillRoundedRect(-13, -9, 26, 18, 4);
+      art.fillStyle(0x162024, 1);
+      art.fillCircle(-2, 0, 8);
+      art.lineStyle(3, 0x76d6df, 0.9);
+      art.strokeCircle(-2, 0, 5);
+      art.fillStyle(0xf0473f, 1);
+      art.fillCircle(9, -5, 2);
+    } else {
+      art.fillStyle(0xf4c44e, 1);
+      art.fillCircle(0, 0, 12);
+      art.lineStyle(3, 0x0f7a78, 1);
+      art.strokeCircle(0, 0, 12);
+    }
+    icon.add(art);
+    return icon;
+  }
+
   openGuideQuestion(nodeId) {
     const node = this.guideTree.nodes[nodeId];
     this.playGuideTalk();
@@ -1757,7 +2124,30 @@ class CampScene extends Phaser.Scene {
   }
 
   updateInventory() {
-    this.inventoryText.setText(this.learnedWords.join("  "));
+    if (!this.inventoryItems) {
+      return;
+    }
+    this.inventoryItems.removeAll(true);
+    this.hideInventoryTooltip();
+    this.inventoryText.setVisible(false);
+    const expectedIds = this.getInventorySlotIds();
+    expectedIds.forEach((itemId, index) => {
+      const hotspot = this.hotspots?.find((candidate) => candidate.id === itemId);
+      if (hotspot && this.learnedWords.includes(itemId)) {
+        this.inventoryItems.add(this.createInventorySlot(hotspot, index));
+        return;
+      }
+      this.inventoryItems.add(this.createEmptyInventorySlot(itemId, index));
+    });
+  }
+
+  getInventorySlotIds() {
+    const requiredItems = this.contentModel?.guide?.required_items;
+    const collectibleIds = this.hotspots
+      ?.filter((hotspot) => !hotspot.scenery)
+      .map((hotspot) => hotspot.id) || [];
+    const baseIds = Array.isArray(requiredItems) && requiredItems.length > 0 ? requiredItems : collectibleIds;
+    return [...new Set([...this.learnedWords, ...baseIds])].slice(0, 3);
   }
 
   setCommand(text) {
