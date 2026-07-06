@@ -130,6 +130,121 @@
         return { ...exit, ...(this.getStateEntry(exit.states) || {}) };
       }
 
+      getActiveExitPuzzle() {
+        if (!this.gameEngine) {
+          return null;
+        }
+        const snapshot = this.gameEngine.getSnapshot();
+        return snapshot.available.find((node) => node.type === "scene_exit")
+          || snapshot.puzzles.find((node) => node.type === "scene_exit" && node.status === "available")
+          || null;
+      }
+
+      shouldRunExitVocabularyGate() {
+        const exitPuzzle = this.getActiveExitPuzzle();
+        return Boolean(exitPuzzle && exitPuzzle.status !== "completed");
+      }
+
+      getGateVocabularyPool() {
+        const configuredWords = this.contentModel?.level_plan?.gate_review_words
+          || this.contentModel?.level_plan?.vocabulary_targets
+          || [];
+        const translations = this.contentModel?.translations || {};
+        return configuredWords
+          .map((word) => {
+            const english = String(word || "").trim();
+            const bulgarian = translations[english.toLowerCase()] || translations[english] || null;
+            return english && bulgarian ? { english, bulgarian } : null;
+          })
+          .filter(Boolean);
+      }
+
+      chooseGateReviewWords(pool, count) {
+        const shuffled = [...pool];
+        Phaser.Utils.Array.Shuffle(shuffled);
+        if (shuffled.length >= count) {
+          return shuffled.slice(0, count);
+        }
+        const result = [...shuffled];
+        while (result.length < count && pool.length > 0) {
+          const next = pool[result.length % pool.length];
+          result.push(next);
+        }
+        return result;
+      }
+
+      buildGateQuestionOptions(word, pool, direction) {
+        const distractorPool = pool.filter((entry) => entry.english !== word.english);
+        Phaser.Utils.Array.Shuffle(distractorPool);
+        const optionText = direction === "en-bg" ? "bulgarian" : "english";
+        const correct = {
+          text: word[optionText],
+          isCorrect: true,
+        };
+        const feedback = `Not yet. ${word.english} = ${word.bulgarian}. Try again.`;
+        const distractors = distractorPool.slice(0, 2).map((entry) => ({
+          text: entry[optionText],
+          feedback,
+        }));
+        return this.getShuffledChallengeOptions([correct, ...distractors]);
+      }
+
+      buildGateReviewQuestions() {
+        const pool = this.getGateVocabularyPool();
+        const reviewWords = this.chooseGateReviewWords(pool, 10);
+        return reviewWords.map((word, index) => {
+          const direction = index % 2 === 0 ? "en-bg" : "bg-en";
+          const promptWord = direction === "en-bg" ? word.english : word.bulgarian;
+          const targetLanguage = direction === "en-bg" ? "Bulgarian" : "English";
+          return {
+            id: `exit-gate-review-${index + 1}`,
+            text: `Gate review ${index + 1}/10. Choose the ${targetLanguage} word for: ${promptWord}`,
+            word,
+            direction,
+          };
+        });
+      }
+
+      openExitVocabularyGate(onPassed, questionIndex = null, questions = null) {
+        const gateQuestions = questions || this.exitGateReview?.questions || this.buildGateReviewQuestions();
+        const currentIndex = questionIndex ?? this.exitGateReview?.questionIndex ?? 0;
+        this.exitGateReview = { questions: gateQuestions, questionIndex: currentIndex };
+        const question = gateQuestions[currentIndex];
+        if (!question) {
+          this.exitGateReview = null;
+          this.closeBubble();
+          onPassed();
+          return;
+        }
+        const pool = this.getGateVocabularyPool();
+        this.showSpeechBubble({
+          speaker: "Gate Review",
+          text: question.text,
+          bg: "",
+          anchor: { x: this.exitMarker.x, y: this.exitMarker.y - 54 },
+          revealTranslations: false,
+          onClose: () => {
+            this.closeBubble();
+            this.setCommand("Gate review paused");
+          },
+          options: this.buildGateQuestionOptions(question.word, pool, question.direction).map((option) => ({
+            text: option.text,
+            isCorrect: option.isCorrect,
+            action: () => this.handleExitVocabularyGateOption(option, onPassed, currentIndex, gateQuestions),
+          })),
+        });
+      }
+
+      handleExitVocabularyGateOption(option, onPassed, questionIndex, questions) {
+        if (!option.isCorrect) {
+          this.activeBubble?.showFeedback(option.feedback || "Try that word once more before the gate opens.");
+          return;
+        }
+        this.exitGateReview = { questions, questionIndex: questionIndex + 1 };
+        this.closeBubble();
+        this.time.delayedCall(100, () => this.openExitVocabularyGate(onPassed, questionIndex + 1, questions));
+      }
+
       getAssistantHint() {
         if (!this.gameEngine) {
           return super.getAssistantHint();
@@ -532,11 +647,17 @@
           this.setCommand(currentExit.command || `Walk to ${currentExit.label || exit.label}`);
           const walkTo = currentExit.walk_to || exit.walk_to || { x, y };
           this.walkHeroTo(walkTo.x, walkTo.y, () => {
-            this.gameEngine.emit("exit.reached", {
+            const emitExitReached = () => this.gameEngine.emit("exit.reached", {
               target: exit.id,
               exit_id: exit.id,
               puzzle_id: this.getExitBinding().puzzle_id,
             });
+            if (this.shouldRunExitVocabularyGate()) {
+              this.setCommand("Pass the gate review");
+              this.openExitVocabularyGate(emitExitReached);
+              return;
+            }
+            emitExitReached();
           });
         });
         marker.zone = zone;

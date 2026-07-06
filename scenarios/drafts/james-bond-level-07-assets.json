@@ -1,0 +1,40 @@
+{
+  "scene_id": "james-bond-level-07",
+  "status": "integrated",
+  "style_guide": "Painted kid-friendly spy adventure, festive warm light, readable objects, no text inside generated images.",
+  "assets": [
+    {
+      "id": "level07_background",
+      "type": "background",
+      "size": "1536x864",
+      "path": "assets/james-bond/level-07-festival-puzzle/generated/festival-background.png",
+      "texture_key": "campBg",
+      "prompt": "A cheerful New Year festival square for a children's spy adventure English-learning game, with lanterns, a music stage, clothing stalls, festive lights, a decorated archway exit, open walkable foreground, no readable text."
+    },
+    {
+      "id": "level07_interactive_props",
+      "type": "interactive_props",
+      "size": "1536x512",
+      "path": "assets/james-bond/level-07-festival-puzzle/generated/interactive-props.png",
+      "texture_key": "interactiveProps",
+      "prompt": "Transparent-background prop sheet for a children's spy adventure New Year festival level: colorful festival hat, clothes bundle, hand drum, fireworks envelope, glowing festival arch marker, no text."
+    },
+    {
+      "id": "level07_guide_reuse",
+      "type": "guide_spritesheet",
+      "size": "768x660",
+      "path": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+      "texture_key": "guide",
+      "decision": "Reuse the polished existing guide spritesheet until a dedicated Host Lina sheet can match the same quality and walk-cycle constraints."
+    }
+  ],
+  "generated_outputs": [
+    "assets/james-bond/level-07-festival-puzzle/generated/festival-background.png",
+    "assets/james-bond/level-07-festival-puzzle/generated/interactive-props.png"
+  ],
+  "source_outputs": [
+    "/Users/I024148/.codex/generated_images/019f383c-295c-7391-91d6-5b0a456eb6f3/ig_0c51d447e22b4b52016a4be93681ac8191b391bb159e294bc0.png",
+    "/Users/I024148/.codex/generated_images/019f383c-295c-7391-91d6-5b0a456eb6f3/ig_0c51d447e22b4b52016a4be96b218c8191b6950a2a5abc6d54.png"
+  ],
+  "integration_note": "The background and interactive prop atlas are generated project assets. The guide sheet is an explicit reuse decision, not a missing generated output."
+}

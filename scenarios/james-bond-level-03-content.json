@@ -40,6 +40,18 @@
       "help",
       "play"
     ],
+    "gate_review_words": [
+      "village",
+      "friend",
+      "teacher",
+      "cook",
+      "garden",
+      "bread",
+      "fruit",
+      "water",
+      "football",
+      "play"
+    ],
     "flow": [
       "Read the village welcome board.",
       "Collect the bread note by using I make.",
@@ -161,6 +173,7 @@
     "make": "правя",
     "map": "карта",
     "mission": "мисия",
+    "music": "музика",
     "need": "имам нужда",
     "note": "бележка",
     "on": "на",

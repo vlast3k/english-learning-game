@@ -1,10 +1,12 @@
 import { readdir, readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SCENARIOS_DIR = path.join(ROOT, "scenarios");
+const DRAFTS_DIR = path.join(SCENARIOS_DIR, "drafts");
 const HTML_PATH = path.join(ROOT, "phaser.html");
 const ADAPTER_PATH = path.join(ROOT, "phaser-content.js");
 
@@ -32,6 +34,16 @@ if (html.indexOf("phaser-content.js") > html.indexOf("phaser-game.js")) {
 function requirePoint(value, pathLabel) {
   if (!Number.isFinite(value?.x) || !Number.isFinite(value?.y)) {
     fail(`${pathLabel} must define numeric x and y`);
+  }
+}
+
+function requireWorkspaceAsset(assetPath, pathLabel) {
+  requireString(assetPath, pathLabel);
+  if (path.isAbsolute(assetPath) || assetPath.includes("..")) {
+    fail(`${pathLabel} must be a workspace-relative asset path`);
+  }
+  if (!existsSync(path.join(ROOT, assetPath))) {
+    fail(`${pathLabel} does not exist: ${assetPath}`);
   }
 }
 
@@ -162,11 +174,54 @@ function validateInventoryPresentation(hotspot, pathLabel) {
   }
 }
 
-function validateContent(content, fileLabel) {
+function validateContentAssets(content, fileLabel, assetPlan) {
+  for (const [key, assetPath] of Object.entries(content.assets || {})) {
+    requireWorkspaceAsset(assetPath, `${fileLabel}.assets.${key}`);
+  }
+
+  if (!assetPlan) {
+    return;
+  }
+
+  const planLabel = `scenarios/drafts/${content.scene_id}-assets.json`;
+  if (assetPlan.scene_id !== undefined && assetPlan.scene_id !== content.scene_id) {
+    fail(`${planLabel}.scene_id must match ${content.scene_id}`);
+  }
+  if (assetPlan.status === "planned") {
+    fail(`${planLabel} is still marked planned; generate assets and integrate paths before validation can pass`);
+  }
+  const planAssets = Array.isArray(assetPlan) ? assetPlan : assetPlan.assets;
+  if (!Array.isArray(planAssets) || planAssets.length === 0) {
+    fail(`${planLabel}.assets must contain at least one asset entry`);
+  }
+
+  const requiredScenarioBindings = new Map([
+    ["background", "background"],
+    ["interactive_props", "interactive_props"],
+    ["prop_atlas", "interactive_props"],
+    ["guide_spritesheet", "guide_spritesheet"],
+  ]);
+  for (const [index, asset] of planAssets.entries()) {
+    requireString(asset.id, `${planLabel}.assets[${index}].id`);
+    requireString(asset.type, `${planLabel}.assets[${index}].type`);
+    requireWorkspaceAsset(asset.path, `${planLabel}.assets[${index}].path`);
+    const scenarioAssetKey = requiredScenarioBindings.get(asset.type);
+    if (scenarioAssetKey && content.assets?.[scenarioAssetKey] !== asset.path) {
+      fail(`${planLabel}.assets[${index}] declares ${asset.path}, but ${fileLabel}.assets.${scenarioAssetKey} points to ${content.assets?.[scenarioAssetKey] || "nothing"}`);
+    }
+  }
+
+  for (const [index, outputPath] of (assetPlan.generated_outputs || []).entries()) {
+    requireWorkspaceAsset(outputPath, `${planLabel}.generated_outputs[${index}]`);
+  }
+}
+
+function validateContent(content, fileLabel, assetPlan = null) {
   if (content.schema_version !== 1) {
     fail(`${fileLabel}: schema_version must be 1`);
   }
   requireString(content.scene_id, `${fileLabel}.scene_id`);
+  validateContentAssets(content, fileLabel, assetPlan);
   if (!content.translations || typeof content.translations !== "object") {
     fail(`${fileLabel}.translations must be an object`);
   }
@@ -174,6 +229,20 @@ function validateContent(content, fileLabel) {
   requireString(content.level_plan?.mission, `${fileLabel}.level_plan.mission`);
   requireString(content.level_plan?.mission_bg, `${fileLabel}.level_plan.mission_bg`);
   validateTranslationCheck(content.level_plan?.translation_check, `${fileLabel}.level_plan.translation_check`);
+  if (content.scene_id?.startsWith("james-bond-level-")) {
+    if (!Array.isArray(content.level_plan?.gate_review_words) || content.level_plan.gate_review_words.length !== 10) {
+      fail(`${fileLabel}.level_plan.gate_review_words must contain exactly 10 authored review words`);
+    }
+    for (const [index, word] of content.level_plan.gate_review_words.entries()) {
+      requireString(word, `${fileLabel}.level_plan.gate_review_words[${index}]`);
+      if (!content.translations[word.toLowerCase()] && !content.translations[word]) {
+        fail(`${fileLabel}.level_plan.gate_review_words[${index}] is missing a translation: ${word}`);
+      }
+      if (Array.isArray(content.level_plan.vocabulary_targets) && !content.level_plan.vocabulary_targets.includes(word)) {
+        fail(`${fileLabel}.level_plan.gate_review_words[${index}] must also appear in vocabulary_targets: ${word}`);
+      }
+    }
+  }
 
   const hotspotIds = new Set();
   const collectibleIds = new Set();
@@ -349,11 +418,19 @@ function validateContent(content, fileLabel) {
 const scenarioFiles = (await readdir(SCENARIOS_DIR))
   .filter((file) => file.endsWith("-content.json"))
   .sort();
+const assetPlanFiles = existsSync(DRAFTS_DIR)
+  ? (await readdir(DRAFTS_DIR)).filter((file) => file.endsWith("-assets.json"))
+  : [];
+const assetPlans = new Map();
+for (const file of assetPlanFiles) {
+  const sceneId = file.replace(/-assets\.json$/, "");
+  assetPlans.set(sceneId, JSON.parse(await readFile(path.join(DRAFTS_DIR, file), "utf8")));
+}
 const validationResults = [];
 let content = null;
 for (const file of scenarioFiles) {
   const parsed = JSON.parse(await readFile(path.join(SCENARIOS_DIR, file), "utf8"));
-  validationResults.push(validateContent(parsed, file));
+  validationResults.push(validateContent(parsed, file, assetPlans.get(parsed.scene_id)));
   if (file === "james-bond-level-01-content.json") {
     content = parsed;
   }

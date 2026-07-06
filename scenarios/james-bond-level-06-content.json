@@ -1,0 +1,621 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-06",
+  "content_version": "2026-07-06-river-mountain-art-1",
+  "level_plan": {
+    "title": "River And Mountain",
+    "mission": "Agent Alex studies a route station to find the safe path from the river, through the village, and toward the mountain.",
+    "mission_bg": "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека от реката, през селото и към планината.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        { "text": "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека от реката, през селото и към планината.", "isCorrect": true },
+        { "text": "Героят посещава лабораторията на Q, за да провери своите шпионски джаджи." },
+        { "text": "Рейнджърът изучава животно, което спи сутрин и ходи през нощта." }
+      ]
+    },
+    "plan_hotspot_id": "route_board",
+    "grammar_targets": [
+      "Where is...? with place phrases",
+      "Where are...? with plural places",
+      "There is/There are review",
+      "This is/These are review"
+    ],
+    "vocabulary_targets": [
+      "river",
+      "mountain",
+      "boat",
+      "bridge",
+      "map",
+      "photo",
+      "city",
+      "country",
+      "village",
+      "road",
+      "path",
+      "left",
+      "right"
+    ],
+    "gate_review_words": [
+      "river",
+      "mountain",
+      "boat",
+      "bridge",
+      "map",
+      "photo",
+      "city",
+      "country",
+      "village",
+      "path"
+    ],
+    "flow": [
+      "Read the route board at the station.",
+      "Collect the river map.",
+      "Collect the boat ticket.",
+      "Collect the mountain photo.",
+      "Talk to Guide Mira for the route check.",
+      "Exit through the mountain path."
+    ]
+  },
+  "assets": {
+    "background": "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "interactive_props": "assets/james-bond/level-06-river-and-mountain/generated/interactive-props.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.72,
+    "guide_scale_multiplier": 1.86
+  },
+  "hero_start": { "x": 222, "y": 518 },
+  "hud": {
+    "status_text": "River and mountain route in progress"
+  },
+  "assistant": {
+    "speaker": "Helper",
+    "complete_text": "Excellent route work, Agent Alex.",
+    "complete_bg": "Отлична работа с маршрута, агент Алекс.",
+    "fallback_bg": "Провери следващата задача.",
+    "hints": {
+      "level06_understand_mission": {
+        "text": "Read the route board first.",
+        "bg": "Първо прочети маршрутната дъска."
+      },
+      "level06_river_map": {
+        "text": "Find the river map.",
+        "bg": "Намери картата на реката."
+      },
+      "level06_boat_ticket": {
+        "text": "Find the boat ticket.",
+        "bg": "Намери билета за лодката."
+      },
+      "level06_mountain_photo": {
+        "text": "Find the mountain photo.",
+        "bg": "Намери снимката на планината."
+      },
+      "level06_guide_route_check": {
+        "text": "Talk to Guide Mira.",
+        "bg": "Говори с Guide Mira."
+      },
+      "level06_mountain_path_exit": {
+        "text": "Use the mountain path.",
+        "bg": "Използвай планинската пътека."
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      { "x": 18, "y": 346 },
+      { "x": 1006, "y": 346 },
+      { "x": 1016, "y": 566 },
+      { "x": 12, "y": 566 }
+    ],
+    "clearance": 28,
+    "obstacles": [
+      { "id": "left_river_bank", "x1": 0, "y1": 280, "x2": 186, "y2": 430 },
+      { "id": "route_table", "x1": 388, "y1": 330, "x2": 700, "y2": 462 },
+      { "id": "mountain_path_marker", "x1": 858, "y1": 292, "x2": 1006, "y2": 438 }
+    ]
+  },
+  "translations": {
+    "a": "един",
+    "after": "след",
+    "alex": "Алекс",
+    "agent": "агент",
+    "and": "и",
+    "are": "са",
+    "at": "при",
+    "behind": "зад",
+    "board": "дъска",
+    "boat": "лодка",
+    "bridge": "мост",
+    "bulgarian": "български",
+    "challenge": "предизвикателство",
+    "check": "проверка",
+    "choose": "избери",
+    "city": "град",
+    "closed": "затворен",
+    "collect": "събери",
+    "complete": "завърши",
+    "country": "село/провинция",
+    "excellent": "отличен",
+    "exit": "изход",
+    "find": "намери",
+    "first": "първо",
+    "from": "от",
+    "gate": "порта",
+    "goes": "върви",
+    "good": "добре",
+    "guide": "водач",
+    "hero": "герой",
+    "i": "аз",
+    "in": "в",
+    "is": "е",
+    "it": "то",
+    "left": "ляво",
+    "map": "карта",
+    "means": "означава",
+    "mira": "Мира",
+    "mira's": "на Мира",
+    "mission": "мисия",
+    "more": "още",
+    "mountain": "планина",
+    "mountains": "планини",
+    "need": "нуждая се",
+    "next": "следваща",
+    "night": "нощ",
+    "on": "на",
+    "once": "веднъж",
+    "open": "отворен",
+    "opened": "отвори",
+    "path": "пътека",
+    "photo": "снимка",
+    "plan": "план",
+    "read": "прочети",
+    "review": "преговор",
+    "river": "река",
+    "road": "път",
+    "route": "маршрут",
+    "safe": "безопасен",
+    "says": "казва",
+    "sentence": "изречение",
+    "sleep": "спи",
+    "station": "станция",
+    "studies": "изучава",
+    "talk": "говори",
+    "task": "задача",
+    "the": "",
+    "there": "има",
+    "these": "тези",
+    "they": "те",
+    "this": "това",
+    "through": "през",
+    "ticket": "билет",
+    "to": "към/за",
+    "today": "днес",
+    "toward": "към",
+    "transport": "транспорт",
+    "true": "вярно",
+    "validating": "проверка",
+    "village": "село",
+    "walk": "ходя",
+    "where": "къде",
+    "which": "кой",
+    "with": "с",
+    "work": "работа",
+    "you": "ти"
+  },
+  "hotspots": [
+    {
+      "id": "route_board",
+      "kind": "scenery",
+      "label": "route board",
+      "english": "board",
+      "bg": "дъска",
+      "x": 168,
+      "y": 302,
+      "walk_to": { "x": 268, "y": 514 },
+      "radius": 48,
+      "interaction": "view",
+      "scene_icon": {
+        "texture": "interactiveProps",
+        "frame": { "x": 922, "y": 0, "width": 307, "height": 512 },
+        "size": 76
+      },
+      "description": {
+        "text": "The route board says: There is a river on the left. There are mountains behind the village.",
+        "bg": "Маршрутната дъска казва: Има река отляво. Има планини зад селото."
+      }
+    },
+    {
+      "id": "river_map",
+      "kind": "collectible",
+      "label": "river map",
+      "english": "map",
+      "bg": "карта",
+      "x": 456,
+      "y": 386,
+      "walk_to": { "x": 392, "y": 520 },
+      "radius": 34,
+      "intro": {
+        "text": "You find the river map. Where is the river? The river is on the left.",
+        "bg": "Намираш картата на реката. Къде е реката? Реката е отляво.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Намираш картата на реката. Къде е реката? Реката е отляво.", "isCorrect": true },
+            { "text": "Билетът за лодката е до моста.", "isCorrect": false },
+            { "text": "Планините са зад селото.", "isCorrect": false }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "river/map/left",
+        "curriculum_source": "Blue Dot 2 Entry Review 3",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "Where is...?",
+          "place phrase: on the left"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": { "x": 0, "y": 0, "width": 307, "height": 512 }
+        }
+      },
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 2
+      }
+    },
+    {
+      "id": "boat_ticket",
+      "kind": "collectible",
+      "label": "boat ticket",
+      "english": "boat",
+      "bg": "лодка",
+      "x": 596,
+      "y": 394,
+      "walk_to": { "x": 534, "y": 524 },
+      "radius": 34,
+      "intro": {
+        "text": "This is the boat ticket. Where is the boat? The boat is next to the bridge.",
+        "bg": "Това е билетът за лодката. Къде е лодката? Лодката е до моста.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Това е билетът за лодката. Къде е лодката? Лодката е до моста.", "isCorrect": true },
+            { "text": "Картата на реката е отляво.", "isCorrect": false },
+            { "text": "Снимката показва града и селото.", "isCorrect": false }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "boat/bridge/ticket",
+        "curriculum_source": "Blue Dot 2 Entry Review 3",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "Where is...?",
+          "place phrase: next to"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "short answer"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": { "x": 307, "y": 0, "width": 307, "height": 512 }
+        }
+      },
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
+    },
+    {
+      "id": "mountain_photo",
+      "kind": "collectible",
+      "label": "mountain photo",
+      "english": "photo",
+      "bg": "снимка",
+      "x": 724,
+      "y": 386,
+      "walk_to": { "x": 674, "y": 522 },
+      "radius": 36,
+      "intro": {
+        "text": "These are the mountains in the photo. Where are the mountains? They are behind the village.",
+        "bg": "Това са планините на снимката. Къде са планините? Те са зад селото.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            { "text": "Това са планините на снимката. Къде са планините? Те са зад селото.", "isCorrect": true },
+            { "text": "Реката е отляво на картата.", "isCorrect": false },
+            { "text": "Лодката е до моста.", "isCorrect": false }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "mountain/photo/village",
+        "curriculum_source": "Blue Dot 2 Entry Review 3",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "Where are...?",
+          "place phrase: behind the village"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": { "x": 614, "y": 0, "width": 308, "height": 512 }
+        }
+      },
+      "presentation": {
+        "hero_expression": "thinking",
+        "portrait_frame": 5
+      }
+    },
+    {
+      "id": "village_road",
+      "kind": "scenery",
+      "label": "village road",
+      "english": "road",
+      "bg": "път",
+      "x": 842,
+      "y": 326,
+      "walk_to": { "x": 790, "y": 520 },
+      "radius": 46,
+      "interaction": "view",
+      "scene_icon": {
+        "texture": "interactiveProps",
+        "frame": { "x": 1229, "y": 0, "width": 307, "height": 512 },
+        "size": 68
+      },
+      "description": {
+        "text": "The village road goes right. The city road is closed today.",
+        "bg": "Селският път върви надясно. Градският път е затворен днес."
+      }
+    }
+  ],
+  "guide": {
+    "speaker": "Guide Mira",
+    "position": { "x": 792, "y": 486 },
+    "required_items": ["river_map", "boat_ticket", "mountain_photo"],
+    "walk_to": { "x": 730, "y": 524 },
+    "locked_text": "Collect the river map, boat ticket, and mountain photo first.",
+    "locked_text_bg": "Първо събери картата на реката, билета за лодката и снимката на планината.",
+    "completed_messages": [
+      {
+        "text": "The mountain path is open. Use it after the gate review.",
+        "bg": "Планинската пътека е отворена. Използвай я след преговора на портата."
+      }
+    ],
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Guide Mira",
+          "npc_text": "Route check. Where is the river?",
+          "npc_text_bg": "Проверка на маршрута. Къде е реката?",
+          "options": [
+            {
+              "text": "The river is on the left.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "The river are on the left.",
+              "is_correct": false,
+              "feedback_bg": "River е една река, затова използваме is."
+            },
+            {
+              "text": "The river is behind the village.",
+              "is_correct": false,
+              "feedback_bg": "Планините са зад селото. Реката е отляво."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Guide Mira",
+          "npc_text": "Good. Where are the mountains?",
+          "npc_text_bg": "Добре. Къде са планините?",
+          "options": [
+            {
+              "text": "They are behind the village.",
+              "is_correct": true
+            },
+            {
+              "text": "It is behind the village.",
+              "is_correct": false,
+              "feedback_bg": "Mountains са много, затова използваме They are."
+            },
+            {
+              "text": "They is next to the bridge.",
+              "is_correct": false,
+              "feedback_bg": "С they използваме are, а планините са behind the village."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "mountain_path",
+    "label": "mountain path",
+    "x": 944,
+    "y": 340,
+    "zone": { "width": 120, "height": 184 },
+    "walk_to": { "x": 872, "y": 520 },
+    "required_flag": "mountain_path_open",
+    "command": "Walk to mountain path",
+    "locked_speaker": "Alex",
+    "locked_text": "The mountain path is closed. I need Guide Mira's route check first.",
+    "locked_text_bg": "Планинската пътека е затворена. Първо ми трябва проверката на маршрута от Guide Mira.",
+    "unlocked_command": "The mountain path is open!",
+    "unlocked_status": "Mountain path open",
+    "unlocked_toast": "River and mountain route complete.",
+    "scene_icon": {
+      "texture": "interactiveProps",
+      "frame": { "x": 1229, "y": 0, "width": 307, "height": 512 },
+      "size": 74,
+      "offset_y": -8
+    }
+  },
+  "quizzes": {
+    "river_map": [
+      {
+        "id": "river-map-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Map challenge 1/3. Which word means река?",
+        "bg": "Предизвикателство с карта 1/3. Коя дума означава река?",
+        "options": [
+          { "text": "river", "isCorrect": true },
+          { "text": "city", "feedback": "City е град. Река е river." },
+          { "text": "photo", "feedback": "Photo е снимка. Река е river." }
+        ]
+      },
+      {
+        "id": "river-map-where-is",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "Where is...?",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Map challenge 2/3. ___ is the river?",
+        "bg": "Предизвикателство с карта 2/3. ___ е реката?",
+        "options": [
+          { "text": "Where", "isCorrect": true },
+          { "text": "Who", "feedback": "Who пита за човек. За място използваме Where." },
+          { "text": "What", "feedback": "What пита какво е нещо. Тук питаме за място: Where." }
+        ]
+      },
+      {
+        "id": "river-map-left",
+        "exercise_type": "sentence choice",
+        "grammar_target": "place phrase: on the left",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Map challenge 3/3. Choose the true route sentence.",
+        "bg": "Предизвикателство с карта 3/3. Избери вярното изречение за маршрута.",
+        "options": [
+          { "text": "The river is on the left.", "isCorrect": true },
+          { "text": "The river are on the left.", "feedback": "River е една река, затова използваме is." },
+          { "text": "The city is on the left.", "feedback": "Картата показва river on the left." }
+        ]
+      }
+    ],
+    "boat_ticket": [
+      {
+        "id": "boat-ticket-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Boat challenge 1/3. What transport is next to the bridge?",
+        "bg": "Предизвикателство с лодка 1/3. Какъв транспорт е до моста?",
+        "options": [
+          { "text": "boat", "isCorrect": true },
+          { "text": "mountain", "feedback": "Mountain е планина. Транспортът е boat." },
+          { "text": "village", "feedback": "Village е село. Транспортът е boat." }
+        ]
+      },
+      {
+        "id": "boat-ticket-next-to",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "place phrase: next to",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Boat challenge 2/3. The boat is ___ to the bridge.",
+        "bg": "Предизвикателство с лодка 2/3. Лодката е ___ до моста.",
+        "options": [
+          { "text": "next", "isCorrect": true },
+          { "text": "behind", "feedback": "Behind означава зад. Тук изразът е next to." },
+          { "text": "left", "feedback": "Left е ляво. Тук изразът е next to." }
+        ]
+      },
+      {
+        "id": "boat-ticket-short-answer",
+        "exercise_type": "short answer",
+        "grammar_target": "Where is...?",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Boat challenge 3/3. Where is the boat?",
+        "bg": "Предизвикателство с лодка 3/3. Къде е лодката?",
+        "options": [
+          { "text": "It is next to the bridge.", "isCorrect": true },
+          { "text": "They are next to the bridge.", "feedback": "Boat е едно нещо, затова използваме It is." },
+          { "text": "It are next to the bridge.", "feedback": "С it използваме is." }
+        ]
+      }
+    ],
+    "mountain_photo": [
+      {
+        "id": "mountain-photo-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Photo challenge 1/3. Which word means планина?",
+        "bg": "Предизвикателство със снимка 1/3. Коя дума означава планина?",
+        "options": [
+          { "text": "mountain", "isCorrect": true },
+          { "text": "river", "feedback": "River е река. Планина е mountain." },
+          { "text": "boat", "feedback": "Boat е лодка. Планина е mountain." }
+        ]
+      },
+      {
+        "id": "mountain-photo-where-are",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "Where are...?",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Photo challenge 2/3. Where ___ the mountains?",
+        "bg": "Предизвикателство със снимка 2/3. Къде ___ планините?",
+        "options": [
+          { "text": "are", "isCorrect": true },
+          { "text": "is", "feedback": "Mountains са много, затова използваме are." },
+          { "text": "am", "feedback": "Am се използва с I." }
+        ]
+      },
+      {
+        "id": "mountain-photo-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "place phrase: behind the village",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Photo challenge 3/3. Choose the true mountain sentence.",
+        "bg": "Предизвикателство със снимка 3/3. Избери вярното изречение за планината.",
+        "options": [
+          { "text": "The mountains are behind the village.", "isCorrect": true },
+          { "text": "The mountains is behind the village.", "feedback": "Mountains са много, затова използваме are." },
+          { "text": "The mountains are next to the boat.", "feedback": "Снимката показва mountains behind the village." }
+        ]
+      }
+    ]
+  }
+}

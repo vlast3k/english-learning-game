@@ -60,7 +60,7 @@
       "critical": true,
       "final": true,
       "requires": { "puzzle": "level05_q_approval", "status": "completed" },
-      "produces": ["level05.complete", "campaign.levels_01_to_05_complete"]
+      "produces": ["level05.complete", "level06.unlocked"]
     }
   ],
   "rules": [
@@ -140,12 +140,11 @@
       "actions": [
         { "type": "puzzle.complete", "puzzle": "level05_lab_exit" },
         { "type": "fact.set", "fact": "level05.complete", "value": true },
-        {
-          "type": "campaign.complete",
-          "fact": "campaign.levels_01_to_05_complete",
-          "status_text": "Missions 01 to 05 complete",
-          "toast": "Excellent spy work, Agent Alex!"
-        }
+        { "type": "fact.set", "fact": "level06.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to River And Mountain" },
+        { "type": "ui.toast", "text": "Mission 06 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-06-content.json", "delay_ms": 450 }
       ]
     }
   ],

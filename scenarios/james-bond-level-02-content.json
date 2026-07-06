@@ -45,6 +45,18 @@
       "fruit",
       "football"
     ],
+    "gate_review_words": [
+      "apartment",
+      "room",
+      "door",
+      "window",
+      "phone",
+      "computer",
+      "camera",
+      "bag",
+      "desk",
+      "chair"
+    ],
     "flow": [
       "View the mission board to understand the apartment sketch.",
       "Collect the phone clue by reporting what is on the desk.",

@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260706-level03-art-1";
+const ASSET_VERSION = "20260706-level07-art-1";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const REVEAL_TRANSLATIONS = new Map([
@@ -1737,7 +1737,7 @@ class CampScene extends Phaser.Scene {
     this.flashToast("Jungle path unlocked!");
   }
 
-  showSpeechBubble({ speaker, text, bg, anchor, options, onClose = null }) {
+  showSpeechBubble({ speaker, text, bg, anchor, options, onClose = null, revealTranslations = true }) {
     this.closeBubble();
     const width = 660;
     const longChoice = options.some((option) => option.text.length > 58);
@@ -1751,6 +1751,7 @@ class CampScene extends Phaser.Scene {
       fontStyle: "700",
       color: "#172321",
       lineSpacing: 8,
+      revealTranslations,
     });
     const choicesY = Math.max(132, 61 + textFlow.contentHeight + 22);
     const feedbackY = choicesY + options.length * optionHeight + 10;
@@ -1887,7 +1888,7 @@ class CampScene extends Phaser.Scene {
         return;
       }
 
-      const translation = this.getWordTranslation(token);
+      const translation = style.revealTranslations === false ? null : this.getWordTranslation(token);
       const originalWidth = Math.ceil(this.measureTextWidth(token, style));
       const tokenWidth = originalWidth;
 

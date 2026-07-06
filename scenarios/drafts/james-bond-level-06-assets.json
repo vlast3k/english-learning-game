@@ -1,0 +1,40 @@
+{
+  "scene_id": "james-bond-level-06",
+  "status": "integrated",
+  "style_guide": "Painted kid-friendly spy adventure, warm daylight, readable objects, no text inside generated images.",
+  "assets": [
+    {
+      "id": "level06_background",
+      "type": "background",
+      "size": "1536x864",
+      "path": "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background.png",
+      "texture_key": "campBg",
+      "prompt": "A cheerful outdoor route station for a children's spy adventure, with a blue river on the left, a small wooden bridge, a village road in the middle distance, green mountains behind it, and clear open ground for two characters. Painted storybook style, bright readable shapes, no text."
+    },
+    {
+      "id": "level06_interactive_props",
+      "type": "interactive_props",
+      "size": "1536x512",
+      "path": "assets/james-bond/level-06-river-and-mountain/generated/interactive-props.png",
+      "texture_key": "interactiveProps",
+      "prompt": "Transparent-background prop sheet for a children's spy adventure route station: a folded river map, a small boat ticket, a mountain photo card, a wooden route board, and a glowing path marker. Painted storybook style, no letters or numbers."
+    },
+    {
+      "id": "level06_guide_reuse",
+      "type": "guide_spritesheet",
+      "size": "768x660",
+      "path": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+      "texture_key": "guide",
+      "decision": "Reuse the polished existing guide spritesheet until a dedicated Guide Mira sheet can match the same quality and walk-cycle constraints."
+    }
+  ],
+  "generated_outputs": [
+    "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background.png",
+    "assets/james-bond/level-06-river-and-mountain/generated/interactive-props.png"
+  ],
+  "source_outputs": [
+    "/Users/I024148/.codex/generated_images/019f383c-295c-7391-91d6-5b0a456eb6f3/ig_019639ece77f2df0016a4bdda6e8408191a616f84c21033357.png",
+    "/Users/I024148/.codex/generated_images/019f383c-295c-7391-91d6-5b0a456eb6f3/ig_019639ece77f2df0016a4bddd5dbb48191a33378238972ed45.png"
+  ],
+  "integration_note": "The background and interactive prop atlas are generated project assets. The guide sheet is an explicit reuse decision, not a missing generated output."
+}

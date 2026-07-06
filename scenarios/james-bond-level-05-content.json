@@ -37,6 +37,18 @@
       "find",
       "carry"
     ],
+    "gate_review_words": [
+      "watch",
+      "glasses",
+      "hat",
+      "jacket",
+      "boots",
+      "clothes",
+      "car",
+      "bike",
+      "small",
+      "big"
+    ],
     "flow": [
       "Read the briefing board in Q's lab.",
       "Collect the spy watch clue.",
@@ -151,6 +163,7 @@
     "grammar": "граматика",
     "hand": "ръка",
     "has": "има",
+    "hat": "шапка",
     "have": "имам",
     "he": "той",
     "hero": "герой",

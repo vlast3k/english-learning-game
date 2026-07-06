@@ -2,8 +2,8 @@
   "use strict";
 
   const CONTENT_CACHE_KEY = "gameContent";
-  const DEFAULT_CONTENT_URL = "scenarios/james-bond-level-01-content.json?v=20260706-level03-art-1";
-  const ASSET_OVERRIDE_VERSION = "20260706-level03-art-1";
+  const DEFAULT_CONTENT_URL = "scenarios/james-bond-level-01-content.json?v=20260706-level07-art-1";
+  const ASSET_OVERRIDE_VERSION = "20260706-level07-art-1";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
   const LEVEL_SCENARIOS = {
     1: "scenarios/james-bond-level-01-content.json",
@@ -11,6 +11,8 @@
     3: "scenarios/james-bond-level-03-content.json",
     4: "scenarios/james-bond-level-04-content.json",
     5: "scenarios/james-bond-level-05-content.json",
+    6: "scenarios/james-bond-level-06-content.json",
+    7: "scenarios/james-bond-level-07-content.json",
   };
 
   function getContentUrl() {

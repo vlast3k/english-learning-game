@@ -11,6 +11,8 @@ const SCENARIOS = [
   "james-bond-level-03-content.json",
   "james-bond-level-04-content.json",
   "james-bond-level-05-content.json",
+  "james-bond-level-06-content.json",
+  "james-bond-level-07-content.json",
 ];
 const SUPPORTED_ACTIONS = new Set([
   "fact.set", "counter.increment", "inventory.add", "inventory.remove", "inventory.clear",
@@ -300,10 +302,54 @@ snapshot = level5.getSnapshot();
 if (level5.getPuzzleStatus("level05_lab_exit") !== "completed") {
   fail("Level 05 final puzzle not completed");
 }
-if (snapshot.state.facts["campaign.levels_01_to_05_complete"] !== true) {
-  fail("Level 05 campaign completion fact missing");
+if (snapshot.state.facts["level06.unlocked"] !== true) {
+  fail("Level 06 unlock fact missing");
+}
+if (transitions.at(-1)?.scenario !== "scenarios/james-bond-level-06-content.json") {
+  fail("Level 05 did not transition to Level 06");
 }
 level5.destroy();
+
+const level6 = API.create(contents[5].engine, { storage, content: contents[5].content, bridge });
+if (level6.getSnapshot().state.puzzles.level05_lab_exit !== "completed") {
+  fail("campaign state did not persist into Level 06");
+}
+level6.emit("mission.understood", { target: contents[5].content.scene_id });
+for (const id of ["river_map", "boat_ticket", "mountain_photo"]) {
+  level6.emit("collectible.completed", { target: id });
+}
+level6.emit("guide.completed", { target: "guide_mira" });
+level6.emit("exit.reached", { target: "mountain_path" });
+snapshot = level6.getSnapshot();
+if (level6.getPuzzleStatus("level06_mountain_path_exit") !== "completed") {
+  fail("Level 06 final puzzle not completed");
+}
+if (snapshot.state.facts["level07.unlocked"] !== true) {
+  fail("Level 07 unlock fact missing");
+}
+if (transitions.at(-1)?.scenario !== "scenarios/james-bond-level-07-content.json") {
+  fail("Level 06 did not transition to Level 07");
+}
+level6.destroy();
+
+const level7 = API.create(contents[6].engine, { storage, content: contents[6].content, bridge });
+if (level7.getSnapshot().state.puzzles.level06_mountain_path_exit !== "completed") {
+  fail("campaign state did not persist into Level 07");
+}
+level7.emit("mission.understood", { target: contents[6].content.scene_id });
+for (const id of ["festival_hat", "clothes_bundle", "music_drum"]) {
+  level7.emit("collectible.completed", { target: id });
+}
+level7.emit("guide.completed", { target: "host_lina" });
+level7.emit("exit.reached", { target: "festival_arch" });
+snapshot = level7.getSnapshot();
+if (level7.getPuzzleStatus("level07_festival_arch_exit") !== "completed") {
+  fail("Level 07 final puzzle not completed");
+}
+if (snapshot.state.facts["campaign.levels_01_to_07_complete"] !== true) {
+  fail("Level 07 campaign completion fact missing");
+}
+level7.destroy();
 
 const eventEmitStorage = new API.MemoryStorage();
 const eventEmitManifest = {
@@ -370,4 +416,4 @@ if (snapshot.state.facts["eca.puzzle_completed_event_seen"] !== true) {
 }
 eventEmitEngine.destroy();
 
-console.log("Validated Puzzle Dependency Graph + ECA runtime for James Bond Levels 01, 02, 03, Level 02 return, Level 04, and Level 05.");
+console.log("Validated Puzzle Dependency Graph + ECA runtime for James Bond Levels 01, 02, 03, Level 02 return, Level 04, Level 05, Level 06, and Level 07.");

@@ -43,6 +43,18 @@
       "report",
       "camera"
     ],
+    "gate_review_words": [
+      "animal",
+      "tiger",
+      "snake",
+      "habitat",
+      "meat",
+      "fruit",
+      "sleep",
+      "walk",
+      "morning",
+      "night"
+    ],
     "flow": [
       "Read the field board to understand the animal mission.",
       "Collect the animal report by reading the tiger habit card.",

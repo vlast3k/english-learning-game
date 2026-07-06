@@ -68,6 +68,84 @@ async function clickActiveChoice(page, expectedText) {
   await clickScenePoint(page, x, y);
 }
 
+async function clickActiveCorrectChoice(page) {
+  const point = await page.waitForFunction(() => {
+    const scene = window.phaserGame?.scene.getScene("CampScene");
+    const bubble = scene?.activeBubble;
+    if (!bubble) return null;
+    const choice = bubble.list?.find((entry) => entry.choiceData?.isCorrect === true && entry.hitPlate);
+    if (!choice) return null;
+    return {
+      x: bubble.x + choice.x + choice.hitPlate.x,
+      y: bubble.y + choice.y + choice.hitPlate.y,
+      text: choice.label?.text || "",
+    };
+  }, null, { timeout: 5000 });
+  const { x, y } = await point.jsonValue();
+  await clickScenePoint(page, x, y);
+}
+
+async function clickActiveIncorrectChoice(page) {
+  const point = await page.waitForFunction(() => {
+    const scene = window.phaserGame?.scene.getScene("CampScene");
+    const bubble = scene?.activeBubble;
+    if (!bubble) return null;
+    const choice = bubble.list?.find((entry) => entry.choiceData && entry.choiceData.isCorrect !== true && entry.hitPlate);
+    if (!choice) return null;
+    return {
+      x: bubble.x + choice.x + choice.hitPlate.x,
+      y: bubble.y + choice.y + choice.hitPlate.y,
+      text: choice.label?.text || "",
+    };
+  }, null, { timeout: 5000 });
+  const { x, y } = await point.jsonValue();
+  await clickScenePoint(page, x, y);
+}
+
+async function clickActiveCloseButton(page) {
+  const point = await page.waitForFunction(() => {
+    const scene = window.phaserGame?.scene.getScene("CampScene");
+    const bubble = scene?.activeBubble;
+    if (!bubble) return null;
+    const closeButton = bubble.list?.find((entry) => entry.isCloseButton && entry.hitPlate);
+    if (!closeButton) return null;
+    return {
+      x: bubble.x + closeButton.x + closeButton.hitPlate.x,
+      y: bubble.y + closeButton.y + closeButton.hitPlate.y,
+    };
+  }, null, { timeout: 5000 });
+  const { x, y } = await point.jsonValue();
+  await clickScenePoint(page, x, y);
+}
+
+async function getGateReviewState(page) {
+  return page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const bubble = scene.activeBubble;
+    if (!bubble) {
+      return null;
+    }
+    const countRevealBars = (entry) => {
+      const own = entry.revealBar ? 1 : 0;
+      const children = entry.list || [];
+      return own + children.reduce((total, child) => total + countRevealBars(child), 0);
+    };
+    const collectWords = (entry) => {
+      const own = entry.originalText ? [entry.originalText] : [];
+      const children = entry.list || [];
+      return own.concat(children.flatMap((child) => collectWords(child)));
+    };
+    return {
+      speaker: bubble.list.find((entry) => entry.text === "Gate Review")?.text || "",
+      revealBars: countRevealBars(bubble),
+      choices: bubble.list.filter((entry) => entry.choiceData).length,
+      prompt: collectWords(bubble).join(" ").replace(/\s+([:./])/g, "$1"),
+    };
+  });
+}
+
+let gateProtectionsChecked = false;
+
 async function clickScenePoint(page, sceneX, sceneY) {
   const canvas = await page.locator("canvas").boundingBox();
   if (!canvas) {
@@ -235,10 +313,120 @@ async function clickExitThroughUi(page, expectedPuzzleId) {
     fail("Exit should be interactive", exitPoint);
   }
   await clickScenePoint(page, exitPoint.x, exitPoint.y);
+  await page.waitForFunction(() => {
+    const scene = window.phaserGame?.scene.getScene("CampScene");
+    return scene?.activeBubble?.list?.some((entry) =>
+      entry.text === "Gate Review") && scene.activeBubble.list.some((entry) => entry.choiceData);
+  }, null, { timeout: 5000 });
+  let startIndex = 0;
+  if (!gateProtectionsChecked) {
+    await clickActiveIncorrectChoice(page);
+    const feedback = await page.waitForFunction(() => {
+      const scene = window.phaserGame?.scene.getScene("CampScene");
+      const note = scene?.activeBubble?.feedbackNote;
+      return note?.visible && note.text.includes(" = ") ? note.text : null;
+    }, null, { timeout: 5000 });
+    const feedbackText = await feedback.jsonValue();
+    if (!feedbackText.includes("Try again.")) {
+      fail("Gate wrong-answer feedback should show the correct word pair", feedbackText);
+    }
+    await clickActiveCorrectChoice(page);
+    await page.waitForFunction(() => {
+      const scene = window.phaserGame?.scene.getScene("CampScene");
+      const bubble = scene?.activeBubble;
+      const collectWords = (entry) => {
+        const own = entry.originalText ? [entry.originalText] : [];
+        const children = entry.list || [];
+        return own.concat(children.flatMap((child) => collectWords(child)));
+      };
+      const prompt = bubble ? collectWords(bubble).join(" ") : "";
+      return prompt.includes("Gate review 2/10");
+    }, null, { timeout: 5000 });
+    await clickActiveCloseButton(page);
+    await page.waitForFunction(() => {
+      const scene = window.phaserGame?.scene.getScene("CampScene");
+      return !scene?.activeBubble && scene?.commandText?.text === "Gate review paused";
+    }, null, { timeout: 5000 });
+    await clickScenePoint(page, exitPoint.x, exitPoint.y);
+    await page.waitForFunction(() => {
+      const scene = window.phaserGame?.scene.getScene("CampScene");
+      const bubble = scene?.activeBubble;
+      const collectWords = (entry) => {
+        const own = entry.originalText ? [entry.originalText] : [];
+        const children = entry.list || [];
+        return own.concat(children.flatMap((child) => collectWords(child)));
+      };
+      const prompt = bubble ? collectWords(bubble).join(" ") : "";
+      return prompt.includes("Gate review 2/10");
+    }, null, { timeout: 5000 });
+    gateProtectionsChecked = true;
+    startIndex = 1;
+  }
+  const directions = startIndex === 1 ? ["en-bg"] : [];
+  for (let index = startIndex; index < 10; index += 1) {
+    await page.waitForFunction((questionNumber) => {
+      const scene = window.phaserGame?.scene.getScene("CampScene");
+      const bubble = scene?.activeBubble;
+      const collectWords = (entry) => {
+        const own = entry.originalText ? [entry.originalText] : [];
+        const children = entry.list || [];
+        return own.concat(children.flatMap((child) => collectWords(child)));
+      };
+      const prompt = bubble ? collectWords(bubble).join(" ") : "";
+      return bubble?.list?.some((entry) => entry.text === "Gate Review")
+        && bubble.list.some((entry) => entry.choiceData)
+        && prompt.includes(`Gate review ${questionNumber}/10`);
+    }, index + 1, { timeout: 5000 });
+    const reviewState = await getGateReviewState(page);
+    if (
+      reviewState?.speaker !== "Gate Review"
+      || reviewState.revealBars !== 0
+      || reviewState.choices !== 3
+      || !reviewState.prompt.includes(`Gate review ${index + 1}/10`)
+    ) {
+      fail("Exit gate review question should have progress, three choices, and no hover translation bars", reviewState);
+    }
+    if (reviewState.prompt.includes("Bulgarian word")) {
+      directions.push("en-bg");
+    } else if (reviewState.prompt.includes("English word")) {
+      directions.push("bg-en");
+    } else {
+      fail("Exit gate review should state the answer direction", reviewState);
+    }
+    await clickActiveCorrectChoice(page);
+  }
+  if (directions.filter((direction) => direction === "en-bg").length !== 5
+    || directions.filter((direction) => direction === "bg-en").length !== 5) {
+    fail("Exit gate review should ask five questions in each direction", directions);
+  }
   await page.waitForFunction((puzzleId) =>
     window.__ENGLISH_GAME_ENGINE__?.getPuzzleStatus(puzzleId) === "completed",
   expectedPuzzleId);
   return exitPoint;
+}
+
+async function verifyCompletedExitSkipsGate(page) {
+  const exitPoint = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    scene.closeBubble();
+    return {
+      x: scene.exitMarker.zone.x,
+      y: scene.exitMarker.zone.y,
+      interactive: Boolean(scene.exitMarker.zone.input?.enabled),
+    };
+  });
+  if (!exitPoint.interactive) {
+    fail("Completed exit should remain interactive", exitPoint);
+  }
+  await clickScenePoint(page, exitPoint.x, exitPoint.y);
+  await page.waitForTimeout(600);
+  const gateVisible = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return scene.activeBubble?.list?.some((entry) => entry.text === "Gate Review") || false;
+  });
+  if (gateVisible) {
+    fail("Completed exit should not show the vocabulary gate again");
+  }
 }
 
 const { server, url } = await startServer();
@@ -590,9 +778,171 @@ try {
   if (level5PostExit.snapshot.state.puzzles.level05_lab_exit !== "completed") {
     fail("Level 05 final puzzle was not completed", level5PostExit);
   }
-  if (level5PostExit.snapshot.state.facts["campaign.levels_01_to_05_complete"] !== true) {
-    fail("Level 05 campaign completion fact is missing", level5PostExit);
+  if (level5PostExit.snapshot.state.facts["level06.unlocked"] !== true) {
+    fail("Level 06 unlock fact is missing after Level 05", level5PostExit);
   }
+
+  // Wait for transition to Level 6
+  await page.waitForURL(
+    (current) => current.searchParams.get("scenario") === "scenarios/james-bond-level-06-content.json",
+    { timeout: 5000 },
+  );
+  await page.waitForFunction(() => window.__ENGLISH_GAME_ENGINE__?.config?.scene_id === "james-bond-level-06");
+
+  await completeMissionFromPlanHotspotThroughUi(
+    page,
+    "route_board",
+    "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека от реката, през селото и към планината.",
+    "level06_understand_mission",
+  );
+  await completeCollectibleThroughUi(page, "river_map", [
+    "Намираш картата на реката. Къде е реката? Реката е отляво.",
+    "river",
+    "Where",
+    "The river is on the left.",
+  ], "level06_river_map");
+  await completeCollectibleThroughUi(page, "boat_ticket", [
+    "Това е билетът за лодката. Къде е лодката? Лодката е до моста.",
+    "boat",
+    "next",
+    "It is next to the bridge.",
+  ], "level06_boat_ticket");
+  await completeCollectibleThroughUi(page, "mountain_photo", [
+    "Това са планините на снимката. Къде са планините? Те са зад селото.",
+    "mountain",
+    "are",
+    "The mountains are behind the village.",
+  ], "level06_mountain_photo");
+  await completeGuideThroughUi(page, [
+    "The river is on the left.",
+    "They are behind the village.",
+  ], "level06_guide_route_check");
+
+  const level6 = await page.evaluate(() => {
+    const engine = window.__ENGLISH_GAME_ENGINE__;
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const persistedLevel5 = engine.getSnapshot().state.puzzles.level05_lab_exit;
+    const inventoryIcons = scene.inventoryItems.list
+      .filter((slot) => slot.isInventorySlot)
+      .map((slot) => ({
+        label: slot.hotspot.label,
+        type: slot.icon.type,
+        texture: slot.icon.texture?.key || null,
+        frame: slot.icon.frame?.name || null,
+      }));
+    return { persistedLevel5, inventoryIcons, snapshot: engine.getSnapshot() };
+  });
+  const level6Exit = await clickExitThroughUi(page, "level06_mountain_path_exit");
+
+  if (level6Exit.label !== "mountain path") {
+    fail("Level 06 exit should be presented as the mountain path", level6Exit);
+  }
+  if (level6.persistedLevel5 !== "completed") {
+    fail("Level 05 state was not retained after Level 06 navigation", level6);
+  }
+  if (
+    level6.inventoryIcons.length !== 3
+    || level6.inventoryIcons.some((icon) => icon.texture !== "interactiveProps")
+    || !level6.inventoryIcons.every((icon) => typeof icon.frame === "string" && icon.frame.startsWith("inventory-"))
+  ) {
+    fail("Level 06 inventory should use level-specific prop-sheet icons", level6.inventoryIcons);
+  }
+
+  const level6PostExit = await page.evaluate(() => {
+    const engine = window.__ENGLISH_GAME_ENGINE__;
+    return { snapshot: engine.getSnapshot() };
+  });
+  if (level6PostExit.snapshot.state.puzzles.level06_mountain_path_exit !== "completed") {
+    fail("Level 06 final puzzle was not completed", level6PostExit);
+  }
+  if (level6PostExit.snapshot.state.facts["level07.unlocked"] !== true) {
+    fail("Level 07 unlock fact is missing after Level 06", level6PostExit);
+  }
+
+  // Wait for transition to Level 7
+  await page.waitForURL(
+    (current) => current.searchParams.get("scenario") === "scenarios/james-bond-level-07-content.json",
+    { timeout: 5000 },
+  );
+  await page.waitForFunction(() => window.__ENGLISH_GAME_ENGINE__?.config?.scene_id === "james-bond-level-07");
+
+  await completeMissionFromPlanHotspotThroughUi(
+    page,
+    "festival_board",
+    "Агент Алекс помага на Host Lina да подготви новогодишния фестивал, като проверява цветни дрехи, музика и притежателни думи.",
+    "level07_understand_mission",
+  );
+  await completeCollectibleThroughUi(page, "festival_hat", [
+    "Намираш фестивалната шапка. Моята шапка е цветна. Нося моята шапка.",
+    "hat",
+    "My",
+    "I wear my hat.",
+  ], "level07_festival_hat");
+  await completeCollectibleThroughUi(page, "clothes_bundle", [
+    "Това са фестивални дрехи. Нейната риза е синя. Неговите ботуши са кафяви.",
+    "shirt, jeans, and boots",
+    "Her",
+    "His boots are brown.",
+  ], "level07_clothes_bundle");
+  await completeCollectibleThroughUi(page, "music_drum", [
+    "Намираш музикалния барабан. Техният инструмент е готов за музиканта.",
+    "instrument",
+    "Their",
+    "Their instrument is on the stage.",
+  ], "level07_music_drum");
+  await completeGuideThroughUi(page, [
+    "My hat is colorful.",
+    "Their instrument is on the stage.",
+  ], "level07_host_check");
+
+  const level7 = await page.evaluate(() => {
+    const engine = window.__ENGLISH_GAME_ENGINE__;
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    const persistedLevel6 = engine.getSnapshot().state.puzzles.level06_mountain_path_exit;
+    const resources = performance.getEntriesByType("resource").map((entry) => entry.name);
+    const inventoryIcons = scene.inventoryItems.list
+      .filter((slot) => slot.isInventorySlot)
+      .map((slot) => ({
+        label: slot.hotspot.label,
+        type: slot.icon.type,
+        texture: slot.icon.texture?.key || null,
+        frame: slot.icon.frame?.name || null,
+      }));
+    return { persistedLevel6, resources, inventoryIcons, snapshot: engine.getSnapshot() };
+  });
+  const level7Exit = await clickExitThroughUi(page, "level07_festival_arch_exit");
+
+  if (level7Exit.label !== "festival arch") {
+    fail("Level 07 exit should be presented as the festival arch", level7Exit);
+  }
+  if (level7.persistedLevel6 !== "completed") {
+    fail("Level 06 state was not retained after Level 07 navigation", level7);
+  }
+  if (
+    !level7.resources.some((resource) => resource.includes("level-07-festival-puzzle/generated/festival-background.png"))
+    || !level7.resources.some((resource) => resource.includes("level-07-festival-puzzle/generated/interactive-props.png"))
+  ) {
+    fail("Level 07 should load generated background and prop assets", level7.resources);
+  }
+  if (
+    level7.inventoryIcons.length !== 3
+    || level7.inventoryIcons.some((icon) => icon.texture !== "interactiveProps")
+    || !level7.inventoryIcons.every((icon) => typeof icon.frame === "string" && icon.frame.startsWith("inventory-"))
+  ) {
+    fail("Level 07 inventory should use level-specific prop-sheet icons", level7.inventoryIcons);
+  }
+
+  const level7PostExit = await page.evaluate(() => {
+    const engine = window.__ENGLISH_GAME_ENGINE__;
+    return { snapshot: engine.getSnapshot() };
+  });
+  if (level7PostExit.snapshot.state.puzzles.level07_festival_arch_exit !== "completed") {
+    fail("Level 07 final puzzle was not completed", level7PostExit);
+  }
+  if (level7PostExit.snapshot.state.facts["campaign.levels_01_to_07_complete"] !== true) {
+    fail("Level 07 campaign completion fact is missing", level7PostExit);
+  }
+  await verifyCompletedExitSkipsGate(page);
 
   if (errors.length) fail("Browser console reported errors", errors);
 
@@ -656,6 +1006,9 @@ try {
     level3: "returned",
     level2Return: "transitioned",
     level4: "completed",
+    level5: "completed",
+    level6: "transitioned",
+    level7: "completed",
     directLevel2: "completed",
     campaignStatePersisted: true,
   }, null, 2));

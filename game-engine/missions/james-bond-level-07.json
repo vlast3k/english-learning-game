@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-07",
+  "mission_puzzle": "level07_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level07_understand_mission",
+      "title": "Read the festival board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level07.mission_understood"]
+    },
+    {
+      "id": "level07_festival_hat",
+      "title": "Find the festival hat",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level07_understand_mission", "status": "completed" },
+      "produces": ["level07.festival_hat_collected"]
+    },
+    {
+      "id": "level07_clothes_bundle",
+      "title": "Check the festival clothes",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level07_understand_mission", "status": "completed" },
+      "produces": ["level07.clothes_bundle_collected"]
+    },
+    {
+      "id": "level07_music_drum",
+      "title": "Find the music drum",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level07_understand_mission", "status": "completed" },
+      "produces": ["level07.music_drum_collected"]
+    },
+    {
+      "id": "level07_host_check",
+      "title": "Pass Host Lina's festival check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level07_festival_hat", "status": "completed" },
+          { "puzzle": "level07_clothes_bundle", "status": "completed" },
+          { "puzzle": "level07_music_drum", "status": "completed" }
+        ]
+      },
+      "produces": ["level07.host_approved"]
+    },
+    {
+      "id": "level07_festival_arch_exit",
+      "title": "Walk through the festival arch",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level07_host_check", "status": "completed" },
+      "produces": ["level07.complete", "campaign.levels_01_to_07_complete"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level07-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-07" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level07_understand_mission" }]
+    },
+    {
+      "id": "level07-collect-festival-hat",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "festival_hat" },
+      "condition": { "puzzle": "level07_festival_hat", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "festival_hat" },
+        { "type": "puzzle.complete", "puzzle": "level07_festival_hat" },
+        { "type": "ui.vocab.show", "hotspot": "festival_hat" }
+      ]
+    },
+    {
+      "id": "level07-collect-clothes-bundle",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "clothes_bundle" },
+      "condition": { "puzzle": "level07_clothes_bundle", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "clothes_bundle" },
+        { "type": "puzzle.complete", "puzzle": "level07_clothes_bundle" },
+        { "type": "ui.vocab.show", "hotspot": "clothes_bundle" }
+      ]
+    },
+    {
+      "id": "level07-collect-music-drum",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "music_drum" },
+      "condition": { "puzzle": "level07_music_drum", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "music_drum" },
+        { "type": "puzzle.complete", "puzzle": "level07_music_drum" },
+        { "type": "ui.vocab.show", "hotspot": "music_drum" }
+      ]
+    },
+    {
+      "id": "level07-host-opens-arch",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "host_lina" },
+      "condition": { "puzzle": "level07_host_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level07_host_check" },
+        { "type": "flag.set", "flag": "festival_arch_open", "value": true },
+        { "type": "ui.status.set", "text": "Festival arch open" },
+        { "type": "ui.toast", "text": "Host Lina opened the arch!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level07-festival-arch-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "festival_arch" },
+      "condition": { "not": { "puzzle": "level07_host_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The festival arch is closed. I need Host Lina's check first.",
+          "bg": "Фестивалната арка е затворена. Първо ми трябва проверката на Host Lina."
+        }
+      ]
+    },
+    {
+      "id": "level07-complete-festival-puzzle",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "festival_arch" },
+      "condition": { "puzzle": "level07_host_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level07_festival_arch_exit" },
+        { "type": "fact.set", "fact": "level07.complete", "value": true },
+        {
+          "type": "campaign.complete",
+          "fact": "campaign.levels_01_to_07_complete",
+          "status_text": "Missions 01 to 07 complete",
+          "toast": "Excellent festival work, Agent Alex!"
+        }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "festival_hat": { "puzzle_id": "level07_festival_hat" },
+      "clothes_bundle": { "puzzle_id": "level07_clothes_bundle" },
+      "music_drum": { "puzzle_id": "level07_music_drum" }
+    },
+    "guide": { "id": "host_lina", "puzzle_id": "level07_host_check" },
+    "exit": {
+      "id": "festival_arch",
+      "puzzle_id": "level07_festival_arch_exit",
+      "requires_puzzle": "level07_host_check"
+    }
+  }
+}

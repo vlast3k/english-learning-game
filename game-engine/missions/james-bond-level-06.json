@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-06",
+  "mission_puzzle": "level06_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level06_understand_mission",
+      "title": "Read the route board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level06.mission_understood"]
+    },
+    {
+      "id": "level06_river_map",
+      "title": "Read the river map",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level06_understand_mission", "status": "completed" },
+      "produces": ["level06.river_map_collected"]
+    },
+    {
+      "id": "level06_boat_ticket",
+      "title": "Check the boat ticket",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level06_understand_mission", "status": "completed" },
+      "produces": ["level06.boat_ticket_collected"]
+    },
+    {
+      "id": "level06_mountain_photo",
+      "title": "Read the mountain photo",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level06_understand_mission", "status": "completed" },
+      "produces": ["level06.mountain_photo_collected"]
+    },
+    {
+      "id": "level06_guide_route_check",
+      "title": "Pass Guide Mira's route check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level06_river_map", "status": "completed" },
+          { "puzzle": "level06_boat_ticket", "status": "completed" },
+          { "puzzle": "level06_mountain_photo", "status": "completed" }
+        ]
+      },
+      "produces": ["level06.guide_approved"]
+    },
+    {
+      "id": "level06_mountain_path_exit",
+      "title": "Walk through the mountain path",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level06_guide_route_check", "status": "completed" },
+      "produces": ["level06.complete", "level07.unlocked"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level06-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-06" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level06_understand_mission" }]
+    },
+    {
+      "id": "level06-collect-river-map",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "river_map" },
+      "condition": { "puzzle": "level06_river_map", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "river_map" },
+        { "type": "puzzle.complete", "puzzle": "level06_river_map" },
+        { "type": "ui.vocab.show", "hotspot": "river_map" }
+      ]
+    },
+    {
+      "id": "level06-collect-boat-ticket",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "boat_ticket" },
+      "condition": { "puzzle": "level06_boat_ticket", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "boat_ticket" },
+        { "type": "puzzle.complete", "puzzle": "level06_boat_ticket" },
+        { "type": "ui.vocab.show", "hotspot": "boat_ticket" }
+      ]
+    },
+    {
+      "id": "level06-collect-mountain-photo",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "mountain_photo" },
+      "condition": { "puzzle": "level06_mountain_photo", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "mountain_photo" },
+        { "type": "puzzle.complete", "puzzle": "level06_mountain_photo" },
+        { "type": "ui.vocab.show", "hotspot": "mountain_photo" }
+      ]
+    },
+    {
+      "id": "level06-guide-opens-path",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "guide_mira" },
+      "condition": { "puzzle": "level06_guide_route_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level06_guide_route_check" },
+        { "type": "flag.set", "flag": "mountain_path_open", "value": true },
+        { "type": "ui.status.set", "text": "Mountain path open" },
+        { "type": "ui.toast", "text": "Guide Mira opened the path!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level06-mountain-path-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "mountain_path" },
+      "condition": { "not": { "puzzle": "level06_guide_route_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The mountain path is closed. I need Guide Mira's route check first.",
+          "bg": "Планинската пътека е затворена. Първо ми трябва проверката на маршрута от Guide Mira."
+        }
+      ]
+    },
+    {
+      "id": "level06-complete-river-and-mountain",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "mountain_path" },
+      "condition": { "puzzle": "level06_guide_route_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level06_mountain_path_exit" },
+        { "type": "fact.set", "fact": "level06.complete", "value": true },
+        { "type": "fact.set", "fact": "level07.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to Festival Puzzle" },
+        { "type": "ui.toast", "text": "Mission 07 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-07-content.json", "delay_ms": 450 }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "river_map": { "puzzle_id": "level06_river_map" },
+      "boat_ticket": { "puzzle_id": "level06_boat_ticket" },
+      "mountain_photo": { "puzzle_id": "level06_mountain_photo" }
+    },
+    "guide": { "id": "guide_mira", "puzzle_id": "level06_guide_route_check" },
+    "exit": {
+      "id": "mountain_path",
+      "puzzle_id": "level06_mountain_path_exit",
+      "requires_puzzle": "level06_guide_route_check"
+    }
+  }
+}
