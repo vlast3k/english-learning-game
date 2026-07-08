@@ -1,0 +1,56 @@
+{
+  "scene_id": "james-bond-level-09",
+  "status": "integrated",
+  "style_guide": "Painted kid-friendly spy adventure, secret nature garden, clear season clues, readable objects, no text inside generated images.",
+  "assets": [
+    {
+      "id": "level09_background",
+      "type": "background",
+      "size": "1672x941",
+      "path": "assets/james-bond/level-09-seasons-garden/generated/seasons-garden-background-v2.png",
+      "texture_key": "campBg",
+      "prompt": "A cheerful Seasons Garden background with spring blossoms, summer flowers, a modest poem board, small spring leaf clue, small winter snow card clue, windy autumn path leaves, and a clear garden gate embedded naturally in the painted scene; no readable text, no floating props, no oversized clue objects."
+    },
+    {
+      "id": "level09_interactive_props",
+      "type": "interactive_props",
+      "size": "2172x724",
+      "path": "assets/james-bond/level-09-seasons-garden/generated/interactive-props.png",
+      "texture_key": "interactiveProps",
+      "prompt": "Transparent-background prop atlas for Seasons Garden: poem board, spring leaf, summer flower, winter snow card, windy fall marker, and garden gate; no readable text."
+    },
+    {
+      "id": "level09_hero_reuse",
+      "type": "hero_spritesheet",
+      "size": "1536x1320",
+      "path": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+      "texture_key": "hero",
+      "decision": "Reuse the established Agent Alex spritesheet for campaign continuity."
+    },
+    {
+      "id": "level09_hero_portraits_reuse",
+      "type": "hero_portraits",
+      "size": "768x128",
+      "path": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+      "texture_key": "heroPortraits",
+      "decision": "Reuse the established Agent Alex portrait sheet."
+    },
+    {
+      "id": "level09_guide_reuse",
+      "type": "guide_spritesheet",
+      "size": "768x660",
+      "path": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+      "texture_key": "guide",
+      "decision": "Reuse the polished existing guide spritesheet until a dedicated Gardener Mira sheet can match the same quality and walk-cycle constraints."
+    }
+  ],
+  "generated_outputs": [
+    "assets/james-bond/level-09-seasons-garden/generated/seasons-garden-background-v2.png",
+    "assets/james-bond/level-09-seasons-garden/generated/interactive-props.png"
+  ],
+  "source_outputs": [
+    "/Users/I024148/.codex/generated_images/019f3c7e-2e1a-7c11-bbec-2140ae831828/ig_079d48e8c5ab0d7e016a4d399518bc8191b66c3fdb26885263.png",
+    "/Users/I024148/.codex/generated_images/019f38ee-c79a-7992-94c8-999b9b691bf5/ig_0c24fbc61db2e2d6016a4c6d654cf08191b209a4cfda5f74db.png"
+  ],
+  "integration_note": "Level 09 now uses an embedded-prop Seasons Garden background for the world objects. The transparent prop atlas remains referenced only for inventory reward icons; scene hotspots and the garden gate are represented by painted background art."
+}

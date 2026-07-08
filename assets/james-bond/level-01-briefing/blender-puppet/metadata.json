@@ -1,0 +1,96 @@
+{
+  "frame_width": 192,
+  "frame_height": 220,
+  "layers": [
+    {
+      "name": "back_leg",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/back_leg.png",
+      "bbox": [
+        72,
+        122,
+        122,
+        208
+      ],
+      "pivot": [
+        96,
+        127
+      ],
+      "depth": -0.04
+    },
+    {
+      "name": "front_leg",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/front_leg.png",
+      "bbox": [
+        72,
+        122,
+        122,
+        208
+      ],
+      "pivot": [
+        96,
+        127
+      ],
+      "depth": -0.02
+    },
+    {
+      "name": "rear_arm",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/rear_arm.png",
+      "bbox": [
+        69,
+        78,
+        92,
+        155
+      ],
+      "pivot": [
+        78,
+        83
+      ],
+      "depth": -0.01
+    },
+    {
+      "name": "torso_bag",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/torso_bag.png",
+      "bbox": [
+        66,
+        56,
+        122,
+        147
+      ],
+      "pivot": [
+        92,
+        128
+      ],
+      "depth": 0.0
+    },
+    {
+      "name": "front_arm",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/front_arm.png",
+      "bbox": [
+        94,
+        78,
+        116,
+        155
+      ],
+      "pivot": [
+        104,
+        86
+      ],
+      "depth": 0.02
+    },
+    {
+      "name": "head",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/head.png",
+      "bbox": [
+        64,
+        8,
+        127,
+        73
+      ],
+      "pivot": [
+        93,
+        67
+      ],
+      "depth": 0.03
+    }
+  ]
+}

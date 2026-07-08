@@ -1,0 +1,29 @@
+{
+  "scene_id": "james-bond-level-04",
+  "status": "integrated",
+  "style_guide": "Painted kid-friendly spy adventure, warm animal trail field station, readable embedded props, no text inside generated images.",
+  "assets": [
+    {
+      "id": "level04_background",
+      "type": "background",
+      "size": "1672x941",
+      "path": "assets/james-bond/level-04-animal-trail/generated/animal-trail-background.png",
+      "texture_key": "campBg",
+      "prompt": "A kid-friendly spy adventure Animal Trail field station with a field board, animal report, meat bowl, trail camera, rock habitat, and base gate embedded naturally in the painted scene; no readable text, no floating props, no oversized clue objects."
+    },
+    {
+      "id": "level04_interactive_props",
+      "type": "interactive_props",
+      "path": "assets/james-bond/level-04-animal-trail/interactive-props.svg",
+      "texture_key": "interactiveProps",
+      "decision": "Keep the existing prop sheet for inventory reward icons only."
+    }
+  ],
+  "generated_outputs": [
+    "assets/james-bond/level-04-animal-trail/generated/animal-trail-background.png"
+  ],
+  "source_outputs": [
+    "/Users/I024148/.codex/generated_images/019f3c7e-2e1a-7c11-bbec-2140ae831828/ig_0cfef9e5e7cbde87016a4d41cc881481988604148bdd28543a.png"
+  ],
+  "integration_note": "Level 04 now uses a dedicated embedded-prop Animal Trail background. The existing SVG prop sheet remains referenced only for inventory reward icons."
+}

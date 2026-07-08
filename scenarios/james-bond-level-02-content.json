@@ -11,9 +11,16 @@
       "validating_text": "Validating...",
       "retry_text": "Read the mission once more.",
       "options": [
-        { "text": "Героят проверява тих апартамент, за да намери скрити микрофони и улики.", "isCorrect": true },
-        { "text": "Героят попълва профилен формуляр, за да спечели агентска значка." },
-        { "text": "Директорът отваря тренировъчна врата до голямата карта." }
+        {
+          "text": "Героят проверява тих апартамент, за да намери скрити микрофони и улики.",
+          "isCorrect": true
+        },
+        {
+          "text": "Героят попълва профилен формуляр, за да спечели агентска значка."
+        },
+        {
+          "text": "Директорът отваря тренировъчна врата до голямата карта."
+        }
       ]
     },
     "plan_hotspot_id": "mission_board",
@@ -46,16 +53,16 @@
       "football"
     ],
     "gate_review_words": [
-      "apartment",
       "room",
       "door",
       "window",
       "phone",
-      "computer",
-      "camera",
       "bag",
       "desk",
-      "chair"
+      "table",
+      "chair",
+      "water",
+      "supply"
     ],
     "flow": [
       "View the mission board to understand the apartment sketch.",
@@ -77,8 +84,17 @@
   "presentation": {
     "character_scale_multiplier": 1.72,
     "guide_scale_multiplier": 1.9
+  ,
+    "character_depth_scale": {
+      "back_y": 333,
+      "back_scale": 0.544,
+      "front_y": 566,
+      "front_scale": 0.78
+  }},
+  "hero_start": {
+    "x": 830,
+    "y": 557
   },
-  "hero_start": { "x": 256, "y": 512 },
   "hud": {
     "status_text": "Apartment watch in progress"
   },
@@ -124,26 +140,77 @@
   },
   "state_prompts": [
     {
-      "when": { "fact": "level02.return_unlocked", "equals": true },
+      "when": {
+        "fact": "level02.return_unlocked",
+        "equals": true
+      },
       "status_text": "Send the village supply plan",
       "command_text": "Return task: send the village supply message"
     }
   ],
   "navigation": {
     "walkable_polygon": [
-      { "x": 18, "y": 348 },
-      { "x": 1004, "y": 348 },
-      { "x": 1014, "y": 566 },
-      { "x": 10, "y": 566 }
+      {
+        "x": 18,
+        "y": 348
+      },
+      {
+        "x": 1004,
+        "y": 348
+      },
+      {
+        "x": 1014,
+        "y": 566
+      },
+      {
+        "x": 10,
+        "y": 566
+      }
     ],
     "clearance": 28,
     "obstacles": [
-      { "id": "sofa", "x1": 0, "y1": 328, "x2": 274, "y2": 516 },
-      { "id": "coffee_table", "x1": 34, "y1": 424, "x2": 334, "y2": 534 },
-      { "id": "desk", "x1": 378, "y1": 306, "x2": 618, "y2": 458 },
-      { "id": "desk_chair", "x1": 340, "y1": 348, "x2": 454, "y2": 528 },
-      { "id": "right_chair_bag", "x1": 764, "y1": 390, "x2": 888, "y2": 548 },
-      { "id": "right_bookshelf", "x1": 666, "y1": 202, "x2": 790, "y2": 458 }
+      {
+        "id": "sofa",
+        "x1": 0,
+        "y1": 214,
+        "x2": 274,
+        "y2": 402
+      },
+      {
+        "id": "coffee_table",
+        "x1": 11,
+        "y1": 318,
+        "x2": 311,
+        "y2": 428
+      },
+      {
+        "id": "desk",
+        "x1": 375,
+        "y1": 176,
+        "x2": 615,
+        "y2": 328
+      },
+      {
+        "id": "desk_chair",
+        "x1": 366,
+        "y1": 174,
+        "x2": 480,
+        "y2": 354
+      },
+      {
+        "id": "right_chair_bag",
+        "x1": 757,
+        "y1": 270,
+        "x2": 881,
+        "y2": 428
+      },
+      {
+        "id": "right_bookshelf",
+        "x1": 666,
+        "y1": 202,
+        "x2": 790,
+        "y2": 458
+      }
     ]
   },
   "translations": {
@@ -172,8 +239,8 @@
     "clue": "улика",
     "clues": "улики",
     "collect": "събери",
-    "computer": "компютър",
     "complete": "попълни",
+    "computer": "компютър",
     "correct": "правилно",
     "curtain": "перде",
     "desk": "бюро",
@@ -194,26 +261,31 @@
     "great": "чудесен",
     "guide": "водач",
     "help": "помагам",
-    "hidden": "скрит",
     "hero": "герой",
+    "hidden": "скрит",
+    "hiding": "скривалище",
     "i": "аз",
     "in": "в",
     "inside": "вътре",
     "is": "е",
     "it": "то",
     "key": "ключ",
-    "list": "списък",
     "later": "по-късно",
+    "lens": "обектив",
+    "list": "списък",
+    "log": "запиши",
     "machine": "машина",
     "map": "карта",
     "may": "може",
+    "me": "мен",
     "means": "означава",
     "message": "съобщение",
-    "me": "мен",
     "microphones": "микрофони",
     "mission": "мисия",
+    "near": "до",
     "need": "имам нужда",
     "next": "до",
+    "note": "бележка",
     "notes": "бележки",
     "object": "предмет",
     "on": "на",
@@ -221,6 +293,7 @@
     "pack": "раница",
     "phone": "телефон",
     "picture": "снимка",
+    "place": "място",
     "plan": "план",
     "quiet": "тих",
     "read": "прочети",
@@ -229,23 +302,24 @@
     "room": "стая",
     "safe": "таен",
     "screen": "екран",
-    "sentence": "изречение",
     "send": "изпрати",
+    "sentence": "изречение",
     "shows": "показва",
     "sketch": "скица",
     "small": "малък",
+    "spots": "вижда",
     "start": "започва",
     "starts": "започва",
     "stays": "остава",
     "supply": "доставка",
     "table": "маса",
+    "talk": "говори",
     "task": "задача",
     "the": "the",
     "there": "има",
     "there's": "има",
     "they": "те",
     "this": "това",
-    "talk": "говори",
     "to": "за да",
     "travel": "пътуване",
     "two": "две",
@@ -254,28 +328,42 @@
     "validating": "проверява се",
     "view": "изглед",
     "village": "село",
+    "watch": "наблюдение",
     "water": "вода",
     "we": "ние",
     "welcome": "добре дошли",
-    "watch": "наблюдение",
-    "when": "когато",
     "what": "какво",
+    "when": "когато",
     "which": "кой",
     "window": "прозорец",
     "word": "дума",
     "work": "работа",
+    "write": "пиши",
     "you": "ти"
   },
   "guide": {
     "speaker": "Director",
-    "position": { "x": 690, "y": 486 },
-    "required_items": ["phone_clue", "camera_clue", "hidden_bag"],
-    "walk_to": { "x": 636, "y": 524 },
+    "position": {
+      "x": 690,
+      "y": 486
+    },
+    "required_items": [
+      "phone_clue",
+      "camera_clue",
+      "hidden_bag"
+    ],
+    "walk_to": {
+      "x": 636,
+      "y": 524
+    },
     "locked_text": "Find the phone clue, camera clue, and hidden bag first.",
     "locked_text_bg": "Първо намери уликата с телефона, уликата с камерата и скритата чанта.",
     "completed_messages": [
       {
-        "when": { "fact": "level02.return_unlocked", "equals": true },
+        "when": {
+          "fact": "level02.return_unlocked",
+          "equals": true
+        },
         "text": "Send the village supply message on the desk, then bring me the final report.",
         "bg": "Изпрати съобщението за доставки за селото на бюрото, после ми донеси последния доклад."
       },
@@ -345,8 +433,14 @@
     "label": "apartment door",
     "x": 968,
     "y": 328,
-    "zone": { "width": 92, "height": 172 },
-    "walk_to": { "x": 888, "y": 516 },
+    "zone": {
+      "width": 92,
+      "height": 172
+    },
+    "walk_to": {
+      "x": 888,
+      "y": 516
+    },
     "required_flag": "safe_flat_door_open",
     "command": "Walk to apartment door",
     "locked_speaker": "Alex",
@@ -357,7 +451,10 @@
     "unlocked_toast": "Mission 03 unlocked!",
     "states": [
       {
-        "when": { "fact": "level02.return_unlocked", "equals": true },
+        "when": {
+          "fact": "level02.return_unlocked",
+          "equals": true
+        },
         "label": "final report",
         "command": "Walk to final report",
         "unlocked_command": "The final report is ready!",
@@ -373,22 +470,35 @@
       "label": "phone clue",
       "english": "phone",
       "bg": "телефон",
-      "x": 594,
-      "y": 254,
-      "walk_to": { "x": 624, "y": 492 },
+      "x": 555,
+      "y": 215,
+      "walk_to": {
+        "x": 624,
+        "y": 492
+      },
       "radius": 30,
-      "hidden_when": { "fact": "level02.return_unlocked", "equals": true },
+      "hidden_when": {
+        "fact": "level02.return_unlocked",
+        "equals": true
+      },
       "intro": {
-        "text": "A phone is on the desk. Find a clue.",
-        "bg": "Телефон е на бюрото. Намери улика.",
+        "text": "A phone is on the desk. Take it.",
+        "bg": "Телефон на бюрото. Вземи го.",
         "translation_check": {
           "prompt": "Choose the Bulgarian translation before you pick it up.",
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Телефон е на бюрото. Намери улика.", "isCorrect": true },
-            { "text": "Камера е зад пердето до прозореца." },
-            { "text": "Чанта е под стола и има скрита улика." }
+            {
+              "text": "Телефон на бюрото. Вземи го.",
+              "isCorrect": true
+            },
+            {
+              "text": "Камера зад пердето до прозореца."
+            },
+            {
+              "text": "Чанта под стола и има скрита улика."
+            }
           ]
         }
       },
@@ -396,16 +506,31 @@
         "vocabulary_target": "phone/desk",
         "curriculum_source": "James Bond Level 02",
         "curriculum_stage": "new",
-        "grammar_targets": ["There is", "preposition of place: on"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "There is",
+          "preposition of place: on"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 70, "y": 60, "width": 445, "height": 300 }
+          "frame": {
+            "x": 70,
+            "y": 60,
+            "width": 445,
+            "height": 300
+          }
         }
       },
-      "presentation": { "hero_expression": "curious", "portrait_frame": 3 }
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
     },
     {
       "id": "camera_clue",
@@ -413,22 +538,35 @@
       "label": "camera clue",
       "english": "camera",
       "bg": "камера",
-      "x": 196,
-      "y": 192,
-      "walk_to": { "x": 314, "y": 496 },
+      "x": 183,
+      "y": 191,
+      "walk_to": {
+        "x": 314,
+        "y": 496
+      },
       "radius": 34,
-      "hidden_when": { "fact": "level02.return_unlocked", "equals": true },
+      "hidden_when": {
+        "fact": "level02.return_unlocked",
+        "equals": true
+      },
       "intro": {
-        "text": "The camera is behind the curtain by the window. Find the hidden clue.",
-        "bg": "Камерата е зад пердето до прозореца. Намери скритата улика.",
+        "text": "The camera is behind the curtain by the window.",
+        "bg": "Камерата е зад пердето до прозореца.",
         "translation_check": {
           "prompt": "Choose the Bulgarian translation before you pick it up.",
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Камерата е зад пердето до прозореца. Намери скритата улика.", "isCorrect": true },
-            { "text": "Телефонът е на бюрото. Намери улика." },
-            { "text": "Компютърът е под стола до скритата чанта." }
+            {
+              "text": "Камерата е зад пердето до прозореца.",
+              "isCorrect": true
+            },
+            {
+              "text": "Телефонът е на бюрото."
+            },
+            {
+              "text": "Компютърът е под стола до скритата чанта."
+            }
           ]
         }
       },
@@ -436,16 +574,31 @@
         "vocabulary_target": "camera/window",
         "curriculum_source": "James Bond Level 02",
         "curriculum_stage": "new",
-        "grammar_targets": ["There are", "preposition of place: behind"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "There are",
+          "preposition of place: behind"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 590, "y": 70, "width": 335, "height": 230 }
+          "frame": {
+            "x": 590,
+            "y": 70,
+            "width": 335,
+            "height": 230
+          }
         }
       },
-      "presentation": { "hero_expression": "focused", "portrait_frame": 6 }
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 6
+      }
     },
     {
       "id": "hidden_bag",
@@ -453,22 +606,35 @@
       "label": "hidden bag",
       "english": "bag",
       "bg": "чанта",
-      "x": 842,
-      "y": 426,
-      "walk_to": { "x": 724, "y": 536 },
+      "x": 829,
+      "y": 411,
+      "walk_to": {
+        "x": 724,
+        "y": 536
+      },
       "radius": 34,
-      "hidden_when": { "fact": "level02.return_unlocked", "equals": true },
+      "hidden_when": {
+        "fact": "level02.return_unlocked",
+        "equals": true
+      },
       "intro": {
         "text": "A bag is under the chair. There may be a clue inside.",
-        "bg": "Чанта е под стола. Може да има улика вътре.",
+        "bg": "Чанта под стола. Може да има улика вътре.",
         "translation_check": {
           "prompt": "Choose the Bulgarian translation before you pick it up.",
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Чанта е под стола. Може да има улика вътре.", "isCorrect": true },
-            { "text": "Телефон е зад прозореца. Може да има врата вътре." },
-            { "text": "Камера е на бюрото. Може да има стол вътре." }
+            {
+              "text": "Чанта под стола. Може да има улика вътре.",
+              "isCorrect": true
+            },
+            {
+              "text": "Телефон зад прозореца. Може да има врата вътре."
+            },
+            {
+              "text": "Камера на бюрото. Може да има стол вътре."
+            }
           ]
         }
       },
@@ -476,16 +642,31 @@
         "vocabulary_target": "bag/chair",
         "curriculum_source": "James Bond Level 02",
         "curriculum_stage": "new",
-        "grammar_targets": ["There is", "preposition of place: under"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "There is",
+          "preposition of place: under"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 1000, "y": 44, "width": 410, "height": 285 }
+          "frame": {
+            "x": 1000,
+            "y": 44,
+            "width": 410,
+            "height": 285
+          }
         }
       },
-      "presentation": { "hero_expression": "thinking", "portrait_frame": 5 }
+      "presentation": {
+        "hero_expression": "thinking",
+        "portrait_frame": 5
+      }
     },
     {
       "id": "supply_message",
@@ -495,9 +676,15 @@
       "bg": "съобщение за доставки",
       "x": 548,
       "y": 260,
-      "walk_to": { "x": 468, "y": 492 },
+      "walk_to": {
+        "x": 468,
+        "y": 492
+      },
       "radius": 38,
-      "visible_when": { "fact": "level02.return_unlocked", "equals": true },
+      "visible_when": {
+        "fact": "level02.return_unlocked",
+        "equals": true
+      },
       "locked_text": "This message is for later. I need the village list first.",
       "locked_text_bg": "Това съобщение е за по-късно. Първо ми трябва списъкът от селото.",
       "intro": {
@@ -508,9 +695,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Списъкът от селото е на бюрото. Изпрати плана: Ние помагаме на селото.", "isCorrect": true },
-            { "text": "Камерата е зад пердето до прозореца." },
-            { "text": "Чанта е под стола и има скрита улика." }
+            {
+              "text": "Списъкът от селото е на бюрото. Изпрати плана: Ние помагаме на селото.",
+              "isCorrect": true
+            },
+            {
+              "text": "Камерата е зад пердето до прозореца."
+            },
+            {
+              "text": "Чанта е под стола и има скрита улика."
+            }
           ]
         }
       },
@@ -518,16 +712,30 @@
         "vocabulary_target": "supply message",
         "curriculum_source": "James Bond Level 02 Return",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present: We help", "simple present: They need"],
-        "exercise_types": ["sentence choice", "grammar gap-fill"]
+        "grammar_targets": [
+          "simple present: We help",
+          "simple present: They need"
+        ],
+        "exercise_types": [
+          "sentence choice",
+          "grammar gap-fill"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 70, "y": 60, "width": 445, "height": 300 }
+          "frame": {
+            "x": 70,
+            "y": 60,
+            "width": 445,
+            "height": 300
+          }
         }
       },
-      "presentation": { "hero_expression": "focused", "portrait_frame": 6 }
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 6
+      }
     },
     {
       "id": "mission_board",
@@ -535,9 +743,12 @@
       "label": "mission board",
       "english": "mission board",
       "bg": "дъска на мисията",
-      "x": 616,
-      "y": 164,
-      "walk_to": { "x": 642, "y": 452 },
+      "x": 609,
+      "y": 109,
+      "walk_to": {
+        "x": 642,
+        "y": 452
+      },
       "radius": 68,
       "interaction": "view",
       "description": {
@@ -551,11 +762,17 @@
       "label": "computer station",
       "english": "computer",
       "bg": "компютър",
-      "x": 468,
-      "y": 230,
-      "walk_to": { "x": 468, "y": 492 },
+      "x": 439,
+      "y": 200,
+      "walk_to": {
+        "x": 468,
+        "y": 492
+      },
       "radius": 48,
-      "hidden_when": { "fact": "level02.return_unlocked", "equals": true },
+      "hidden_when": {
+        "fact": "level02.return_unlocked",
+        "equals": true
+      },
       "interaction": "view",
       "description": {
         "text": "The computer is on the desk. There are notes next to the screen.",
@@ -574,9 +791,18 @@
         "text": "Phone challenge 1/3. What is on the desk?",
         "bg": "Предизвикателство с телефон 1/3. Какво е на бюрото?",
         "options": [
-          { "text": "phone", "isCorrect": true },
-          { "text": "window", "feedback": "Window е прозорец. На бюрото има phone." },
-          { "text": "chair", "feedback": "Chair е стол. Тук търсим phone." }
+          {
+            "text": "phone",
+            "isCorrect": true
+          },
+          {
+            "text": "window",
+            "feedback": "Window е прозорец. На бюрото има phone."
+          },
+          {
+            "text": "chair",
+            "feedback": "Chair е стол. Тук търсим phone."
+          }
         ]
       },
       {
@@ -588,9 +814,18 @@
         "text": "Phone challenge 2/3. ___ a phone on the desk.",
         "bg": "Предизвикателство с телефон 2/3. ___ телефон на бюрото.",
         "options": [
-          { "text": "There is", "isCorrect": true },
-          { "text": "There are", "feedback": "There are е за повече от един предмет. Един телефон: There is." },
-          { "text": "Are there", "feedback": "Are there започва въпрос. Тук правим изречение: There is." }
+          {
+            "text": "There is",
+            "isCorrect": true
+          },
+          {
+            "text": "There are",
+            "feedback": "There are е за повече от един предмет. Един телефон: There is."
+          },
+          {
+            "text": "Are there",
+            "feedback": "Are there започва въпрос. Тук правим изречение: There is."
+          }
         ]
       },
       {
@@ -599,12 +834,21 @@
         "grammar_target": "preposition of place: on",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Phone challenge 3/3. Choose the best sentence.",
-        "bg": "Предизвикателство с телефон 3/3. Избери най-доброто изречение.",
+        "text": "Phone challenge 3/3. Log the phone in the room report.",
+        "bg": "Предизвикателство с телефон 3/3. Запиши телефона в доклада за стаята.",
         "options": [
-          { "text": "There is a phone on the desk.", "isCorrect": true },
-          { "text": "There is a phone under the desk.", "feedback": "Under значи под. Телефонът е на бюрото: on the desk." },
-          { "text": "There is a phone behind the desk.", "feedback": "Behind значи зад. Тук телефонът е on the desk." }
+          {
+            "text": "There is a phone on the desk.",
+            "isCorrect": true
+          },
+          {
+            "text": "There is a phone under the desk.",
+            "feedback": "Under значи под. Телефонът е на бюрото: on the desk."
+          },
+          {
+            "text": "There is a phone behind the desk.",
+            "feedback": "Behind значи зад. Тук телефонът е on the desk."
+          }
         ]
       }
     ],
@@ -618,9 +862,18 @@
         "text": "Camera challenge 1/3. What is behind the curtain?",
         "bg": "Предизвикателство с камера 1/3. Какво е зад пердето?",
         "options": [
-          { "text": "camera", "isCorrect": true },
-          { "text": "computer", "feedback": "Computer е компютър. Camera прави снимки." },
-          { "text": "table", "feedback": "Table е маса. Тук търсим camera." }
+          {
+            "text": "camera",
+            "isCorrect": true
+          },
+          {
+            "text": "computer",
+            "feedback": "Computer е компютър. Camera прави снимки."
+          },
+          {
+            "text": "table",
+            "feedback": "Table е маса. Тук търсим camera."
+          }
         ]
       },
       {
@@ -632,9 +885,18 @@
         "text": "Camera challenge 2/3. Where is the camera? The camera is ___ the curtain.",
         "bg": "Предизвикателство с камера 2/3. Къде е камерата? Камерата е ___ пердето.",
         "options": [
-          { "text": "behind", "isCorrect": true },
-          { "text": "under", "feedback": "Under значи под. Камерата е зад пердето: behind." },
-          { "text": "on", "feedback": "On значи на. Тук търсим behind." }
+          {
+            "text": "behind",
+            "isCorrect": true
+          },
+          {
+            "text": "under",
+            "feedback": "Under значи под. Камерата е зад пердето: behind."
+          },
+          {
+            "text": "on",
+            "feedback": "On значи на. Тук търсим behind."
+          }
         ]
       },
       {
@@ -643,12 +905,21 @@
         "grammar_target": "There are",
         "difficulty": 2,
         "curriculum_stage": "new",
-        "text": "Camera challenge 3/3. Choose the sentence about two clues.",
-        "bg": "Предизвикателство с камера 3/3. Избери изречението за две улики.",
+        "text": "Camera challenge 3/3. The lens spots two clues near the window.",
+        "bg": "Предизвикателство с камера 3/3. Обективът вижда две улики до прозореца.",
         "options": [
-          { "text": "There are two clues near the window.", "isCorrect": true },
-          { "text": "There is two clues near the window.", "feedback": "Two clues е множествено число, затова използваме There are." },
-          { "text": "There are a clue near the window.", "feedback": "A clue е единствено число. За две улики казваме two clues." }
+          {
+            "text": "There are two clues near the window.",
+            "isCorrect": true
+          },
+          {
+            "text": "There is two clues near the window.",
+            "feedback": "Two clues е множествено число, затова използваме There are."
+          },
+          {
+            "text": "There are a clue near the window.",
+            "feedback": "A clue е единствено число. За две улики казваме two clues."
+          }
         ]
       }
     ],
@@ -662,9 +933,18 @@
         "text": "Bag challenge 1/3. What is under the chair?",
         "bg": "Предизвикателство с чанта 1/3. Какво е под стола?",
         "options": [
-          { "text": "bag", "isCorrect": true },
-          { "text": "phone", "feedback": "Phone е телефон. Под стола има bag." },
-          { "text": "door", "feedback": "Door е врата. Тук търсим bag." }
+          {
+            "text": "bag",
+            "isCorrect": true
+          },
+          {
+            "text": "phone",
+            "feedback": "Phone е телефон. Под стола има bag."
+          },
+          {
+            "text": "door",
+            "feedback": "Door е врата. Тук търсим bag."
+          }
         ]
       },
       {
@@ -676,9 +956,18 @@
         "text": "Bag challenge 2/3. The bag is ___ the chair.",
         "bg": "Предизвикателство с чанта 2/3. Чантата е ___ стола.",
         "options": [
-          { "text": "under", "isCorrect": true },
-          { "text": "on", "feedback": "On значи на. Чантата е под стола: under." },
-          { "text": "behind", "feedback": "Behind значи зад. Тук търсим under." }
+          {
+            "text": "under",
+            "isCorrect": true
+          },
+          {
+            "text": "on",
+            "feedback": "On значи на. Чантата е под стола: under."
+          },
+          {
+            "text": "behind",
+            "feedback": "Behind значи зад. Тук търсим under."
+          }
         ]
       },
       {
@@ -687,12 +976,21 @@
         "grammar_target": "There is",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Bag challenge 3/3. Choose the best sentence.",
-        "bg": "Предизвикателство с чанта 3/3. Избери най-доброто изречение.",
+        "text": "Bag challenge 3/3. Write the hiding place in the evidence note.",
+        "bg": "Предизвикателство с чанта 3/3. Запиши скривалището в бележката с доказателства.",
         "options": [
-          { "text": "There is a bag under the chair.", "isCorrect": true },
-          { "text": "There are a bag under the chair.", "feedback": "A bag е един предмет, затова използваме There is." },
-          { "text": "There is a bag on the chair.", "feedback": "Чантата е под стола: under the chair." }
+          {
+            "text": "There is a bag under the chair.",
+            "isCorrect": true
+          },
+          {
+            "text": "There are a bag under the chair.",
+            "feedback": "A bag е един предмет, затова използваме There is."
+          },
+          {
+            "text": "There is a bag on the chair.",
+            "feedback": "Чантата е под стола: under the chair."
+          }
         ]
       }
     ],
@@ -703,12 +1001,21 @@
         "grammar_target": "simple present: We help",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Supply challenge 1/3. Which sentence starts the message?",
-        "bg": "Предизвикателство с доставки 1/3. Кое изречение започва съобщението?",
+        "text": "Supply challenge 1/3. Start the village supply message.",
+        "bg": "Предизвикателство с доставки 1/3. Започни съобщението за доставките на селото.",
         "options": [
-          { "text": "We help the village.", "isCorrect": true },
-          { "text": "We helps the village.", "feedback": "С we използваме help." },
-          { "text": "We hide the village.", "feedback": "Тук помагаме на селото: help." }
+          {
+            "text": "We help the village.",
+            "isCorrect": true
+          },
+          {
+            "text": "We helps the village.",
+            "feedback": "С we използваме help."
+          },
+          {
+            "text": "We hide the village.",
+            "feedback": "Тук помагаме на селото: help."
+          }
         ]
       },
       {
@@ -720,9 +1027,18 @@
         "text": "Supply challenge 2/3. Complete: They need ___, fruit, and a football.",
         "bg": "Предизвикателство с доставки 2/3. Попълни: Те имат нужда от ___, плод и футболна топка.",
         "options": [
-          { "text": "water", "isCorrect": true },
-          { "text": "window", "feedback": "Window е прозорец. Селото има нужда от water." },
-          { "text": "camera", "feedback": "Camera е камера. Селото има нужда от water." }
+          {
+            "text": "water",
+            "isCorrect": true
+          },
+          {
+            "text": "window",
+            "feedback": "Window е прозорец. Селото има нужда от water."
+          },
+          {
+            "text": "camera",
+            "feedback": "Camera е камера. Селото има нужда от water."
+          }
         ]
       },
       {
@@ -731,12 +1047,21 @@
         "grammar_target": "simple present: They need",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Supply challenge 3/3. Choose the full supply plan.",
-        "bg": "Предизвикателство с доставки 3/3. Избери пълния план за доставки.",
+        "text": "Supply challenge 3/3. Send the complete village supply message.",
+        "bg": "Предизвикателство с доставки 3/3. Изпрати пълното съобщение за доставките на селото.",
         "options": [
-          { "text": "We help the village. They need water, fruit, and a football.", "isCorrect": true },
-          { "text": "We helps the village. They needs water.", "feedback": "С we и they използваме help и need без -s." },
-          { "text": "We help the room. They need a camera.", "feedback": "Планът е за селото: water, fruit, and a football." }
+          {
+            "text": "We help the village. They need water, fruit, and a football.",
+            "isCorrect": true
+          },
+          {
+            "text": "We helps the village. They needs water.",
+            "feedback": "С we и they използваме help и need без -s."
+          },
+          {
+            "text": "We help the room. They need a camera.",
+            "feedback": "Планът е за селото: water, fruit, and a football."
+          }
         ]
       }
     ]

@@ -1,0 +1,797 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-09",
+  "content_version": "2026-07-07-seasons-garden-embedded-props-1",
+  "level_plan": {
+    "title": "Seasons Garden",
+    "mission": "Agent Alex reads poem clues in the seasons garden and checks what nature is doing now.",
+    "mission_bg": "Агент Алекс чете стихотворни улики в градината на сезоните и проверява какво прави природата сега.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        {
+          "text": "Агент Алекс чете стихотворни улики в градината на сезоните и проверява какво прави природата сега.",
+          "isCorrect": true
+        },
+        {
+          "text": "Агент Алекс подготвя цветни дрехи и музика за фестивала."
+        },
+        {
+          "text": "Агент Алекс изучава маршрут от реката към планината."
+        }
+      ]
+    },
+    "plan_hotspot_id": "garden_poem_board",
+    "grammar_targets": [
+      "present continuous: is + verb-ing",
+      "present continuous: are + verb-ing",
+      "review: There is/There are",
+      "review: weather words"
+    ],
+    "vocabulary_targets": [
+      "spring",
+      "summer",
+      "fall",
+      "winter",
+      "garden",
+      "poem",
+      "leaf",
+      "snow",
+      "windy",
+      "rain",
+      "flower",
+      "melt"
+    ],
+    "gate_review_words": [
+      "spring",
+      "summer",
+      "flower",
+      "winter",
+      "garden",
+      "poem",
+      "leaf",
+      "snow",
+      "melt",
+      "rain"
+    ],
+    "flow": [
+      "Read the garden poem board.",
+      "Collect the spring leaf clue.",
+      "Collect the summer flower clue.",
+      "Collect the winter snow card.",
+      "Talk to Gardener Mira for the poem check.",
+      "Exit through the garden gate."
+    ]
+  },
+  "assets": {
+    "background": "assets/james-bond/level-09-seasons-garden/generated/seasons-garden-background-v2.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "interactive_props": "assets/james-bond/level-09-seasons-garden/generated/interactive-props.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.38,
+    "guide_scale_multiplier": 1.5,
+    "character_depth_scale": {
+      "back_y": 219,
+      "back_scale": 0.3,
+      "front_y": 533,
+      "front_scale": 0.878
+    }
+  },
+  "hero_start": {
+    "x": 165,
+    "y": 478
+  },
+  "hud": {
+    "status_text": "Seasons garden in progress"
+  },
+  "assistant": {
+    "speaker": "Helper",
+    "complete_text": "Excellent season work, Agent Alex.",
+    "complete_bg": "Отлична работа със сезоните, агент Алекс.",
+    "fallback_bg": "Провери следващата задача.",
+    "hints": {
+      "level09_understand_mission": {
+        "text": "Read the garden poem board first.",
+        "bg": "Първо прочети дъската със стихотворението в градината."
+      },
+      "level09_spring_leaf": {
+        "text": "Find the spring leaf clue.",
+        "bg": "Намери пролетната улика с листо."
+      },
+      "level09_summer_flower": {
+        "text": "Find the summer flower clue.",
+        "bg": "Намери лятната улика с цвете."
+      },
+      "level09_winter_snow_card": {
+        "text": "Find the winter snow card.",
+        "bg": "Намери зимната карта със сняг."
+      },
+      "level09_gardener_poem_check": {
+        "text": "Talk to Gardener Mira.",
+        "bg": "Говори с Gardener Mira."
+      },
+      "level09_garden_gate_exit": {
+        "text": "Use the garden gate.",
+        "bg": "Използвай градинската порта."
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 18,
+        "y": 346
+      },
+      {
+        "x": 1006,
+        "y": 346
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
+    ],
+    "clearance": 28,
+    "obstacles": [
+      {
+        "id": "garden_bed",
+        "x1": 0,
+        "y1": 352,
+        "x2": 154,
+        "y2": 532
+      },
+      {
+        "id": "poem_table",
+        "x1": 290,
+        "y1": 253,
+        "x2": 689,
+        "y2": 345
+      },
+      {
+        "id": "garden_gate_frame",
+        "x1": 810,
+        "y1": 136,
+        "x2": 974,
+        "y2": 296
+      }
+    ]
+  },
+  "translations": {
+    "a": "един",
+    "add": "добави",
+    "after": "след",
+    "agent": "агент",
+    "alex": "Алекс",
+    "and": "и",
+    "are": "са",
+    "autumn": "есен",
+    "board": "дъска",
+    "bulgarian": "български",
+    "card": "карта",
+    "challenge": "предизвикателство",
+    "check": "проверка",
+    "checks": "проверява",
+    "choose": "избери",
+    "closed": "затворена",
+    "clue": "улика",
+    "clues": "улики",
+    "collect": "събери",
+    "complete": "завърши",
+    "doing": "прави",
+    "excellent": "отличен",
+    "fall": "есен",
+    "falling": "падащ",
+    "file": "досие",
+    "find": "намери",
+    "first": "първо",
+    "flower": "цвете",
+    "flowers": "цветя",
+    "garden": "градина",
+    "gardener": "градинар",
+    "gate": "порта",
+    "good": "добре",
+    "grow": "раста",
+    "growing": "расте",
+    "i": "аз",
+    "in": "в",
+    "is": "е",
+    "it": "то",
+    "leaf": "листо",
+    "leaves": "листа",
+    "means": "означава",
+    "melt": "топя се",
+    "melting": "се топи",
+    "mira": "Мира",
+    "mira's": "на Мира",
+    "mission": "мисия",
+    "more": "още",
+    "moving": "движещи се",
+    "nature": "природа",
+    "need": "нуждая се",
+    "now": "сега",
+    "open": "отворена",
+    "opened": "отвори",
+    "opening": "се отваря",
+    "plan": "план",
+    "poem": "стихотворение",
+    "rain": "дъжд",
+    "raining": "вали",
+    "read": "прочети",
+    "reads": "чете",
+    "record": "запиши",
+    "review": "преговор",
+    "says": "казва",
+    "season": "сезон",
+    "seasons": "сезони",
+    "snow": "сняг",
+    "spring": "пролет",
+    "summer": "лято",
+    "sun": "слънце",
+    "task": "задача",
+    "the": "",
+    "there": "има",
+    "to": "към/за",
+    "true": "вярно",
+    "validating": "проверка",
+    "warm": "топъл",
+    "what": "какво",
+    "wind": "вятър",
+    "windy": "ветровито",
+    "winter": "зима",
+    "with": "с",
+    "work": "работа",
+    "you": "ти"
+  },
+  "hotspots": [
+    {
+      "id": "garden_poem_board",
+      "kind": "scenery",
+      "label": "garden poem board",
+      "english": "poem",
+      "bg": "стихотворение",
+      "x": 179,
+      "y": 250,
+      "walk_to": {
+        "x": 268,
+        "y": 514
+      },
+      "radius": 54,
+      "interaction": "view",
+      "label_visible": true,
+      "description": {
+        "text": "The garden poem says: Spring is growing. Summer is opening. Winter is melting.",
+        "bg": "Стихотворението в градината казва: Пролетта расте. Лятото се отваря. Зимата се топи."
+      }
+    },
+    {
+      "id": "spring_leaf",
+      "kind": "collectible",
+      "label": "spring leaf",
+      "english": "leaf",
+      "bg": "листо",
+      "x": 313,
+      "y": 338,
+      "walk_to": {
+        "x": 364,
+        "y": 520
+      },
+      "radius": 32,
+      "intro": {
+        "text": "You find the spring leaf. The leaf is growing in the garden.",
+        "bg": "Намираш пролетното листо. Листото расте в градината.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш пролетното листо. Листото расте в градината.",
+              "isCorrect": true
+            },
+            {
+              "text": "Снегът се топи до зимната порта."
+            },
+            {
+              "text": "Цветето се отваря през лятото."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "spring/leaf/garden",
+        "curriculum_source": "Blue Dot 1 Unit 16",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "present continuous: is growing",
+          "review: in the garden"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 505,
+            "y": 168,
+            "width": 248,
+            "height": 378
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
+    },
+    {
+      "id": "summer_flower",
+      "kind": "collectible",
+      "label": "summer flower",
+      "english": "flower",
+      "bg": "цвете",
+      "x": 535,
+      "y": 280,
+      "walk_to": {
+        "x": 506,
+        "y": 522
+      },
+      "radius": 42,
+      "intro": {
+        "text": "You find the summer flower. The flower is opening in the warm sun.",
+        "bg": "Намираш лятното цвете. Цветето се отваря на топлото слънце.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш лятното цвете. Цветето се отваря на топлото слънце.",
+              "isCorrect": true
+            },
+            {
+              "text": "Листото расте в градината."
+            },
+            {
+              "text": "Вятърът духа и вали дъжд."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "summer/flower/warm",
+        "curriculum_source": "Blue Dot 1 Unit 16",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "present continuous: is opening",
+          "review: weather words"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 810,
+            "y": 169,
+            "width": 249,
+            "height": 376
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "happy",
+        "portrait_frame": 4
+      }
+    },
+    {
+      "id": "winter_snow_card",
+      "kind": "collectible",
+      "label": "winter snow card",
+      "english": "snow",
+      "bg": "сняг",
+      "x": 686,
+      "y": 300,
+      "walk_to": {
+        "x": 640,
+        "y": 522
+      },
+      "radius": 40,
+      "intro": {
+        "text": "You find the winter snow card. The snow is melting and the rain is falling.",
+        "bg": "Намираш зимната карта със сняг. Снегът се топи и дъждът пада.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш зимната карта със сняг. Снегът се топи и дъждът пада.",
+              "isCorrect": true
+            },
+            {
+              "text": "Цветето се отваря на топлото слънце."
+            },
+            {
+              "text": "Листото расте в градината."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "winter/snow/rain/melt",
+        "curriculum_source": "Blue Dot 1 Units 15-16",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "present continuous: is melting",
+          "present continuous: is falling"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "short answer"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 1141,
+            "y": 204,
+            "width": 249,
+            "height": 348
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 2
+      }
+    },
+    {
+      "id": "windy_fall_path",
+      "kind": "scenery",
+      "label": "windy fall path",
+      "english": "windy",
+      "bg": "ветровито",
+      "x": 672,
+      "y": 436,
+      "walk_to": {
+        "x": 610,
+        "y": 522
+      },
+      "radius": 57,
+      "interaction": "view",
+      "description": {
+        "text": "The fall path is windy. Leaves are moving in the wind.",
+        "bg": "Есенната пътека е ветровита. Листата се движат във вятъра."
+      }
+    }
+  ],
+  "guide": {
+    "speaker": "Gardener Mira",
+    "position": {
+      "x": 849,
+      "y": 480
+    },
+    "required_items": [
+      "spring_leaf",
+      "summer_flower",
+      "winter_snow_card"
+    ],
+    "walk_to": {
+      "x": 704,
+      "y": 524
+    },
+    "locked_text": "Collect the spring leaf, summer flower, and winter snow card first.",
+    "locked_text_bg": "Първо събери пролетното листо, лятното цвете и зимната карта със сняг.",
+    "completed_messages": [
+      {
+        "text": "The garden gate is open. Use it after the gate review.",
+        "bg": "Градинската порта е отворена. Използвай я след преговора на портата."
+      }
+    ],
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Gardener Mira",
+          "npc_text": "Poem check. What is the leaf doing?",
+          "npc_text_bg": "Проверка на стихотворението. Какво прави листото?",
+          "options": [
+            {
+              "text": "The leaf is growing.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "The leaf are growing.",
+              "is_correct": false,
+              "feedback_bg": "Leaf е едно листо, затова казваме is growing."
+            },
+            {
+              "text": "The leaf is grow.",
+              "is_correct": false,
+              "feedback_bg": "В present continuous използваме is + growing."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Gardener Mira",
+          "npc_text": "Good. What is the snow doing?",
+          "npc_text_bg": "Добре. Какво прави снегът?",
+          "options": [
+            {
+              "text": "The snow is melting.",
+              "is_correct": true
+            },
+            {
+              "text": "The snow are melting.",
+              "is_correct": false,
+              "feedback_bg": "Snow е едно нещо тук, затова казваме is melting."
+            },
+            {
+              "text": "The snow is melt.",
+              "is_correct": false,
+              "feedback_bg": "След is използваме melting."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "garden_gate",
+    "label": "garden gate",
+    "x": 916,
+    "y": 238,
+    "zone": {
+      "width": 142,
+      "height": 190
+    },
+    "walk_to": {
+      "x": 846,
+      "y": 522
+    },
+    "required_flag": "garden_gate_open",
+    "command": "Walk to garden gate",
+    "locked_speaker": "Alex",
+    "locked_text": "The garden gate is closed. I need Gardener Mira's poem check first.",
+    "locked_text_bg": "Градинската порта е затворена. Първо ми трябва проверката на стихотворението от Gardener Mira.",
+    "unlocked_command": "The garden gate is open!",
+    "unlocked_status": "Garden gate open",
+    "unlocked_toast": "Seasons garden complete."
+  },
+  "quizzes": {
+    "spring_leaf": [
+      {
+        "id": "spring-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Spring challenge 1/3. Which word means пролет?",
+        "bg": "Пролетно предизвикателство 1/3. Коя дума означава пролет?",
+        "options": [
+          {
+            "text": "spring",
+            "isCorrect": true
+          },
+          {
+            "text": "winter",
+            "feedback": "Winter е зима. Пролет е spring."
+          },
+          {
+            "text": "snow",
+            "feedback": "Snow е сняг. Пролет е spring."
+          }
+        ]
+      },
+      {
+        "id": "leaf-growing",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "present continuous: is growing",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Spring challenge 2/3. The leaf ___ growing.",
+        "bg": "Пролетно предизвикателство 2/3. Листото ___ расте.",
+        "options": [
+          {
+            "text": "is",
+            "isCorrect": true
+          },
+          {
+            "text": "are",
+            "feedback": "Leaf е едно листо, затова използваме is."
+          },
+          {
+            "text": "am",
+            "feedback": "Am се използва с I."
+          }
+        ]
+      },
+      {
+        "id": "spring-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "present continuous: is growing",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Spring challenge 3/3. Record what the spring garden clue is doing.",
+        "bg": "Пролетно предизвикателство 3/3. Запиши какво прави пролетната градинска улика.",
+        "options": [
+          {
+            "text": "The leaf is growing in the garden.",
+            "isCorrect": true
+          },
+          {
+            "text": "The leaf are growing in the garden.",
+            "feedback": "Leaf е едно листо, затова казваме is."
+          },
+          {
+            "text": "The snow is growing in the garden.",
+            "feedback": "В тази улика расте leaf, не snow."
+          }
+        ]
+      }
+    ],
+    "summer_flower": [
+      {
+        "id": "summer-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Summer challenge 1/3. Which word means лято?",
+        "bg": "Лятно предизвикателство 1/3. Коя дума означава лято?",
+        "options": [
+          {
+            "text": "summer",
+            "isCorrect": true
+          },
+          {
+            "text": "fall",
+            "feedback": "Fall е есен. Лято е summer."
+          },
+          {
+            "text": "rain",
+            "feedback": "Rain е дъжд. Лято е summer."
+          }
+        ]
+      },
+      {
+        "id": "flower-opening",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "present continuous: is opening",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Summer challenge 2/3. The flower is ___.",
+        "bg": "Лятно предизвикателство 2/3. Цветето се ___.",
+        "options": [
+          {
+            "text": "opening",
+            "isCorrect": true
+          },
+          {
+            "text": "open",
+            "feedback": "След is използваме opening."
+          },
+          {
+            "text": "opens",
+            "feedback": "Тук упражняваме is opening."
+          }
+        ]
+      },
+      {
+        "id": "summer-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "present continuous: is opening",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Summer challenge 3/3. Add the warm-sun clue to the season file.",
+        "bg": "Лятно предизвикателство 3/3. Добави уликата с топлото слънце към сезонното досие.",
+        "options": [
+          {
+            "text": "The flower is opening in the warm sun.",
+            "isCorrect": true
+          },
+          {
+            "text": "The flower are opening in the warm sun.",
+            "feedback": "Flower е едно цвете, затова казваме is."
+          },
+          {
+            "text": "The winter is opening in the warm sun.",
+            "feedback": "В тази улика flower се отваря."
+          }
+        ]
+      }
+    ],
+    "winter_snow_card": [
+      {
+        "id": "winter-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Winter challenge 1/3. Which word means сняг?",
+        "bg": "Зимно предизвикателство 1/3. Коя дума означава сняг?",
+        "options": [
+          {
+            "text": "snow",
+            "isCorrect": true
+          },
+          {
+            "text": "leaf",
+            "feedback": "Leaf е листо. Сняг е snow."
+          },
+          {
+            "text": "garden",
+            "feedback": "Garden е градина. Сняг е snow."
+          }
+        ]
+      },
+      {
+        "id": "snow-melting",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "present continuous: is melting",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Winter challenge 2/3. The snow is ___.",
+        "bg": "Зимно предизвикателство 2/3. Снегът се ___.",
+        "options": [
+          {
+            "text": "melting",
+            "isCorrect": true
+          },
+          {
+            "text": "melt",
+            "feedback": "След is използваме melting."
+          },
+          {
+            "text": "melts",
+            "feedback": "Тук упражняваме is melting."
+          }
+        ]
+      },
+      {
+        "id": "winter-short-answer",
+        "exercise_type": "short answer",
+        "grammar_target": "present continuous: is melting",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Winter challenge 3/3. What is the snow doing?",
+        "bg": "Зимно предизвикателство 3/3. Какво прави снегът?",
+        "options": [
+          {
+            "text": "The snow is melting.",
+            "isCorrect": true
+          },
+          {
+            "text": "The snow are melting.",
+            "feedback": "Snow използва is."
+          },
+          {
+            "text": "The leaf is melting.",
+            "feedback": "В тази улика snow се топи."
+          }
+        ]
+      }
+    ]
+  }
+}

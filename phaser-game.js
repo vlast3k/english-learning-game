@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260706-level07-art-1";
+const ASSET_VERSION = "20260708-dynamic-briefing-panel";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const REVEAL_TRANSLATIONS = new Map([
@@ -252,7 +252,7 @@ class CampScene extends Phaser.Scene {
 
   createAssistantButton() {
     const x = GAME_WIDTH - 52;
-    const y = 82;
+    const y = 98;
     const button = this.add.container(x, y).setDepth(905).setSize(48, 48);
     const bg = this.add.graphics();
     const icon = this.add.text(0, -1, "?", {
@@ -612,8 +612,8 @@ class CampScene extends Phaser.Scene {
           ],
         },
         {
-          text: "Rope challenge 2/3. Choose the best sentence.",
-          bg: "Предизвикателство с въже 2/3. Избери най-доброто изречение.",
+          text: "Rope challenge 2/3. The gear tag is almost ready. Which line fits the rope?",
+          bg: "Предизвикателство с въже 2/3. Етикетът за екипировката е почти готов. Кой ред пасва на въжето?",
           options: [
             { text: "Alex found a rope.", isCorrect: true },
             { text: "Alex found an rope.", feedback: "Използваме an пред гласен звук. Rope започва със съгласен звук, затова е a rope." },
@@ -650,8 +650,8 @@ class CampScene extends Phaser.Scene {
           ],
         },
         {
-          text: "Backpack challenge 3/3. Choose the best sentence.",
-          bg: "Предизвикателство с раница 3/3. Избери най-доброто изречение.",
+          text: "Backpack challenge 3/3. The camp report needs the backpack location.",
+          bg: "Предизвикателство с раница 3/3. Докладът от лагера има нужда от мястото на раницата.",
           options: [
             { text: "The backpack is on the ground.", isCorrect: true },
             { text: "The backpack are on the ground.", feedback: "Backpack е единствено число, затова използваме is." },
@@ -1268,18 +1268,25 @@ class CampScene extends Phaser.Scene {
     };
   }
 
-  openLevelIntro() {
+  openLevelIntro(force = false) {
     const plan = this.getLevelIntroPlan();
     if (!plan?.mission || this.activeBubble) {
       return;
     }
     const sceneId = this.getLevelIntroId();
-    if (this.validatedSceneIntroTranslations.has(sceneId)) {
+    const alreadyUnderstood = this.validatedSceneIntroTranslations.has(sceneId);
+    if (alreadyUnderstood && !force) {
       return;
     }
     this.setCommand("Read the mission");
     this.faceHeroToward(GAME_WIDTH / 2, 220, "curious");
     const target = this.createLevelIntroTarget(plan);
+    const options = alreadyUnderstood
+      ? [{ text: "OK", action: () => this.closeBubble() }]
+      : this.getTranslationCheckOptions(target).map((option) => ({
+        text: option.text,
+        action: () => this.handleLevelIntroTranslationOption(target, option),
+      }));
     this.showSpeechBubble({
       speaker: plan.title || "Mission",
       text: plan.mission,
@@ -1289,10 +1296,7 @@ class CampScene extends Phaser.Scene {
         this.closeBubble();
         this.setCommand("Mission paused");
       },
-      options: this.getTranslationCheckOptions(target).map((option) => ({
-        text: option.text,
-        action: () => this.handleLevelIntroTranslationOption(target, option),
-      })),
+      options,
     });
   }
 
@@ -1744,6 +1748,7 @@ class CampScene extends Phaser.Scene {
     const optionHeight = longChoice ? 72 : 52;
     const choiceHeight = longChoice ? 62 : 42;
     const feedbackReserve = 104;
+    const hiddenFeedbackReserve = 26;
     const speakerTitle = speaker ? `${speaker[0].toUpperCase()}${speaker.slice(1)}` : "";
     const textFlow = this.createRevealTextFlow(30, 61, text, width - 62, {
       fontFamily: UI_FONT,
@@ -1755,14 +1760,14 @@ class CampScene extends Phaser.Scene {
     });
     const choicesY = Math.max(132, 61 + textFlow.contentHeight + 22);
     const feedbackY = choicesY + options.length * optionHeight + 10;
-    const height = feedbackY + feedbackReserve;
+    const initialHeight = feedbackY + hiddenFeedbackReserve;
     const preferredX = anchor.x > GAME_WIDTH * 0.55 ? anchor.x - width - 42 : anchor.x - width * 0.5;
     const x = Phaser.Math.Clamp(preferredX, 32, GAME_WIDTH - width - 32);
-    const y = Phaser.Math.Clamp(anchor.y - height - 24, 58, 340);
+    const y = Phaser.Math.Clamp(anchor.y - initialHeight - 24, 58, 340);
     const bubble = this.add.container(x, y).setDepth(950);
 
     const panel = this.add.graphics();
-    this.drawDialoguePanel(panel, width, height);
+    this.drawDialoguePanel(panel, width, initialHeight);
 
     const speakerRibbon = this.add.graphics();
     const ribbonWidth = Phaser.Math.Clamp(speakerTitle.length * 16 + 40, 132, 236);
@@ -1813,6 +1818,10 @@ class CampScene extends Phaser.Scene {
     }).setVisible(false);
     const drawFeedback = () => {
       const noteHeight = Math.min(feedbackNote.height + 18, feedbackReserve - 14);
+      const expandedHeight = feedbackY + noteHeight + 18;
+      const expandedY = Phaser.Math.Clamp(anchor.y - expandedHeight - 24, 58, 340);
+      bubble.setY(Math.min(bubble.y, expandedY));
+      this.drawDialoguePanel(panel, width, expandedHeight);
       feedbackBg.clear();
       feedbackBg.fillStyle(0x4d3322, 0.15);
       feedbackBg.fillRoundedRect(23, feedbackY + 4, width - 46, noteHeight, 9);
@@ -1840,6 +1849,7 @@ class CampScene extends Phaser.Scene {
   }
 
   drawDialoguePanel(graphics, width, height) {
+    graphics.clear();
     graphics.fillStyle(0x0b1d18, 0.3);
     graphics.fillRoundedRect(7, 9, width, height, 18);
     graphics.fillStyle(0xb77a2f, 0.98);

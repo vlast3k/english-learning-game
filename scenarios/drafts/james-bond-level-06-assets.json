@@ -7,9 +7,9 @@
       "id": "level06_background",
       "type": "background",
       "size": "1536x864",
-      "path": "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background.png",
+      "path": "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background-v2.png",
       "texture_key": "campBg",
-      "prompt": "A cheerful outdoor route station for a children's spy adventure, with a blue river on the left, a small wooden bridge, a village road in the middle distance, green mountains behind it, and clear open ground for two characters. Painted storybook style, bright readable shapes, no text."
+      "prompt": "A cheerful outdoor route station for a children's spy adventure, with a blue river and dock on the left, a modest route board, small map/ticket/photo clues on a route table, a village road in the middle distance, green mountains and a visible mountain path exit. Painted storybook style, bright readable shapes, no readable text."
     },
     {
       "id": "level06_interactive_props",
@@ -29,12 +29,12 @@
     }
   ],
   "generated_outputs": [
-    "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background.png",
+    "assets/james-bond/level-06-river-and-mountain/generated/river-mountain-background-v2.png",
     "assets/james-bond/level-06-river-and-mountain/generated/interactive-props.png"
   ],
   "source_outputs": [
-    "/Users/I024148/.codex/generated_images/019f383c-295c-7391-91d6-5b0a456eb6f3/ig_019639ece77f2df0016a4bdda6e8408191a616f84c21033357.png",
+    "/Users/I024148/.codex/generated_images/019f3c7e-2e1a-7c11-bbec-2140ae831828/ig_0c14fec8ecf560fa016a4d4015c62c819b97ae93decb14ffa6.png",
     "/Users/I024148/.codex/generated_images/019f383c-295c-7391-91d6-5b0a456eb6f3/ig_019639ece77f2df0016a4bddd5dbb48191a33378238972ed45.png"
   ],
-  "integration_note": "The background and interactive prop atlas are generated project assets. The guide sheet is an explicit reuse decision, not a missing generated output."
+  "integration_note": "Level 06 now uses an embedded-prop route-station background for all world objects. The transparent prop atlas remains referenced only for inventory reward icons. The guide sheet is an explicit reuse decision, not a missing generated output."
 }

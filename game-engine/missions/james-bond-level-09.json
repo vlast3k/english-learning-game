@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-09",
+  "mission_puzzle": "level09_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level09_understand_mission",
+      "title": "Read the garden poem board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level09.mission_understood"]
+    },
+    {
+      "id": "level09_spring_leaf",
+      "title": "Find the spring leaf clue",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level09_understand_mission", "status": "completed" },
+      "produces": ["level09.spring_leaf_collected"]
+    },
+    {
+      "id": "level09_summer_flower",
+      "title": "Find the summer flower clue",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level09_understand_mission", "status": "completed" },
+      "produces": ["level09.summer_flower_collected"]
+    },
+    {
+      "id": "level09_winter_snow_card",
+      "title": "Find the winter snow card",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level09_understand_mission", "status": "completed" },
+      "produces": ["level09.winter_snow_card_collected"]
+    },
+    {
+      "id": "level09_gardener_poem_check",
+      "title": "Pass Gardener Mira's poem check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level09_spring_leaf", "status": "completed" },
+          { "puzzle": "level09_summer_flower", "status": "completed" },
+          { "puzzle": "level09_winter_snow_card", "status": "completed" }
+        ]
+      },
+      "produces": ["level09.gardener_approved"]
+    },
+    {
+      "id": "level09_garden_gate_exit",
+      "title": "Walk through the garden gate",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level09_gardener_poem_check", "status": "completed" },
+      "produces": ["level09.complete", "level10.unlocked"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level09-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-09" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level09_understand_mission" }]
+    },
+    {
+      "id": "level09-collect-spring-leaf",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "spring_leaf" },
+      "condition": { "puzzle": "level09_spring_leaf", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "spring_leaf" },
+        { "type": "puzzle.complete", "puzzle": "level09_spring_leaf" },
+        { "type": "ui.vocab.show", "hotspot": "spring_leaf" }
+      ]
+    },
+    {
+      "id": "level09-collect-summer-flower",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "summer_flower" },
+      "condition": { "puzzle": "level09_summer_flower", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "summer_flower" },
+        { "type": "puzzle.complete", "puzzle": "level09_summer_flower" },
+        { "type": "ui.vocab.show", "hotspot": "summer_flower" }
+      ]
+    },
+    {
+      "id": "level09-collect-winter-snow-card",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "winter_snow_card" },
+      "condition": { "puzzle": "level09_winter_snow_card", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "winter_snow_card" },
+        { "type": "puzzle.complete", "puzzle": "level09_winter_snow_card" },
+        { "type": "ui.vocab.show", "hotspot": "winter_snow_card" }
+      ]
+    },
+    {
+      "id": "level09-gardener-opens-gate",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "gardener_mira" },
+      "condition": { "puzzle": "level09_gardener_poem_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level09_gardener_poem_check" },
+        { "type": "flag.set", "flag": "garden_gate_open", "value": true },
+        { "type": "ui.status.set", "text": "Garden gate open" },
+        { "type": "ui.toast", "text": "Gardener Mira opened the gate!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level09-garden-gate-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "garden_gate" },
+      "condition": { "not": { "puzzle": "level09_gardener_poem_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The garden gate is closed. I need Gardener Mira's poem check first.",
+          "bg": "Градинската порта е затворена. Първо ми трябва проверката на стихотворението от Gardener Mira."
+        }
+      ]
+    },
+    {
+      "id": "level09-complete-seasons-garden",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "garden_gate" },
+      "condition": { "puzzle": "level09_gardener_poem_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level09_garden_gate_exit" },
+        { "type": "fact.set", "fact": "level09.complete", "value": true },
+        { "type": "fact.set", "fact": "level10.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to Earth Helper Mission" },
+        { "type": "ui.toast", "text": "Mission 10 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-10-content.json", "delay_ms": 450 }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "spring_leaf": { "puzzle_id": "level09_spring_leaf" },
+      "summer_flower": { "puzzle_id": "level09_summer_flower" },
+      "winter_snow_card": { "puzzle_id": "level09_winter_snow_card" }
+    },
+    "guide": { "id": "gardener_mira", "puzzle_id": "level09_gardener_poem_check" },
+    "exit": {
+      "id": "garden_gate",
+      "puzzle_id": "level09_garden_gate_exit",
+      "requires_puzzle": "level09_gardener_poem_check"
+    }
+  }
+}

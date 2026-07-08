@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "james-bond-level-07",
-  "content_version": "2026-07-06-festival-art-1",
+  "content_version": "2026-07-07-festival-embedded-props-1",
   "level_plan": {
     "title": "Festival Puzzle",
     "mission": "Agent Alex helps Host Lina prepare the New Year festival by checking colorful clothes, music, and possessive words.",
@@ -11,9 +11,16 @@
       "validating_text": "Validating...",
       "retry_text": "Read the mission once more.",
       "options": [
-        { "text": "Агент Алекс помага на Host Lina да подготви новогодишния фестивал, като проверява цветни дрехи, музика и притежателни думи.", "isCorrect": true },
-        { "text": "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека към планината." },
-        { "text": "Героят посещава лабораторията на Q, за да провери шпионските джаджи." }
+        {
+          "text": "Агент Алекс помага на Host Lina да подготви новогодишния фестивал, като проверява цветни дрехи, музика и притежателни думи.",
+          "isCorrect": true
+        },
+        {
+          "text": "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека към планината."
+        },
+        {
+          "text": "Героят посещава лабораторията на Q, за да провери шпионските джаджи."
+        }
       ]
     },
     "plan_hotspot_id": "festival_board",
@@ -45,9 +52,9 @@
       "clothes",
       "colorful",
       "music",
-      "instrument",
-      "musician",
-      "fireworks"
+      "fireworks",
+      "wear",
+      "give"
     ],
     "flow": [
       "Read the festival board.",
@@ -59,17 +66,26 @@
     ]
   },
   "assets": {
-    "background": "assets/james-bond/level-07-festival-puzzle/generated/festival-background.png",
+    "background": "assets/james-bond/level-07-festival-puzzle/generated/festival-background-v2.png",
     "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
     "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
-    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "guide_spritesheet": "assets/james-bond/level-03-village-camp/generated/teacher-guide-spritesheet.png",
     "interactive_props": "assets/james-bond/level-07-festival-puzzle/generated/interactive-props.png"
   },
   "presentation": {
     "character_scale_multiplier": 1.72,
     "guide_scale_multiplier": 1.82
+  ,
+    "character_depth_scale": {
+      "back_y": 342,
+      "back_scale": 0.369,
+      "front_y": 566,
+      "front_scale": 0.666
+  }},
+  "hero_start": {
+    "x": 354,
+    "y": 525
   },
-  "hero_start": { "x": 238, "y": 516 },
   "hud": {
     "status_text": "Festival puzzle in progress"
   },
@@ -107,29 +123,59 @@
   },
   "navigation": {
     "walkable_polygon": [
-      { "x": 18, "y": 342 },
-      { "x": 1006, "y": 342 },
-      { "x": 1016, "y": 566 },
-      { "x": 12, "y": 566 }
+      {
+        "x": 18,
+        "y": 342
+      },
+      {
+        "x": 1006,
+        "y": 342
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
     ],
     "clearance": 28,
     "obstacles": [
-      { "id": "clothes_stall", "x1": 0, "y1": 270, "x2": 330, "y2": 448 },
-      { "id": "music_stage", "x1": 428, "y1": 230, "x2": 720, "y2": 430 },
-      { "id": "festival_arch_frame", "x1": 772, "y1": 200, "x2": 986, "y2": 430 }
+      {
+        "id": "clothes_stall",
+        "x1": 79,
+        "y1": 167,
+        "x2": 409,
+        "y2": 345
+      },
+      {
+        "id": "music_stage",
+        "x1": 430,
+        "y1": 132,
+        "x2": 722,
+        "y2": 332
+      },
+      {
+        "id": "festival_arch_frame",
+        "x1": 771,
+        "y1": 130,
+        "x2": 951,
+        "y2": 330
+      }
     ]
   },
   "translations": {
     "a": "един",
     "after": "след",
-    "alex": "Алекс",
     "agent": "агент",
+    "alex": "Алекс",
     "and": "и",
     "arch": "арка",
     "are": "са",
+    "blue": "син",
     "board": "дъска",
     "boots": "ботуши",
-    "blue": "син",
     "brown": "кафяв",
     "bulgarian": "български",
     "bundle": "комплект",
@@ -140,9 +186,10 @@
     "choose": "избери",
     "closed": "затворен",
     "clothes": "дрехи",
-    "colorful": "цветен",
     "collect": "събери",
+    "colorful": "цветен",
     "complete": "завърши",
+    "costume": "костюм",
     "drum": "барабан",
     "envelope": "плик",
     "excellent": "отличен",
@@ -150,8 +197,8 @@
     "find": "намери",
     "fireworks": "фойерверки",
     "first": "първо",
-    "give": "дай",
     "gate": "порта",
+    "give": "дай",
     "good": "добре",
     "has": "има",
     "hat": "шапка",
@@ -166,17 +213,21 @@
     "jeans": "дънки",
     "lina": "Лина",
     "lina's": "на Лина",
+    "line": "ред",
+    "means": "означава",
     "mission": "мисия",
     "more": "още",
     "music": "музика",
     "musician": "музикант",
     "my": "моят",
-    "means": "означава",
-    "new": "нов",
     "need": "нуждая се",
+    "needs": "има нужда",
+    "new": "нов",
+    "note": "бележка",
     "open": "отворен",
     "opened": "отвори",
     "our": "нашият",
+    "pass": "пропуск",
     "plan": "план",
     "possessive": "притежателен",
     "prepare": "подготви",
@@ -190,9 +241,9 @@
     "the": "",
     "their": "техният",
     "these": "тези",
+    "things": "неща",
     "this": "това",
     "to": "за/към",
-    "things": "неща",
     "true": "вярно",
     "until": "докато",
     "validating": "проверка",
@@ -213,16 +264,14 @@
       "label": "festival board",
       "english": "board",
       "bg": "дъска",
-      "x": 170,
-      "y": 294,
-      "walk_to": { "x": 266, "y": 512 },
-      "radius": 48,
-      "interaction": "view",
-      "scene_icon": {
-        "texture": "interactiveProps",
-        "frame": { "x": 1229, "y": 0, "width": 307, "height": 512 },
-        "size": 72
+      "x": 103,
+      "y": 298,
+      "walk_to": {
+        "x": 266,
+        "y": 512
       },
+      "radius": 58,
+      "interaction": "view",
       "description": {
         "text": "The festival board says: My hat is colorful. Her shirt and his boots are ready. Their instrument is on the stage.",
         "bg": "Фестивалната дъска казва: Моята шапка е цветна. Нейната риза и неговите ботуши са готови. Техният инструмент е на сцената."
@@ -234,10 +283,13 @@
       "label": "festival hat",
       "english": "hat",
       "bg": "шапка",
-      "x": 260,
-      "y": 394,
-      "walk_to": { "x": 282, "y": 520 },
-      "radius": 36,
+      "x": 974,
+      "y": 323,
+      "walk_to": {
+        "x": 848,
+        "y": 522
+      },
+      "radius": 37,
       "intro": {
         "text": "You find the festival hat. My hat is colorful. I wear my hat.",
         "bg": "Намираш фестивалната шапка. Моята шапка е цветна. Нося моята шапка.",
@@ -246,9 +298,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Намираш фестивалната шапка. Моята шапка е цветна. Нося моята шапка.", "isCorrect": true },
-            { "text": "Барабанът е техният инструмент на сцената." },
-            { "text": "Нейната риза и неговите ботуши са готови." }
+            {
+              "text": "Намираш фестивалната шапка. Моята шапка е цветна. Нося моята шапка.",
+              "isCorrect": true
+            },
+            {
+              "text": "Барабанът е техният инструмент на сцената."
+            },
+            {
+              "text": "Нейната риза и неговите ботуши са готови."
+            }
           ]
         }
       },
@@ -269,7 +328,12 @@
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 0, "y": 0, "width": 307, "height": 512 }
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 307,
+            "height": 512
+          }
         }
       },
       "presentation": {
@@ -283,10 +347,13 @@
       "label": "clothes bundle",
       "english": "clothes",
       "bg": "дрехи",
-      "x": 384,
-      "y": 392,
-      "walk_to": { "x": 390, "y": 522 },
-      "radius": 38,
+      "x": 358,
+      "y": 324,
+      "walk_to": {
+        "x": 390,
+        "y": 522
+      },
+      "radius": 44,
       "intro": {
         "text": "These are festival clothes. Her shirt is blue. His boots are brown.",
         "bg": "Това са фестивални дрехи. Нейната риза е синя. Неговите ботуши са кафяви.",
@@ -295,9 +362,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Това са фестивални дрехи. Нейната риза е синя. Неговите ботуши са кафяви.", "isCorrect": true },
-            { "text": "Моята шапка е цветна и аз я нося." },
-            { "text": "Техният инструмент е на сцената." }
+            {
+              "text": "Това са фестивални дрехи. Нейната риза е синя. Неговите ботуши са кафяви.",
+              "isCorrect": true
+            },
+            {
+              "text": "Моята шапка е цветна и аз я нося."
+            },
+            {
+              "text": "Техният инструмент е на сцената."
+            }
           ]
         }
       },
@@ -318,7 +392,12 @@
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 307, "y": 0, "width": 307, "height": 512 }
+          "frame": {
+            "x": 307,
+            "y": 0,
+            "width": 307,
+            "height": 512
+          }
         }
       },
       "presentation": {
@@ -332,9 +411,12 @@
       "label": "music drum",
       "english": "music",
       "bg": "музика",
-      "x": 604,
-      "y": 334,
-      "walk_to": { "x": 570, "y": 522 },
+      "x": 566,
+      "y": 294,
+      "walk_to": {
+        "x": 570,
+        "y": 522
+      },
       "radius": 40,
       "intro": {
         "text": "You find the music drum. Their instrument is ready for the musician.",
@@ -344,9 +426,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Намираш музикалния барабан. Техният инструмент е готов за музиканта.", "isCorrect": true },
-            { "text": "Нейната риза е синя, а неговите ботуши са кафяви." },
-            { "text": "Моята шапка е цветна." }
+            {
+              "text": "Намираш музикалния барабан. Техният инструмент е готов за музиканта.",
+              "isCorrect": true
+            },
+            {
+              "text": "Нейната риза е синя, а неговите ботуши са кафяви."
+            },
+            {
+              "text": "Моята шапка е цветна."
+            }
           ]
         }
       },
@@ -367,7 +456,12 @@
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 614, "y": 0, "width": 308, "height": 512 }
+          "frame": {
+            "x": 614,
+            "y": 0,
+            "width": 308,
+            "height": 512
+          }
         }
       },
       "presentation": {
@@ -381,16 +475,14 @@
       "label": "fireworks envelope",
       "english": "fireworks",
       "bg": "фойерверки",
-      "x": 760,
-      "y": 360,
-      "walk_to": { "x": 706, "y": 520 },
-      "radius": 44,
-      "interaction": "view",
-      "scene_icon": {
-        "texture": "interactiveProps",
-        "frame": { "x": 922, "y": 0, "width": 307, "height": 512 },
-        "size": 72
+      "x": 746,
+      "y": 334,
+      "walk_to": {
+        "x": 706,
+        "y": 520
       },
+      "radius": 46,
+      "interaction": "view",
       "description": {
         "text": "The fireworks envelope is closed until the music starts.",
         "bg": "Пликът с фойерверки е затворен, докато музиката започне."
@@ -399,9 +491,19 @@
   ],
   "guide": {
     "speaker": "Host Lina",
-    "position": { "x": 734, "y": 486 },
-    "required_items": ["festival_hat", "clothes_bundle", "music_drum"],
-    "walk_to": { "x": 670, "y": 524 },
+    "position": {
+      "x": 828,
+      "y": 486
+    },
+    "required_items": [
+      "festival_hat",
+      "clothes_bundle",
+      "music_drum"
+    ],
+    "walk_to": {
+      "x": 760,
+      "y": 524
+    },
     "locked_text": "Collect the festival hat, clothes, and music drum first.",
     "locked_text_bg": "Първо събери фестивалната шапка, дрехите и музикалния барабан.",
     "completed_messages": [
@@ -463,10 +565,16 @@
   "exit_marker": {
     "id": "festival_arch",
     "label": "festival arch",
-    "x": 884,
-    "y": 304,
-    "zone": { "width": 178, "height": 210 },
-    "walk_to": { "x": 842, "y": 522 },
+    "x": 876,
+    "y": 220,
+    "zone": {
+      "width": 168,
+      "height": 220
+    },
+    "walk_to": {
+      "x": 842,
+      "y": 522
+    },
     "required_flag": "festival_arch_open",
     "command": "Walk to festival arch",
     "locked_speaker": "Alex",
@@ -474,13 +582,7 @@
     "locked_text_bg": "Фестивалната арка е затворена. Първо ми трябва проверката на Host Lina.",
     "unlocked_command": "The festival arch is open!",
     "unlocked_status": "Festival arch open",
-    "unlocked_toast": "Festival puzzle complete.",
-    "scene_icon": {
-      "texture": "interactiveProps",
-      "frame": { "x": 1229, "y": 0, "width": 307, "height": 512 },
-      "size": 80,
-      "offset_y": -8
-    }
+    "unlocked_toast": "Festival puzzle complete."
   },
   "quizzes": {
     "festival_hat": [
@@ -493,9 +595,18 @@
         "text": "Hat challenge 1/3. Which word means шапка?",
         "bg": "Предизвикателство с шапка 1/3. Коя дума означава шапка?",
         "options": [
-          { "text": "hat", "isCorrect": true },
-          { "text": "music", "feedback": "Music е музика. Шапка е hat." },
-          { "text": "boots", "feedback": "Boots са ботуши. Шапка е hat." }
+          {
+            "text": "hat",
+            "isCorrect": true
+          },
+          {
+            "text": "music",
+            "feedback": "Music е музика. Шапка е hat."
+          },
+          {
+            "text": "boots",
+            "feedback": "Boots са ботуши. Шапка е hat."
+          }
         ]
       },
       {
@@ -507,9 +618,18 @@
         "text": "Hat challenge 2/3. ___ hat is colorful.",
         "bg": "Предизвикателство с шапка 2/3. ___ шапка е цветна.",
         "options": [
-          { "text": "My", "isCorrect": true },
-          { "text": "Me", "feedback": "За притежание използваме my." },
-          { "text": "I", "feedback": "I е подлог. Тук ни трябва my hat." }
+          {
+            "text": "My",
+            "isCorrect": true
+          },
+          {
+            "text": "Me",
+            "feedback": "За притежание използваме my."
+          },
+          {
+            "text": "I",
+            "feedback": "I е подлог. Тук ни трябва my hat."
+          }
         ]
       },
       {
@@ -518,12 +638,21 @@
         "grammar_target": "simple present: wear",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Hat challenge 3/3. Choose the true festival sentence.",
-        "bg": "Предизвикателство с шапка 3/3. Избери вярното фестивално изречение.",
+        "text": "Hat challenge 3/3. The festival pass needs the hat line.",
+        "bg": "Предизвикателство с шапка 3/3. Фестивалният пропуск има нужда от реда за шапката.",
         "options": [
-          { "text": "I wear my hat.", "isCorrect": true },
-          { "text": "I wears my hat.", "feedback": "С I използваме wear." },
-          { "text": "I wear his instrument.", "feedback": "Носим шапка, не инструмент." }
+          {
+            "text": "I wear my hat.",
+            "isCorrect": true
+          },
+          {
+            "text": "I wears my hat.",
+            "feedback": "С I използваме wear."
+          },
+          {
+            "text": "I wear his instrument.",
+            "feedback": "Носим шапка, не инструмент."
+          }
         ]
       }
     ],
@@ -537,9 +666,18 @@
         "text": "Clothes challenge 1/3. Which things are clothes?",
         "bg": "Предизвикателство с дрехи 1/3. Кои неща са дрехи?",
         "options": [
-          { "text": "shirt, jeans, and boots", "isCorrect": true },
-          { "text": "music and instrument", "feedback": "Music и instrument са за сцената. Дрехите са shirt, jeans, and boots." },
-          { "text": "fireworks and stage", "feedback": "Fireworks и stage не са дрехи." }
+          {
+            "text": "shirt, jeans, and boots",
+            "isCorrect": true
+          },
+          {
+            "text": "music and instrument",
+            "feedback": "Music и instrument са за сцената. Дрехите са shirt, jeans, and boots."
+          },
+          {
+            "text": "fireworks and stage",
+            "feedback": "Fireworks и stage не са дрехи."
+          }
         ]
       },
       {
@@ -551,9 +689,18 @@
         "text": "Clothes challenge 2/3. ___ shirt is blue.",
         "bg": "Предизвикателство с дрехи 2/3. ___ риза е синя.",
         "options": [
-          { "text": "Her", "isCorrect": true },
-          { "text": "She", "feedback": "За притежание използваме her shirt." },
-          { "text": "They", "feedback": "They е подлог. Тук ни трябва her." }
+          {
+            "text": "Her",
+            "isCorrect": true
+          },
+          {
+            "text": "She",
+            "feedback": "За притежание използваме her shirt."
+          },
+          {
+            "text": "They",
+            "feedback": "They е подлог. Тук ни трябва her."
+          }
         ]
       },
       {
@@ -562,12 +709,21 @@
         "grammar_target": "possessive adjective: his",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Clothes challenge 3/3. Choose the true boots sentence.",
-        "bg": "Предизвикателство с дрехи 3/3. Избери вярното изречение за ботушите.",
+        "text": "Clothes challenge 3/3. Check the costume note for the boots.",
+        "bg": "Предизвикателство с дрехи 3/3. Провери бележката за костюма и ботушите.",
         "options": [
-          { "text": "His boots are brown.", "isCorrect": true },
-          { "text": "He boots are brown.", "feedback": "За притежание използваме his boots." },
-          { "text": "His boots is brown.", "feedback": "Boots са много, затова използваме are." }
+          {
+            "text": "His boots are brown.",
+            "isCorrect": true
+          },
+          {
+            "text": "He boots are brown.",
+            "feedback": "За притежание използваме his boots."
+          },
+          {
+            "text": "His boots is brown.",
+            "feedback": "Boots са много, затова използваме are."
+          }
         ]
       }
     ],
@@ -581,9 +737,18 @@
         "text": "Music challenge 1/3. What is the drum?",
         "bg": "Предизвикателство с музика 1/3. Какво е барабанът?",
         "options": [
-          { "text": "instrument", "isCorrect": true },
-          { "text": "shirt", "feedback": "Shirt е риза. Барабанът е instrument." },
-          { "text": "hat", "feedback": "Hat е шапка. Барабанът е instrument." }
+          {
+            "text": "instrument",
+            "isCorrect": true
+          },
+          {
+            "text": "shirt",
+            "feedback": "Shirt е риза. Барабанът е instrument."
+          },
+          {
+            "text": "hat",
+            "feedback": "Hat е шапка. Барабанът е instrument."
+          }
         ]
       },
       {
@@ -595,9 +760,18 @@
         "text": "Music challenge 2/3. ___ instrument is ready.",
         "bg": "Предизвикателство с музика 2/3. ___ инструмент е готов.",
         "options": [
-          { "text": "Their", "isCorrect": true },
-          { "text": "They", "feedback": "За притежание използваме their instrument." },
-          { "text": "Them", "feedback": "Them не стои пред instrument." }
+          {
+            "text": "Their",
+            "isCorrect": true
+          },
+          {
+            "text": "They",
+            "feedback": "За притежание използваме their instrument."
+          },
+          {
+            "text": "Them",
+            "feedback": "Them не стои пред instrument."
+          }
         ]
       },
       {
@@ -609,9 +783,18 @@
         "text": "Music challenge 3/3. Whose instrument is on the stage?",
         "bg": "Предизвикателство с музика 3/3. Чий инструмент е на сцената?",
         "options": [
-          { "text": "Their instrument is on the stage.", "isCorrect": true },
-          { "text": "They instrument is on the stage.", "feedback": "За притежание използваме their instrument." },
-          { "text": "Their instrument are on the stage.", "feedback": "Instrument е едно нещо, затова използваме is." }
+          {
+            "text": "Their instrument is on the stage.",
+            "isCorrect": true
+          },
+          {
+            "text": "They instrument is on the stage.",
+            "feedback": "За притежание използваме their instrument."
+          },
+          {
+            "text": "Their instrument are on the stage.",
+            "feedback": "Instrument е едно нещо, затова използваме is."
+          }
         ]
       }
     ]

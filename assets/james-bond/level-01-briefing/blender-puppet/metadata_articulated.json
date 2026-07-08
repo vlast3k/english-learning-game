@@ -1,0 +1,106 @@
+{
+  "frame_width": 192,
+  "frame_height": 220,
+  "statics": [
+    {
+      "name": "torso_bag",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/torso_bag.png",
+      "bbox": [
+        66,
+        56,
+        122,
+        147
+      ],
+      "joint": [
+        92,
+        128
+      ],
+      "depth": 0.0
+    },
+    {
+      "name": "head",
+      "path": "assets/james-bond/level-01-briefing/blender-puppet/layers/head.png",
+      "bbox": [
+        64,
+        8,
+        127,
+        73
+      ],
+      "joint": [
+        93,
+        67
+      ],
+      "depth": -0.01
+    }
+  ],
+  "chains": {
+    "back_leg": [
+      {
+        "name": "back_leg",
+        "path": "assets/james-bond/level-01-briefing/blender-puppet/segments/back_leg.png",
+        "bbox": [
+          63.0,
+          122,
+          113.0,
+          208
+        ],
+        "joint": [
+          87.0,
+          127
+        ],
+        "depth": 0.05
+      }
+    ],
+    "front_leg": [
+      {
+        "name": "front_leg",
+        "path": "assets/james-bond/level-01-briefing/blender-puppet/segments/front_leg.png",
+        "bbox": [
+          74.0,
+          122,
+          124.0,
+          208
+        ],
+        "joint": [
+          98.0,
+          127
+        ],
+        "depth": -0.05
+      }
+    ],
+    "back_arm": [
+      {
+        "name": "back_arm",
+        "path": "assets/james-bond/level-01-briefing/blender-puppet/segments/back_arm.png",
+        "bbox": [
+          69.0,
+          78,
+          92.0,
+          155
+        ],
+        "joint": [
+          78.0,
+          83
+        ],
+        "depth": 0.06
+      }
+    ],
+    "front_arm": [
+      {
+        "name": "front_arm",
+        "path": "assets/james-bond/level-01-briefing/blender-puppet/segments/front_arm.png",
+        "bbox": [
+          94.0,
+          78,
+          116.0,
+          155
+        ],
+        "joint": [
+          104.0,
+          86
+        ],
+        "depth": -0.06
+      }
+    ]
+  }
+}

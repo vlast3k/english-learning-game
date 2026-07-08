@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "james-bond-level-03",
-  "content_version": "2026-07-06",
+  "content_version": "2026-07-07-embedded-props-1",
   "level_plan": {
     "title": "Village Picnic List",
     "mission": "The hero visits a friendly village camp to learn what friends do and what they need for a picnic.",
@@ -11,9 +11,16 @@
       "validating_text": "Validating...",
       "retry_text": "Read the mission once more.",
       "options": [
-        { "text": "Героят посещава приятелски селски лагер, за да научи какво правят приятелите и от какво имат нужда за пикник.", "isCorrect": true },
-        { "text": "Героят проверява тих апартамент, за да намери скрити микрофони и улики." },
-        { "text": "Директорът отваря тренировъчна врата до голямата карта." }
+        {
+          "text": "Героят посещава приятелски селски лагер, за да научи какво правят приятелите и от какво имат нужда за пикник.",
+          "isCorrect": true
+        },
+        {
+          "text": "Героят проверява тих апартамент, за да намери скрити микрофони и улики."
+        },
+        {
+          "text": "Директорът отваря тренировъчна врата до голямата карта."
+        }
       ]
     },
     "plan_hotspot_id": "welcome_board",
@@ -71,8 +78,17 @@
   "presentation": {
     "character_scale_multiplier": 1.72,
     "guide_scale_multiplier": 1.55
+  ,
+    "character_depth_scale": {
+      "back_y": 342,
+      "back_scale": 0.388,
+      "front_y": 566,
+      "front_scale": 0.666
+  }},
+  "hero_start": {
+    "x": 273,
+    "y": 547
   },
-  "hero_start": { "x": 246, "y": 512 },
   "hud": {
     "status_text": "Village visit in progress"
   },
@@ -110,16 +126,46 @@
   },
   "navigation": {
     "walkable_polygon": [
-      { "x": 18, "y": 346 },
-      { "x": 1006, "y": 346 },
-      { "x": 1016, "y": 566 },
-      { "x": 12, "y": 566 }
+      {
+        "x": 18,
+        "y": 346
+      },
+      {
+        "x": 1006,
+        "y": 346
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
     ],
     "clearance": 28,
     "obstacles": [
-      { "id": "left_bush", "x1": 0, "y1": 312, "x2": 180, "y2": 450 },
-      { "id": "camp_table", "x1": 384, "y1": 384, "x2": 652, "y2": 514 },
-      { "id": "right_trees", "x1": 812, "y1": 282, "x2": 1000, "y2": 450 }
+      {
+        "id": "left_bush",
+        "x1": 0,
+        "y1": 360,
+        "x2": 95,
+        "y2": 494
+      },
+      {
+        "id": "camp_table",
+        "x1": 383,
+        "y1": 238,
+        "x2": 532,
+        "y2": 328
+      },
+      {
+        "id": "right_trees",
+        "x1": 863,
+        "y1": 146,
+        "x2": 990,
+        "y2": 314
+      }
     ]
   },
   "translations": {
@@ -148,6 +194,7 @@
     "does": "прави",
     "drink": "пия",
     "eat": "ям",
+    "file": "запиши",
     "find": "намери",
     "first": "първо",
     "food": "храна",
@@ -163,15 +210,18 @@
     "great": "чудесен",
     "has": "има",
     "help": "помагам",
+    "helpful": "полезен",
     "hero": "герой",
     "i": "аз",
     "in": "в",
     "is": "е",
     "it": "то",
     "learn": "уча",
+    "line": "ред",
     "list": "списък",
     "make": "правя",
     "map": "карта",
+    "mark": "отбележи",
     "mission": "мисия",
     "music": "музика",
     "need": "имам нужда",
@@ -181,6 +231,7 @@
     "picnic": "пикник",
     "plan": "план",
     "play": "играя",
+    "playground": "игрище",
     "read": "чета",
     "ready": "готов",
     "return": "върни се",
@@ -189,11 +240,13 @@
     "school": "училище",
     "sentence": "изречение",
     "shows": "показва",
+    "signs": "подписва",
     "table": "маса",
     "take": "занеси",
     "talk": "говори",
     "teacher": "учител",
     "teacher's": "на учителя",
+    "team": "отбор",
     "the": "the",
     "there": "има",
     "they": "те",
@@ -214,9 +267,19 @@
   "guide": {
     "speaker": "Teacher",
     "role_label": "Teacher",
-    "position": { "x": 704, "y": 486 },
-    "required_items": ["bread_note", "football_clue", "teacher_map"],
-    "walk_to": { "x": 642, "y": 524 },
+    "position": {
+      "x": 704,
+      "y": 486
+    },
+    "required_items": [
+      "bread_note",
+      "football_clue",
+      "teacher_map"
+    ],
+    "walk_to": {
+      "x": 642,
+      "y": 524
+    },
     "locked_text": "Collect the bread note, football clue, and teacher map first.",
     "locked_text_bg": "Първо събери бележката за хляба, уликата за футбола и картата на учителя.",
     "completed_messages": [
@@ -280,8 +343,14 @@
     "label": "path to map room",
     "x": 952,
     "y": 320,
-    "zone": { "width": 110, "height": 170 },
-    "walk_to": { "x": 876, "y": 520 },
+    "zone": {
+      "width": 110,
+      "height": 170
+    },
+    "walk_to": {
+      "x": 876,
+      "y": 520
+    },
     "required_flag": "map_room_path_open",
     "command": "Walk to map room",
     "locked_speaker": "Alex",
@@ -289,13 +358,7 @@
     "locked_text_bg": "Първо ми трябва списъкът от селото.",
     "unlocked_command": "The path to the map room is open!",
     "unlocked_status": "Path to map room open",
-    "unlocked_toast": "Return to Level 2.",
-    "scene_icon": {
-      "texture": "interactiveProps",
-      "frame": { "x": 1152, "y": 512, "width": 384, "height": 512 },
-      "size": 58,
-      "offset_y": -10
-    }
+    "unlocked_toast": "Return to Level 2."
   },
   "hotspots": [
     {
@@ -304,9 +367,12 @@
       "label": "bread note",
       "english": "bread",
       "bg": "хляб",
-      "x": 322,
-      "y": 246,
-      "walk_to": { "x": 330, "y": 522 },
+      "x": 282,
+      "y": 241,
+      "walk_to": {
+        "x": 330,
+        "y": 522
+      },
       "radius": 38,
       "label_visible": true,
       "intro": {
@@ -317,9 +383,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Готвачът има хляб на масата. Готвачът казва: Аз правя хляб за приятели.", "isCorrect": true },
-            { "text": "Децата играят футбол в градината след училище." },
-            { "text": "Учителят има карта и ти четеш картата." }
+            {
+              "text": "Готвачът има хляб на масата. Готвачът казва: Аз правя хляб за приятели.",
+              "isCorrect": true
+            },
+            {
+              "text": "Децата играят футбол в градината след училище."
+            },
+            {
+              "text": "Учителят има карта и ти четеш картата."
+            }
           ]
         }
       },
@@ -327,16 +400,30 @@
         "vocabulary_target": "bread/cook",
         "curriculum_source": "James Bond Level 03",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present: I make"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "simple present: I make"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 0, "y": 0, "width": 384, "height": 512 }
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 384,
+            "height": 512
+          }
         }
       },
-      "presentation": { "hero_expression": "curious", "portrait_frame": 3 }
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
     },
     {
       "id": "football_clue",
@@ -344,9 +431,12 @@
       "label": "football clue",
       "english": "football",
       "bg": "футбол",
-      "x": 122,
-      "y": 412,
-      "walk_to": { "x": 252, "y": 528 },
+      "x": 151,
+      "y": 414,
+      "walk_to": {
+        "x": 252,
+        "y": 528
+      },
       "radius": 38,
       "label_visible": true,
       "intro": {
@@ -357,9 +447,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Децата играят футбол в градината. Те играят след училище.", "isCorrect": true },
-            { "text": "Готвач има хляб на масата за приятели." },
-            { "text": "Картата чака на бюрото в апартамента." }
+            {
+              "text": "Децата играят футбол в градината. Те играят след училище.",
+              "isCorrect": true
+            },
+            {
+              "text": "Готвач има хляб на масата за приятели."
+            },
+            {
+              "text": "Картата чака на бюрото в апартамента."
+            }
           ]
         }
       },
@@ -367,16 +464,30 @@
         "vocabulary_target": "football/garden",
         "curriculum_source": "James Bond Level 03",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present: They play"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "simple present: They play"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 384, "y": 0, "width": 384, "height": 512 }
+          "frame": {
+            "x": 384,
+            "y": 0,
+            "width": 384,
+            "height": 512
+          }
         }
       },
-      "presentation": { "hero_expression": "happy", "portrait_frame": 4 }
+      "presentation": {
+        "hero_expression": "happy",
+        "portrait_frame": 4
+      }
     },
     {
       "id": "teacher_map",
@@ -384,9 +495,12 @@
       "label": "teacher map",
       "english": "map",
       "bg": "карта",
-      "x": 594,
-      "y": 288,
-      "walk_to": { "x": 576, "y": 522 },
+      "x": 625,
+      "y": 250,
+      "walk_to": {
+        "x": 576,
+        "y": 522
+      },
       "radius": 52,
       "label_visible": true,
       "intro": {
@@ -397,9 +511,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Учителят има карта. Ти четеш картата и помагаш на селото.", "isCorrect": true },
-            { "text": "Телефонът е на бюрото и започва проверката." },
-            { "text": "Децата са под стола до прозореца." }
+            {
+              "text": "Учителят има карта. Ти четеш картата и помагаш на селото.",
+              "isCorrect": true
+            },
+            {
+              "text": "Телефонът е на бюрото и започва проверката."
+            },
+            {
+              "text": "Децата са под стола до прозореца."
+            }
           ]
         }
       },
@@ -407,16 +528,31 @@
         "vocabulary_target": "teacher/map",
         "curriculum_source": "James Bond Level 03",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present: You read", "simple present: We help"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "simple present: You read",
+          "simple present: We help"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 768, "y": 0, "width": 384, "height": 512 }
+          "frame": {
+            "x": 768,
+            "y": 0,
+            "width": 384,
+            "height": 512
+          }
         }
       },
-      "presentation": { "hero_expression": "focused", "portrait_frame": 6 }
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 6
+      }
     },
     {
       "id": "welcome_board",
@@ -424,17 +560,15 @@
       "label": "welcome board",
       "english": "welcome board",
       "bg": "табло за добре дошли",
-      "x": 792,
-      "y": 206,
-      "walk_to": { "x": 724, "y": 512 },
+      "x": 783,
+      "y": 175,
+      "walk_to": {
+        "x": 724,
+        "y": 512
+      },
       "radius": 60,
       "interaction": "view",
       "label_visible": true,
-      "scene_icon": {
-        "texture": "interactiveProps",
-        "frame": { "x": 1152, "y": 0, "width": 384, "height": 512 },
-        "size": 72
-      },
       "description": {
         "text": "The welcome board says: We help the village. They eat fruit after the game.",
         "bg": "Таблото за добре дошли казва: Ние помагаме на селото. Те ядат плод след играта."
@@ -446,17 +580,15 @@
       "label": "garden table",
       "english": "garden table",
       "bg": "градинска маса",
-      "x": 430,
-      "y": 308,
-      "walk_to": { "x": 458, "y": 532 },
+      "x": 458,
+      "y": 280,
+      "walk_to": {
+        "x": 458,
+        "y": 532
+      },
       "radius": 48,
       "interaction": "view",
       "label_visible": true,
-      "scene_icon": {
-        "texture": "interactiveProps",
-        "frame": { "x": 0, "y": 512, "width": 384, "height": 512 },
-        "size": 72
-      },
       "description": {
         "text": "There is fruit on the table. There are friends in the garden.",
         "bg": "Има плод на масата. Има приятели в градината."
@@ -474,9 +606,18 @@
         "text": "Bread challenge 1/3. What food is on the table?",
         "bg": "Предизвикателство с хляб 1/3. Каква храна е на масата?",
         "options": [
-          { "text": "bread", "isCorrect": true },
-          { "text": "football", "feedback": "Football е игра. Храната на масата е bread." },
-          { "text": "map", "feedback": "Map е карта. Тук търсим bread." }
+          {
+            "text": "bread",
+            "isCorrect": true
+          },
+          {
+            "text": "football",
+            "feedback": "Football е игра. Храната на масата е bread."
+          },
+          {
+            "text": "map",
+            "feedback": "Map е карта. Тук търсим bread."
+          }
         ]
       },
       {
@@ -488,9 +629,18 @@
         "text": "Bread challenge 2/3. Complete the sentence: I ___ bread.",
         "bg": "Предизвикателство с хляб 2/3. Попълни изречението: Аз ___ хляб.",
         "options": [
-          { "text": "make", "isCorrect": true },
-          { "text": "makes", "feedback": "С I използваме make без -s." },
-          { "text": "play", "feedback": "Play е играя. Тук правим хляб: make." }
+          {
+            "text": "make",
+            "isCorrect": true
+          },
+          {
+            "text": "makes",
+            "feedback": "С I използваме make без -s."
+          },
+          {
+            "text": "play",
+            "feedback": "Play е играя. Тук правим хляб: make."
+          }
         ]
       },
       {
@@ -499,12 +649,21 @@
         "grammar_target": "simple present: I make",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Bread challenge 3/3. Choose the sentence about the cook.",
-        "bg": "Предизвикателство с хляб 3/3. Избери изречението за готвача.",
+        "text": "Bread challenge 3/3. The village cook signs the food note.",
+        "bg": "Предизвикателство с хляб 3/3. Селският готвач подписва бележката за храната.",
         "options": [
-          { "text": "I make bread for friends.", "isCorrect": true },
-          { "text": "I makes bread for friends.", "feedback": "С I използваме make." },
-          { "text": "I read football for friends.", "feedback": "Read е чета. Готвачът прави bread." }
+          {
+            "text": "I make bread for friends.",
+            "isCorrect": true
+          },
+          {
+            "text": "I makes bread for friends.",
+            "feedback": "С I използваме make."
+          },
+          {
+            "text": "I read football for friends.",
+            "feedback": "Read е чета. Готвачът прави bread."
+          }
         ]
       }
     ],
@@ -518,9 +677,18 @@
         "text": "Football challenge 1/3. What game do children play?",
         "bg": "Предизвикателство с футбол 1/3. Каква игра играят децата?",
         "options": [
-          { "text": "football", "isCorrect": true },
-          { "text": "bread", "feedback": "Bread е хляб. Играта е football." },
-          { "text": "water", "feedback": "Water е вода. Играта е football." }
+          {
+            "text": "football",
+            "isCorrect": true
+          },
+          {
+            "text": "bread",
+            "feedback": "Bread е хляб. Играта е football."
+          },
+          {
+            "text": "water",
+            "feedback": "Water е вода. Играта е football."
+          }
         ]
       },
       {
@@ -532,9 +700,18 @@
         "text": "Football challenge 2/3. They ___ football after school.",
         "bg": "Предизвикателство с футбол 2/3. Те ___ футбол след училище.",
         "options": [
-          { "text": "play", "isCorrect": true },
-          { "text": "plays", "feedback": "С they използваме play без -s." },
-          { "text": "read", "feedback": "Read е чета. С футбол използваме play." }
+          {
+            "text": "play",
+            "isCorrect": true
+          },
+          {
+            "text": "plays",
+            "feedback": "С they използваме play без -s."
+          },
+          {
+            "text": "read",
+            "feedback": "Read е чета. С футбол използваме play."
+          }
         ]
       },
       {
@@ -543,12 +720,21 @@
         "grammar_target": "simple present: They play",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Football challenge 3/3. Choose the best sentence.",
-        "bg": "Предизвикателство с футбол 3/3. Избери най-доброто изречение.",
+        "text": "Football challenge 3/3. File the playground clue for the team.",
+        "bg": "Предизвикателство с футбол 3/3. Запиши уликата от игрището за отбора.",
         "options": [
-          { "text": "They play football in the garden.", "isCorrect": true },
-          { "text": "They plays football in the garden.", "feedback": "С they използваме play." },
-          { "text": "They make football in the garden.", "feedback": "Football е игра: they play football." }
+          {
+            "text": "They play football in the garden.",
+            "isCorrect": true
+          },
+          {
+            "text": "They plays football in the garden.",
+            "feedback": "С they използваме play."
+          },
+          {
+            "text": "They make football in the garden.",
+            "feedback": "Football е игра: they play football."
+          }
         ]
       }
     ],
@@ -562,9 +748,18 @@
         "text": "Map challenge 1/3. What shows a path?",
         "bg": "Предизвикателство с карта 1/3. Какво показва пътека?",
         "options": [
-          { "text": "map", "isCorrect": true },
-          { "text": "bread", "feedback": "Bread е хляб. Път показва map." },
-          { "text": "fruit", "feedback": "Fruit е плод. Път показва map." }
+          {
+            "text": "map",
+            "isCorrect": true
+          },
+          {
+            "text": "bread",
+            "feedback": "Bread е хляб. Път показва map."
+          },
+          {
+            "text": "fruit",
+            "feedback": "Fruit е плод. Път показва map."
+          }
         ]
       },
       {
@@ -576,9 +771,18 @@
         "text": "Map challenge 2/3. You ___ the map.",
         "bg": "Предизвикателство с карта 2/3. Ти ___ картата.",
         "options": [
-          { "text": "read", "isCorrect": true },
-          { "text": "reads", "feedback": "С you използваме read без -s." },
-          { "text": "eat", "feedback": "Eat е ям. Карта четем: read." }
+          {
+            "text": "read",
+            "isCorrect": true
+          },
+          {
+            "text": "reads",
+            "feedback": "С you използваме read без -s."
+          },
+          {
+            "text": "eat",
+            "feedback": "Eat е ям. Карта четем: read."
+          }
         ]
       },
       {
@@ -587,12 +791,21 @@
         "grammar_target": "simple present: We help",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Map challenge 3/3. Choose the sentence about the village.",
-        "bg": "Предизвикателство с карта 3/3. Избери изречението за селото.",
+        "text": "Map challenge 3/3. Mark the helpful line on the village map.",
+        "bg": "Предизвикателство с карта 3/3. Отбележи полезния ред върху картата на селото.",
         "options": [
-          { "text": "We help the village.", "isCorrect": true },
-          { "text": "We helps the village.", "feedback": "С we използваме help." },
-          { "text": "We eat the map.", "feedback": "Картата ни помага. Ние помагаме на селото." }
+          {
+            "text": "We help the village.",
+            "isCorrect": true
+          },
+          {
+            "text": "We helps the village.",
+            "feedback": "С we използваме help."
+          },
+          {
+            "text": "We eat the map.",
+            "feedback": "Картата ни помага. Ние помагаме на селото."
+          }
         ]
       }
     ]

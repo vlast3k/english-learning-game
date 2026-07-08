@@ -27,6 +27,19 @@ ASSETS = {
         "maxBaselineDrift": 3,
         "maxCenterDrift": 6,
     },
+    "james_bond_hero": {
+        "path": Path("assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png"),
+        "frameWidth": 192,
+        "frameHeight": 220,
+        "columns": 8,
+        "frameCount": 48,
+        "walkRows": {
+            "walkSide": range(16, 24),
+        },
+        "maxBaselineDrift": 5,
+        "maxCenterDrift": 14,
+        "minFeetMotion": 18,
+    },
 }
 
 

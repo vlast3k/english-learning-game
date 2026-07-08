@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "james-bond-level-04",
-  "content_version": "2026-07-06",
+  "content_version": "2026-07-07-animal-trail-embedded-props-1",
   "level_plan": {
     "title": "Animal Trail",
     "mission": "The hero studies an animal's habits and finds the best time to pass the base gate.",
@@ -11,9 +11,16 @@
       "validating_text": "Validating...",
       "retry_text": "Read the mission once more.",
       "options": [
-        { "text": "Героят изучава навиците на животно и намира най-доброто време, за да мине през портата на базата.", "isCorrect": true },
-        { "text": "Героят изпраща съобщение за доставки от стаята с картата." },
-        { "text": "Героят попълва профилен формуляр, за да спечели агентска значка." }
+        {
+          "text": "Героят изучава навиците на животно и намира най-доброто време, за да мине през портата на базата.",
+          "isCorrect": true
+        },
+        {
+          "text": "Героят изпраща съобщение за доставки от стаята с картата."
+        },
+        {
+          "text": "Героят попълва профилен формуляр, за да спечели агентска значка."
+        }
       ]
     },
     "plan_hotspot_id": "field_board",
@@ -45,13 +52,13 @@
     ],
     "gate_review_words": [
       "animal",
-      "tiger",
       "snake",
       "habitat",
       "meat",
       "fruit",
       "sleep",
       "walk",
+      "hide",
       "morning",
       "night"
     ],
@@ -65,7 +72,7 @@
     ]
   },
   "assets": {
-    "background": "assets/phaser/camp-bg-painted.png",
+    "background": "assets/james-bond/level-04-animal-trail/generated/animal-trail-background.png",
     "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
     "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
     "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
@@ -74,8 +81,17 @@
   "presentation": {
     "character_scale_multiplier": 1.72,
     "guide_scale_multiplier": 1.9
+  ,
+    "character_depth_scale": {
+      "back_y": 342,
+      "back_scale": 0.3,
+      "front_y": 566,
+      "front_scale": 0.666
+  }},
+  "hero_start": {
+    "x": 244,
+    "y": 512
   },
-  "hero_start": { "x": 244, "y": 512 },
   "hud": {
     "status_text": "Animal trail in progress"
   },
@@ -113,29 +129,59 @@
   },
   "navigation": {
     "walkable_polygon": [
-      { "x": 18, "y": 346 },
-      { "x": 1006, "y": 346 },
-      { "x": 1016, "y": 566 },
-      { "x": 12, "y": 566 }
+      {
+        "x": 18,
+        "y": 346
+      },
+      {
+        "x": 1006,
+        "y": 346
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
     ],
     "clearance": 28,
     "obstacles": [
-      { "id": "left_bush", "x1": 0, "y1": 312, "x2": 180, "y2": 450 },
-      { "id": "camp_table", "x1": 384, "y1": 384, "x2": 652, "y2": 514 },
-      { "id": "right_trees", "x1": 812, "y1": 282, "x2": 1000, "y2": 450 }
+      {
+        "id": "left_bush",
+        "x1": 0,
+        "y1": 438,
+        "x2": 180,
+        "y2": 576
+      },
+      {
+        "id": "camp_table",
+        "x1": 324,
+        "y1": 315,
+        "x2": 592,
+        "y2": 445
+      },
+      {
+        "id": "right_trees",
+        "x1": 890,
+        "y1": 249,
+        "x2": 1024,
+        "y2": 530
+      }
     ]
   },
   "translations": {
     "a": "един",
     "about": "за",
+    "after": "след",
     "agent": "агент",
     "alex": "Алекс",
     "an": "един",
+    "and": "и",
     "animal": "животно",
     "animal's": "на животното",
-    "and": "и",
     "answer": "отговор",
-    "after": "след",
     "at": "в",
     "base": "база",
     "be": "съм/е/са",
@@ -153,18 +199,19 @@
     "collect": "събери",
     "complete": "попълни",
     "day": "ден",
-    "during": "през",
+    "do": "правя",
     "does": "прави",
     "doesn't": "не",
-    "do": "правя",
     "don't": "не",
+    "during": "през",
     "eat": "ям",
     "eats": "яде",
     "excellent": "отличен",
-    "field": "полеви",
-    "finds": "намира",
-    "find": "намери",
     "false": "грешно",
+    "field": "полеви",
+    "find": "намери",
+    "finds": "намира",
+    "finish": "завърши",
     "first": "първо",
     "food": "храна",
     "for": "за",
@@ -173,18 +220,18 @@
     "good": "добре",
     "guard": "охрана",
     "habit": "навик",
-    "habits": "навици",
     "habitat": "местообитание",
+    "habits": "навици",
     "hero": "герой",
     "hide": "крия се",
     "hides": "крие се",
+    "home": "дом",
     "i": "аз",
     "in": "в",
     "is": "е",
     "isn't": "не е",
     "it": "то",
     "its": "негов",
-    "home": "дом",
     "means": "означава",
     "meat": "месо",
     "mission": "мисия",
@@ -214,11 +261,11 @@
     "sleeps": "спи",
     "snake": "змия",
     "studies": "изучава",
+    "talk": "говори",
     "the": "the",
     "there": "там",
-    "time": "време",
-    "talk": "говори",
     "tiger": "тигър",
+    "time": "време",
     "to": "за да",
     "trail": "пътека",
     "true": "вярно",
@@ -236,9 +283,19 @@
   },
   "guide": {
     "speaker": "Ranger Nadia",
-    "position": { "x": 704, "y": 486 },
-    "required_items": ["animal_report", "meat_bowl", "trail_camera"],
-    "walk_to": { "x": 642, "y": 524 },
+    "position": {
+      "x": 704,
+      "y": 486
+    },
+    "required_items": [
+      "animal_report",
+      "meat_bowl",
+      "trail_camera"
+    ],
+    "walk_to": {
+      "x": 642,
+      "y": 524
+    },
     "locked_text": "Collect the animal report, meat bowl, and trail camera first.",
     "locked_text_bg": "Първо събери доклада за животното, купата с месо и камерата на пътеката.",
     "completed_messages": [
@@ -300,10 +357,16 @@
   "exit_marker": {
     "id": "quiet_gate",
     "label": "base gate",
-    "x": 952,
-    "y": 348,
-    "zone": { "width": 110, "height": 170 },
-    "walk_to": { "x": 876, "y": 520 },
+    "x": 908,
+    "y": 208,
+    "zone": {
+      "width": 124,
+      "height": 210
+    },
+    "walk_to": {
+      "x": 876,
+      "y": 520
+    },
     "required_flag": "quiet_gate_open",
     "command": "Walk to base gate",
     "locked_speaker": "Alex",
@@ -320,9 +383,12 @@
       "label": "animal report",
       "english": "animal report",
       "bg": "доклад за животното",
-      "x": 500,
-      "y": 390,
-      "walk_to": { "x": 330, "y": 522 },
+      "x": 439,
+      "y": 329,
+      "walk_to": {
+        "x": 330,
+        "y": 522
+      },
       "radius": 30,
       "intro": {
         "text": "The report says: The tiger sleeps in the morning. It walks at night.",
@@ -332,9 +398,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Докладът казва: Тигърът спи сутрин. Той ходи през нощта.", "isCorrect": true },
-            { "text": "Купата с месо показва, че животното не яде плод." },
-            { "text": "Камерата показва змия зад камъка през деня." }
+            {
+              "text": "Докладът казва: Тигърът спи сутрин. Той ходи през нощта.",
+              "isCorrect": true
+            },
+            {
+              "text": "Купата с месо показва, че животното не яде плод."
+            },
+            {
+              "text": "Камерата показва змия зад камъка през деня."
+            }
           ]
         }
       },
@@ -342,16 +415,31 @@
         "vocabulary_target": "tiger/report",
         "curriculum_source": "James Bond Level 04",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present: It sleeps", "simple present: It walks"],
-        "exercise_types": ["word choice", "grammar gap-fill", "true/false"]
+        "grammar_targets": [
+          "simple present: It sleeps",
+          "simple present: It walks"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "true/false"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 0, "y": 0, "width": 256, "height": 256 }
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 256,
+            "height": 256
+          }
         }
       },
-      "presentation": { "hero_expression": "focused", "portrait_frame": 6 }
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 6
+      }
     },
     {
       "id": "meat_bowl",
@@ -359,9 +447,12 @@
       "label": "meat bowl",
       "english": "meat",
       "bg": "месо",
-      "x": 620,
-      "y": 390,
-      "walk_to": { "x": 512, "y": 532 },
+      "x": 551,
+      "y": 334,
+      "walk_to": {
+        "x": 512,
+        "y": 532
+      },
       "radius": 30,
       "intro": {
         "text": "The animal eats meat. It doesn't eat fruit.",
@@ -371,9 +462,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Животното яде месо. То не яде плод.", "isCorrect": true },
-            { "text": "Тигърът спи сутрин и ходи през нощта." },
-            { "text": "Рейнджър Надя отваря портата на базата." }
+            {
+              "text": "Животното яде месо. То не яде плод.",
+              "isCorrect": true
+            },
+            {
+              "text": "Тигърът спи сутрин и ходи през нощта."
+            },
+            {
+              "text": "Рейнджър Надя отваря портата на базата."
+            }
           ]
         }
       },
@@ -381,16 +479,31 @@
         "vocabulary_target": "meat/fruit",
         "curriculum_source": "James Bond Level 04",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present: It eats", "simple present negative: It doesn't eat"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "simple present: It eats",
+          "simple present negative: It doesn't eat"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 256, "y": 0, "width": 256, "height": 256 }
+          "frame": {
+            "x": 256,
+            "y": 0,
+            "width": 256,
+            "height": 256
+          }
         }
       },
-      "presentation": { "hero_expression": "thinking", "portrait_frame": 5 }
+      "presentation": {
+        "hero_expression": "thinking",
+        "portrait_frame": 5
+      }
     },
     {
       "id": "trail_camera",
@@ -398,9 +511,12 @@
       "label": "trail camera",
       "english": "camera",
       "bg": "камера",
-      "x": 894,
-      "y": 314,
-      "walk_to": { "x": 790, "y": 512 },
+      "x": 758,
+      "y": 219,
+      "walk_to": {
+        "x": 790,
+        "y": 512
+      },
       "radius": 38,
       "intro": {
         "text": "The trail camera shows a snake habitat behind the rock. Does it hide during the day?",
@@ -410,9 +526,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Камерата на пътеката показва местообитание на змия зад камъка. Крие ли се тя през деня?", "isCorrect": true },
-            { "text": "Купата с месо е на масата до плода." },
-            { "text": "Тигърът ходи през нощта и спи сутрин." }
+            {
+              "text": "Камерата на пътеката показва местообитание на змия зад камъка. Крие ли се тя през деня?",
+              "isCorrect": true
+            },
+            {
+              "text": "Купата с месо е на масата до плода."
+            },
+            {
+              "text": "Тигърът ходи през нощта и спи сутрин."
+            }
           ]
         }
       },
@@ -420,16 +543,31 @@
         "vocabulary_target": "snake/camera/habitat",
         "curriculum_source": "James Bond Level 04",
         "curriculum_stage": "new",
-        "grammar_targets": ["simple present question: Does it hide?", "review: behind"],
-        "exercise_types": ["word choice", "grammar gap-fill", "short answer"]
+        "grammar_targets": [
+          "simple present question: Does it hide?",
+          "review: behind"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "short answer"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 512, "y": 0, "width": 256, "height": 256 }
+          "frame": {
+            "x": 512,
+            "y": 0,
+            "width": 256,
+            "height": 256
+          }
         }
       },
-      "presentation": { "hero_expression": "curious", "portrait_frame": 3 }
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
     },
     {
       "id": "field_board",
@@ -437,16 +575,14 @@
       "label": "field board",
       "english": "field board",
       "bg": "полева дъска",
-      "x": 150,
-      "y": 300,
-      "walk_to": { "x": 270, "y": 512 },
-      "radius": 42,
-      "interaction": "view",
-      "scene_icon": {
-        "texture": "interactiveProps",
-        "frame": { "x": 768, "y": 0, "width": 256, "height": 256 },
-        "size": 74
+      "x": 134,
+      "y": 266,
+      "walk_to": {
+        "x": 270,
+        "y": 512
       },
+      "radius": 70,
+      "interaction": "view",
       "description": {
         "text": "The field board says: Read the animal report. The base gate opens after the ranger check.",
         "bg": "Полевата дъска казва: Прочети доклада за животното. Портата на базата се отваря след проверката на рейнджъра."
@@ -458,16 +594,14 @@
       "label": "rock shadow",
       "english": "rock",
       "bg": "камък",
-      "x": 594,
-      "y": 334,
-      "walk_to": { "x": 548, "y": 522 },
-      "radius": 30,
-      "interaction": "view",
-      "scene_icon": {
-        "texture": "interactiveProps",
-        "frame": { "x": 1024, "y": 0, "width": 256, "height": 256 },
-        "size": 64
+      "x": 592,
+      "y": 252,
+      "walk_to": {
+        "x": 548,
+        "y": 522
       },
+      "radius": 34,
+      "interaction": "view",
       "description": {
         "text": "There is a safe habitat behind the rock. A snake hides there during the day.",
         "bg": "Има безопасно местообитание зад камъка. Змия се крие там през деня."
@@ -485,9 +619,18 @@
         "text": "Report challenge 1/3. Which animal is in the report?",
         "bg": "Предизвикателство с доклад 1/3. Кое животно е в доклада?",
         "options": [
-          { "text": "tiger", "isCorrect": true },
-          { "text": "fruit", "feedback": "Fruit е плод. Животното в доклада е tiger." },
-          { "text": "camera", "feedback": "Camera е камера. Животното е tiger." }
+          {
+            "text": "tiger",
+            "isCorrect": true
+          },
+          {
+            "text": "fruit",
+            "feedback": "Fruit е плод. Животното в доклада е tiger."
+          },
+          {
+            "text": "camera",
+            "feedback": "Camera е камера. Животното е tiger."
+          }
         ]
       },
       {
@@ -499,9 +642,18 @@
         "text": "Report challenge 2/3. The tiger ___ in the morning.",
         "bg": "Предизвикателство с доклад 2/3. Тигърът ___ сутрин.",
         "options": [
-          { "text": "sleeps", "isCorrect": true },
-          { "text": "sleep", "feedback": "С he/she/it добавяме -s: sleeps." },
-          { "text": "walk", "feedback": "Докладът казва, че тигърът sleeps in the morning." }
+          {
+            "text": "sleeps",
+            "isCorrect": true
+          },
+          {
+            "text": "sleep",
+            "feedback": "С he/she/it добавяме -s: sleeps."
+          },
+          {
+            "text": "walk",
+            "feedback": "Докладът казва, че тигърът sleeps in the morning."
+          }
         ]
       },
       {
@@ -513,8 +665,14 @@
         "text": "Report challenge 3/3. True or false: The tiger walks at night.",
         "bg": "Предизвикателство с доклад 3/3. Вярно или грешно: Тигърът ходи през нощта.",
         "options": [
-          { "text": "true", "isCorrect": true },
-          { "text": "false", "feedback": "Докладът казва: It walks at night." }
+          {
+            "text": "true",
+            "isCorrect": true
+          },
+          {
+            "text": "false",
+            "feedback": "Докладът казва: It walks at night."
+          }
         ]
       }
     ],
@@ -525,12 +683,21 @@
         "grammar_target": null,
         "difficulty": 1,
         "curriculum_stage": "new",
-          "text": "Meat challenge 1/3. What food does the animal eat?",
-          "bg": "Предизвикателство с месо 1/3. Каква храна яде животното?",
+        "text": "Meat challenge 1/3. What food does the animal eat?",
+        "bg": "Предизвикателство с месо 1/3. Каква храна яде животното?",
         "options": [
-          { "text": "meat", "isCorrect": true },
-          { "text": "gate", "feedback": "Gate е порта. Храната е meat." },
-          { "text": "night", "feedback": "Night е нощ. Храната е meat." }
+          {
+            "text": "meat",
+            "isCorrect": true
+          },
+          {
+            "text": "gate",
+            "feedback": "Gate е порта. Храната е meat."
+          },
+          {
+            "text": "night",
+            "feedback": "Night е нощ. Храната е meat."
+          }
         ]
       },
       {
@@ -542,9 +709,18 @@
         "text": "Meat challenge 2/3. It ___ eat fruit.",
         "bg": "Предизвикателство с месо 2/3. То ___ яде плод.",
         "options": [
-          { "text": "doesn't", "isCorrect": true },
-          { "text": "don't", "feedback": "С it използваме doesn't." },
-          { "text": "isn't", "feedback": "Тук ни трябва отрицание за действие: doesn't eat." }
+          {
+            "text": "doesn't",
+            "isCorrect": true
+          },
+          {
+            "text": "don't",
+            "feedback": "С it използваме doesn't."
+          },
+          {
+            "text": "isn't",
+            "feedback": "Тук ни трябва отрицание за действие: doesn't eat."
+          }
         ]
       },
       {
@@ -553,12 +729,21 @@
         "grammar_target": "simple present: It eats",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Meat challenge 3/3. Choose the true food sentence.",
-        "bg": "Предизвикателство с месо 3/3. Избери вярното изречение за храната.",
+        "text": "Meat challenge 3/3. Finish the trail-camera food report.",
+        "bg": "Предизвикателство с месо 3/3. Завърши хранителния доклад от камерата на пътеката.",
         "options": [
-          { "text": "It eats meat.", "isCorrect": true },
-          { "text": "It eat meat.", "feedback": "С it добавяме -s: eats." },
-          { "text": "It eats fruit.", "feedback": "Докладът казва, че животното doesn't eat fruit." }
+          {
+            "text": "It eats meat.",
+            "isCorrect": true
+          },
+          {
+            "text": "It eat meat.",
+            "feedback": "С it добавяме -s: eats."
+          },
+          {
+            "text": "It eats fruit.",
+            "feedback": "Докладът казва, че животното doesn't eat fruit."
+          }
         ]
       }
     ],
@@ -572,9 +757,18 @@
         "text": "Camera challenge 1/3. What is the animal home behind the rock?",
         "bg": "Предизвикателство с камера 1/3. Какъв е домът на животното зад камъка?",
         "options": [
-          { "text": "habitat", "isCorrect": true },
-          { "text": "tiger", "feedback": "Tiger е животно. Домът на животното е habitat." },
-          { "text": "meat", "feedback": "Meat е храна. Домът на животното е habitat." }
+          {
+            "text": "habitat",
+            "isCorrect": true
+          },
+          {
+            "text": "tiger",
+            "feedback": "Tiger е животно. Домът на животното е habitat."
+          },
+          {
+            "text": "meat",
+            "feedback": "Meat е храна. Домът на животното е habitat."
+          }
         ]
       },
       {
@@ -586,9 +780,18 @@
         "text": "Camera challenge 2/3. ___ it hide during the day?",
         "bg": "Предизвикателство с камера 2/3. ___ се крие то през деня?",
         "options": [
-          { "text": "Does", "isCorrect": true },
-          { "text": "Do", "feedback": "С it започваме въпроса с Does." },
-          { "text": "Is", "feedback": "Тук питаме за действие hide, затова използваме Does." }
+          {
+            "text": "Does",
+            "isCorrect": true
+          },
+          {
+            "text": "Do",
+            "feedback": "С it започваме въпроса с Does."
+          },
+          {
+            "text": "Is",
+            "feedback": "Тук питаме за действие hide, затова използваме Does."
+          }
         ]
       },
       {
@@ -600,9 +803,18 @@
         "text": "Camera challenge 3/3. Does it hide behind the rock?",
         "bg": "Предизвикателство с камера 3/3. Крие ли се то зад камъка?",
         "options": [
-          { "text": "Yes, it does.", "isCorrect": true },
-          { "text": "Yes, it do.", "feedback": "Краткият отговор с it е: Yes, it does." },
-          { "text": "No, it doesn't.", "feedback": "Камерата показва змия зад камъка. Yes, it does." }
+          {
+            "text": "Yes, it does.",
+            "isCorrect": true
+          },
+          {
+            "text": "Yes, it do.",
+            "feedback": "Краткият отговор с it е: Yes, it does."
+          },
+          {
+            "text": "No, it doesn't.",
+            "feedback": "Камерата показва змия зад камъка. Yes, it does."
+          }
         ]
       }
     ]

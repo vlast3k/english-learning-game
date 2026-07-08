@@ -1,0 +1,786 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-11",
+  "content_version": "2026-07-08-city-country-postcards-1",
+  "level_plan": {
+    "title": "City-Country Finale",
+    "mission": "Agent Alex reads city and country postcards, checks simple routines, and opens the final academy gate.",
+    "mission_bg": "Агент Алекс чете картички за града и провинцията, проверява прости навици и отваря последната порта на академията.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        {
+          "text": "Агент Алекс чете картички за града и провинцията, проверява прости навици и отваря последната порта на академията.",
+          "isCorrect": true
+        },
+        {
+          "text": "Агент Алекс брои форми и подрежда тайна последователност."
+        },
+        {
+          "text": "Агент Алекс почиства парка и засажда семена."
+        }
+      ]
+    },
+    "plan_hotspot_id": "message_board",
+    "grammar_targets": [
+      "adverbs of frequency: always",
+      "adverbs of frequency: sometimes",
+      "adverbs of frequency: never",
+      "review: city and country place words"
+    ],
+    "vocabulary_targets": [
+      "city",
+      "country",
+      "apartment",
+      "house",
+      "postcard",
+      "note",
+      "always",
+      "sometimes",
+      "never",
+      "quiet",
+      "view",
+      "elevator",
+      "picnic",
+      "gate",
+      "academy"
+    ],
+    "gate_review_words": [
+      "city",
+      "country",
+      "house",
+      "postcard",
+      "note",
+      "always",
+      "sometimes",
+      "never",
+      "quiet",
+      "view"
+    ],
+    "flow": [
+      "Read the message board.",
+      "Collect the city postcard.",
+      "Collect the country postcard.",
+      "Collect the routine card.",
+      "Talk to Agent Nora for the finale check.",
+      "Exit through the final academy gate."
+    ]
+  },
+  "assets": {
+    "background": "assets/james-bond/level-11-city-country-finale/generated/city-country-finale-background.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.28,
+    "guide_scale_multiplier": 1.29,
+    "character_depth_scale": {
+      "back_y": 261,
+      "back_scale": 0.304,
+      "front_y": 533,
+      "front_scale": 0.88
+    }
+  },
+  "hero_start": {
+    "x": 214,
+    "y": 530
+  },
+  "hud": {
+    "status_text": "City-country finale in progress"
+  },
+  "assistant": {
+    "speaker": "Helper",
+    "complete_text": "Excellent finale work, Agent Alex.",
+    "complete_bg": "Отлична работа на финала, агент Алекс.",
+    "fallback_bg": "Провери следващата задача.",
+    "hints": {
+      "level11_understand_mission": {
+        "text": "Read the message board first.",
+        "bg": "Първо прочети дъската с картичките."
+      },
+      "level11_city_postcard": {
+        "text": "Find the city postcard.",
+        "bg": "Намери градската картичка."
+      },
+      "level11_country_postcard": {
+        "text": "Find the country postcard.",
+        "bg": "Намери картичката за провинцията."
+      },
+      "level11_routine_card": {
+        "text": "Find the routine card.",
+        "bg": "Намери картата с навици."
+      },
+      "level11_agent_check": {
+        "text": "Talk to Agent Nora.",
+        "bg": "Говори с Agent Nora."
+      },
+      "level11_final_gate_exit": {
+        "text": "Use the final academy gate.",
+        "bg": "Използвай последната порта на академията."
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 18,
+        "y": 346
+      },
+      {
+        "x": 1006,
+        "y": 346
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
+    ],
+    "clearance": 28,
+    "obstacles": [
+      {
+        "id": "message_board",
+        "x1": 70,
+        "y1": 204,
+        "x2": 223,
+        "y2": 369
+      },
+      {
+        "id": "planning_table",
+        "x1": 268,
+        "y1": 367,
+        "x2": 658,
+        "y2": 518
+      },
+      {
+        "id": "city_building",
+        "x1": 570,
+        "y1": 3,
+        "x2": 757,
+        "y2": 304
+      },
+      {
+        "id": "final_gate_frame",
+        "x1": 822,
+        "y1": 85,
+        "x2": 988,
+        "y2": 339
+      }
+    ]
+  },
+  "translations": {
+    "a": "един",
+    "academy": "академия",
+    "adverbs": "наречия",
+    "after": "след",
+    "agent": "агент",
+    "alex": "Алекс",
+    "always": "винаги",
+    "and": "и",
+    "apartment": "апартамент",
+    "are": "са",
+    "belongs": "принадлежи",
+    "bg": "български",
+    "board": "дъска",
+    "both": "и двете",
+    "bulgarian": "български",
+    "card": "карта",
+    "check": "проверка",
+    "checks": "проверява",
+    "choose": "избери",
+    "city": "град",
+    "closed": "затворена",
+    "clue": "улика",
+    "collect": "събери",
+    "complete": "завърши",
+    "country": "провинция",
+    "elevator": "асансьор",
+    "excellent": "отличен",
+    "final": "последен",
+    "finale": "финал",
+    "find": "намери",
+    "first": "първо",
+    "fits": "пасва",
+    "gate": "порта",
+    "good": "добре",
+    "has": "има",
+    "have": "имам",
+    "helper": "помощник",
+    "house": "къща",
+    "i": "аз",
+    "in": "в",
+    "is": "е",
+    "it": "то",
+    "line": "ред",
+    "matches": "съвпада",
+    "means": "означава",
+    "message": "съобщение",
+    "mission": "мисия",
+    "more": "още",
+    "need": "трябва",
+    "needs": "има нужда",
+    "never": "никога",
+    "nice": "хубав",
+    "nora": "Нора",
+    "note": "бележка",
+    "notes": "бележки",
+    "of": "от/на",
+    "once": "веднъж",
+    "open": "отворена",
+    "opened": "отвори",
+    "opens": "отваря",
+    "part": "част",
+    "picnic": "пикник",
+    "place": "постави",
+    "places": "места",
+    "plan": "план",
+    "postcard": "картичка",
+    "postcards": "картички",
+    "quiet": "тих",
+    "read": "прочети",
+    "reads": "чете",
+    "report": "доклад",
+    "review": "преговор",
+    "routine": "навик",
+    "routines": "навици",
+    "rule": "правило",
+    "says": "казва",
+    "scan": "скенер",
+    "simple": "прост",
+    "skip": "пропускам",
+    "sometimes": "понякога",
+    "stamp": "подпечати",
+    "task": "задача",
+    "the": "",
+    "there": "има",
+    "to": "към/за",
+    "use": "използвай",
+    "uses": "използва",
+    "validating": "проверка",
+    "view": "гледка",
+    "visit": "посещавам",
+    "we": "ние",
+    "what": "какво",
+    "where": "къде",
+    "window": "прозорец",
+    "with": "с",
+    "work": "работа",
+    "you": "ти"
+  },
+  "hotspots": [
+    {
+      "id": "message_board",
+      "kind": "scenery",
+      "label": "message board",
+      "english": "note",
+      "bg": "бележка",
+      "x": 154,
+      "y": 286,
+      "walk_to": {
+        "x": 266,
+        "y": 516
+      },
+      "radius": 62,
+      "interaction": "view",
+      "label_visible": true,
+      "description": {
+        "text": "The message board says: Read the city postcard. Read the country postcard. Check the routine card.",
+        "bg": "Дъската със съобщения казва: Прочети градската картичка. Прочети картичката за провинцията. Провери картата с навици."
+      }
+    },
+    {
+      "id": "city_postcard",
+      "kind": "collectible",
+      "label": "city postcard",
+      "english": "city",
+      "bg": "град",
+      "x": 366,
+      "y": 358,
+      "walk_to": {
+        "x": 392,
+        "y": 522
+      },
+      "radius": 36,
+      "intro": {
+        "text": "You find the city postcard. I sometimes visit the city. The apartment has a nice view.",
+        "bg": "Намираш градската картичка. Понякога посещавам града. Апартаментът има хубава гледка.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш градската картичка. Понякога посещавам града. Апартаментът има хубава гледка.",
+              "isCorrect": true
+            },
+            {
+              "text": "Къщата е тиха и има кошница за пикник."
+            },
+            {
+              "text": "Ние винаги четем бележките преди портата."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "city/apartment/view",
+        "curriculum_source": "Blue Dot 1 Unit 18; Blue Dot 2 Entry Review",
+        "curriculum_stage": "review",
+        "grammar_targets": [
+          "adverb of frequency: sometimes",
+          "review: have/has"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 2
+      }
+    },
+    {
+      "id": "country_postcard",
+      "kind": "collectible",
+      "label": "country postcard",
+      "english": "country",
+      "bg": "провинция",
+      "x": 505,
+      "y": 345,
+      "walk_to": {
+        "x": 532,
+        "y": 522
+      },
+      "radius": 36,
+      "intro": {
+        "text": "You find the country postcard. The house is quiet. We sometimes have a picnic there.",
+        "bg": "Намираш картичката за провинцията. Къщата е тиха. Понякога правим пикник там.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш картичката за провинцията. Къщата е тиха. Понякога правим пикник там.",
+              "isCorrect": true
+            },
+            {
+              "text": "Апартаментът има асансьор и хубава гледка."
+            },
+            {
+              "text": "Нора отваря последната порта на академията."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "country/house/quiet/picnic",
+        "curriculum_source": "Blue Dot 1 Unit 18",
+        "curriculum_stage": "review",
+        "grammar_targets": [
+          "adverb of frequency: sometimes",
+          "review: be statement"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
+    },
+    {
+      "id": "routine_card",
+      "kind": "collectible",
+      "label": "routine card",
+      "english": "always",
+      "bg": "винаги",
+      "x": 588,
+      "y": 391,
+      "walk_to": {
+        "x": 626,
+        "y": 522
+      },
+      "radius": 34,
+      "intro": {
+        "text": "You find the routine card. We always read the notes. We never skip the final check.",
+        "bg": "Намираш картата с навици. Винаги четем бележките. Никога не пропускаме последната проверка.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш картата с навици. Винаги четем бележките. Никога не пропускаме последната проверка.",
+              "isCorrect": true
+            },
+            {
+              "text": "Градската картичка казва, че апартаментът има гледка."
+            },
+            {
+              "text": "Къщата в провинцията е тиха."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "always/never/note/check",
+        "curriculum_source": "Blue Dot 2 Entry Review; Unit 18 spiral review",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "adverb of frequency: always",
+          "adverb of frequency: never"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "presentation": {
+        "hero_expression": "happy",
+        "portrait_frame": 4
+      }
+    },
+    {
+      "id": "compare_view",
+      "kind": "scenery",
+      "label": "compare view",
+      "english": "view",
+      "bg": "гледка",
+      "x": 589,
+      "y": 234,
+      "walk_to": {
+        "x": 730,
+        "y": 522
+      },
+      "radius": 48,
+      "interaction": "view",
+      "description": {
+        "text": "There is a city view and a country view. Both places are part of the final mission.",
+        "bg": "Има градска гледка и гледка към провинцията. И двете места са част от последната мисия."
+      }
+    }
+  ],
+  "guide": {
+    "speaker": "Agent Nora",
+    "position": {
+      "x": 745,
+      "y": 541
+    },
+    "required_items": [
+      "city_postcard",
+      "country_postcard",
+      "routine_card"
+    ],
+    "walk_to": {
+      "x": 704,
+      "y": 524
+    },
+    "locked_text": "Collect the city postcard, country postcard, and routine card first.",
+    "locked_text_bg": "Първо събери градската картичка, картичката за провинцията и картата с навици.",
+    "completed_messages": [
+      {
+        "text": "The final academy gate is open. Use it after the review.",
+        "bg": "Последната порта на академията е отворена. Използвай я след преговора."
+      }
+    ],
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Agent Nora",
+          "npc_text": "Final academy scan. Place sometimes in the city report.",
+          "npc_text_bg": "Последен скенер на академията. Постави sometimes в градския доклад.",
+          "options": [
+            {
+              "text": "I sometimes visit the city.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "I visit sometimes the city.",
+              "is_correct": false,
+              "feedback_bg": "Sometimes стои пред действието: sometimes visit."
+            },
+            {
+              "text": "I city sometimes visit.",
+              "is_correct": false,
+              "feedback_bg": "Думите трябва да са в ясен ред: I sometimes visit the city."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Agent Nora",
+          "npc_text": "Good. Now stamp the routine line with always.",
+          "npc_text_bg": "Добре. Сега подпечати реда с навик с always.",
+          "options": [
+            {
+              "text": "We always read the notes.",
+              "is_correct": true
+            },
+            {
+              "text": "We read always the notes.",
+              "is_correct": false,
+              "feedback_bg": "Always стои пред действието: always read."
+            },
+            {
+              "text": "We always the notes read.",
+              "is_correct": false,
+              "feedback_bg": "Казваме: We always read the notes."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "final_academy_gate",
+    "label": "final academy gate",
+    "x": 900,
+    "y": 306,
+    "zone": {
+      "width": 170,
+      "height": 220
+    },
+    "walk_to": {
+      "x": 846,
+      "y": 522
+    },
+    "required_flag": "final_academy_gate_open",
+    "command": "Walk to final academy gate",
+    "locked_speaker": "Alex",
+    "locked_text": "The final academy gate is closed. I need the Agent Nora check first.",
+    "locked_text_bg": "Последната порта на академията е затворена. Първо ми трябва проверката на Agent Nora.",
+    "unlocked_command": "The final academy gate is open!",
+    "unlocked_status": "Final academy gate open",
+    "unlocked_toast": "City-country finale complete."
+  },
+  "quizzes": {
+    "city_postcard": [
+      {
+        "id": "city-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "City challenge 1/3. Which word means град?",
+        "bg": "Градско предизвикателство 1/3. Коя дума означава град?",
+        "options": [
+          {
+            "text": "city",
+            "isCorrect": true
+          },
+          {
+            "text": "country",
+            "feedback": "Country е провинция. Град е city."
+          },
+          {
+            "text": "house",
+            "feedback": "House е къща. Град е city."
+          }
+        ]
+      },
+      {
+        "id": "city-sometimes",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "adverb of frequency: sometimes",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "City challenge 2/3. I ___ visit the city.",
+        "bg": "Градско предизвикателство 2/3. Аз ___ посещавам града.",
+        "options": [
+          {
+            "text": "sometimes",
+            "isCorrect": true
+          },
+          {
+            "text": "apartment",
+            "feedback": "Apartment е място. Тук трябва наречие: sometimes."
+          },
+          {
+            "text": "postcard",
+            "feedback": "Postcard е предмет. Тук трябва sometimes."
+          }
+        ]
+      },
+      {
+        "id": "city-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "has statement",
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "City challenge 3/3. The postcard has a window clue. Which line matches it?",
+        "bg": "Градско предизвикателство 3/3. Картичката има улика с прозорец. Кой ред съвпада?",
+        "options": [
+          {
+            "text": "The apartment has a nice view.",
+            "isCorrect": true
+          },
+          {
+            "text": "The house is quiet in the country.",
+            "feedback": "Тази улика е от картичката за провинцията."
+          },
+          {
+            "text": "We always read the notes.",
+            "feedback": "Това е навик от картата, не улика от прозореца."
+          }
+        ]
+      }
+    ],
+    "country_postcard": [
+      {
+        "id": "country-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Country challenge 1/3. Which word means провинция?",
+        "bg": "Предизвикателство за провинцията 1/3. Коя дума означава провинция?",
+        "options": [
+          {
+            "text": "country",
+            "isCorrect": true
+          },
+          {
+            "text": "city",
+            "feedback": "City е град. Провинция е country."
+          },
+          {
+            "text": "elevator",
+            "feedback": "Elevator е асансьор. Провинция е country."
+          }
+        ]
+      },
+      {
+        "id": "country-quiet",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "be statement",
+        "difficulty": 1,
+        "curriculum_stage": "review",
+        "text": "Country challenge 2/3. The house ___ quiet.",
+        "bg": "Предизвикателство за провинцията 2/3. Къщата ___ тиха.",
+        "options": [
+          {
+            "text": "is",
+            "isCorrect": true
+          },
+          {
+            "text": "are",
+            "feedback": "House е едно нещо, затова използваме is."
+          },
+          {
+            "text": "am",
+            "feedback": "Am върви с I. Тук е The house is."
+          }
+        ]
+      },
+      {
+        "id": "country-picnic",
+        "exercise_type": "sentence choice",
+        "grammar_target": "adverb of frequency: sometimes",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Country challenge 3/3. The postcard has a picnic clue. Which line belongs on it?",
+        "bg": "Предизвикателство за провинцията 3/3. Картичката има улика за пикник. Кой ред е за нея?",
+        "options": [
+          {
+            "text": "We sometimes have a picnic there.",
+            "isCorrect": true
+          },
+          {
+            "text": "The apartment has an elevator.",
+            "feedback": "Тази улика е от градската картичка."
+          },
+          {
+            "text": "The notes open the gate.",
+            "feedback": "Това е за финалната проверка, не за пикника."
+          }
+        ]
+      }
+    ],
+    "routine_card": [
+      {
+        "id": "always-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Routine challenge 1/3. Which word means винаги?",
+        "bg": "Предизвикателство с навици 1/3. Коя дума означава винаги?",
+        "options": [
+          {
+            "text": "always",
+            "isCorrect": true
+          },
+          {
+            "text": "sometimes",
+            "feedback": "Sometimes е понякога. Винаги е always."
+          },
+          {
+            "text": "never",
+            "feedback": "Never е никога. Винаги е always."
+          }
+        ]
+      },
+      {
+        "id": "routine-always",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "adverb of frequency: always",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Routine challenge 2/3. We ___ read the notes.",
+        "bg": "Предизвикателство с навици 2/3. Ние ___ четем бележките.",
+        "options": [
+          {
+            "text": "always",
+            "isCorrect": true
+          },
+          {
+            "text": "city",
+            "feedback": "City е място. Тук трябва always."
+          },
+          {
+            "text": "view",
+            "feedback": "View е гледка. Тук трябва always."
+          }
+        ]
+      },
+      {
+        "id": "routine-never",
+        "exercise_type": "sentence choice",
+        "grammar_target": "adverb of frequency: never",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Routine challenge 3/3. The card needs the safe academy rule. Which line fits?",
+        "bg": "Предизвикателство с навици 3/3. Картата има нужда от безопасното правило на академията. Кой ред пасва?",
+        "options": [
+          {
+            "text": "We never skip the final check.",
+            "isCorrect": true
+          },
+          {
+            "text": "We skip never the final check.",
+            "feedback": "Never стои пред действието: never skip."
+          },
+          {
+            "text": "We never city the check.",
+            "feedback": "City е място, не действие."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -11,9 +11,16 @@
       "validating_text": "Validating...",
       "retry_text": "Read the mission once more.",
       "options": [
-        { "text": "Героят пристига в приятелска централа за тайни агенти, за да спечели лиценз за младши агент.", "isCorrect": true },
-        { "text": "Директорът пристига на световната карта, за да отвори стара врата." },
-        { "text": "Героят попълва семеен формуляр, за да намери раница и въже." }
+        {
+          "text": "Героят пристига в приятелска централа за тайни агенти, за да спечели лиценз за младши агент.",
+          "isCorrect": true
+        },
+        {
+          "text": "Директорът пристига на световната карта, за да отвори стара врата."
+        },
+        {
+          "text": "Героят попълва семеен формуляр, за да намери раница и въже."
+        }
       ]
     },
     "plan_hotspot_id": "mission_screen",
@@ -68,7 +75,10 @@
     "dossier_pictures": "assets/james-bond/level-01-briefing/generated/agent-dossier-pictures.png",
     "interactive_props": "assets/james-bond/level-01-briefing/generated/interactive-props.png"
   },
-  "hero_start": { "x": 260, "y": 500 },
+  "hero_start": {
+    "x": 260,
+    "y": 500
+  },
   "hud": {
     "status_text": "Briefing in progress"
   },
@@ -106,38 +116,82 @@
   },
   "navigation": {
     "walkable_polygon": [
-      { "x": 38, "y": 356 },
-      { "x": 1002, "y": 356 },
-      { "x": 1014, "y": 566 },
-      { "x": 18, "y": 566 }
+      {
+        "x": 38,
+        "y": 356
+      },
+      {
+        "x": 1002,
+        "y": 356
+      },
+      {
+        "x": 1014,
+        "y": 566
+      },
+      {
+        "x": 18,
+        "y": 566
+      }
     ],
     "clearance": 30,
     "obstacles": [
-      { "id": "briefing_table", "x1": 420, "y1": 398, "x2": 802, "y2": 514 },
-      { "id": "front_chair", "x1": 588, "y1": 474, "x2": 680, "y2": 566 },
-      { "id": "scanner_station", "x1": 26, "y1": 290, "x2": 128, "y2": 426 },
-      { "id": "plant", "x1": 138, "y1": 306, "x2": 230, "y2": 430 },
-      { "id": "right_cabinets", "x1": 842, "y1": 302, "x2": 1000, "y2": 448 }
+      {
+        "id": "briefing_table",
+        "x1": 420,
+        "y1": 398,
+        "x2": 802,
+        "y2": 514
+      },
+      {
+        "id": "front_chair",
+        "x1": 588,
+        "y1": 474,
+        "x2": 680,
+        "y2": 566
+      },
+      {
+        "id": "scanner_station",
+        "x1": 26,
+        "y1": 290,
+        "x2": 128,
+        "y2": 426
+      },
+      {
+        "id": "plant",
+        "x1": 138,
+        "y1": 306,
+        "x2": 230,
+        "y2": 430
+      },
+      {
+        "id": "right_cabinets",
+        "x1": 842,
+        "y1": 302,
+        "x2": 1000,
+        "y2": 448
+      }
     ]
   },
   "translations": {
     "a": "един",
+    "about": "за",
     "agent": "агент",
+    "agents": "агенти",
     "alex": "Алекс",
     "am": "съм",
     "an": "един",
     "and": "и",
-    "are": "са",
-    "asks": "пита",
-    "at": "при",
-    "about": "за",
-    "agents": "агенти",
     "answer": "отговор",
     "approval": "одобрение",
+    "are": "са",
     "arrives": "пристига",
-    "badge": "значка",
+    "ask": "питай",
+    "asks": "пита",
+    "at": "при",
     "bad": "лош",
+    "badge": "значка",
     "be": "съм/е/са",
+    "belongs": "принадлежи",
     "big": "голям",
     "board": "дъска",
     "boy": "момче",
@@ -157,28 +211,30 @@
     "earn": "спечели",
     "family": "семейство",
     "father": "баща",
-    "final": "последен",
     "file": "папка",
     "fill": "попълни",
+    "final": "последен",
     "folder": "папка",
     "form": "формуляр",
     "friend": "приятел",
     "friendly": "приятелски",
+    "friendship": "приятелство",
     "get": "вземи",
-    "great": "чудесен",
     "girl": "момиче",
     "good": "добър",
+    "great": "чудесен",
     "he": "той",
     "headquarters": "централа",
     "hero": "герой",
-    "identity": "самоличност",
     "i": "аз",
+    "identity": "самоличност",
     "in": "в",
     "is": "е",
     "it": "то",
     "junior": "младши",
     "label": "етикет",
     "license": "лиценз",
+    "line": "ред",
     "man": "мъж",
     "map": "карта",
     "means": "означава",
@@ -193,8 +249,8 @@
     "person": "човек",
     "plan": "план",
     "profile": "профил",
-    "ready": "готов",
     "read": "прочети",
+    "ready": "готов",
     "scanner": "скенер",
     "screen": "екран",
     "secret": "таен",
@@ -206,28 +262,40 @@
     "subjects": "субекти",
     "suspects": "заподозрени",
     "table": "маса",
+    "talk": "говори",
+    "tap": "докосни",
+    "that": "който",
     "the": "the",
     "they": "те",
     "this": "това",
     "together": "заедно",
-    "talk": "говори",
     "training": "тренировка",
     "use": "използвай",
-    "what": "какво",
     "wall": "стена",
+    "what": "какво",
     "who": "кой",
     "woman": "жена",
     "work": "работа",
     "world": "свят",
-    "young": "млад",
     "you": "ти",
+    "young": "млад",
     "your": "твой"
   },
   "guide": {
     "speaker": "Director",
-    "position": { "x": 870, "y": 470 },
-    "required_items": ["agent_badge", "dossier_clue", "profile_form"],
-    "walk_to": { "x": 826, "y": 506 },
+    "position": {
+      "x": 870,
+      "y": 470
+    },
+    "required_items": [
+      "agent_badge",
+      "dossier_clue",
+      "profile_form"
+    ],
+    "walk_to": {
+      "x": 826,
+      "y": 506
+    },
     "locked_text": "Collect your agent badge, dossier clue, and profile form first.",
     "locked_text_bg": "Първо вземи агентската значка, следата от досието и профилния формуляр.",
     "dialogue_start_node": "node_1",
@@ -291,8 +359,14 @@
     "label": "training door",
     "x": 58,
     "y": 300,
-    "zone": { "width": 96, "height": 150 },
-    "walk_to": { "x": 126, "y": 432 },
+    "zone": {
+      "width": 96,
+      "height": 150
+    },
+    "walk_to": {
+      "x": 126,
+      "y": 432
+    },
     "required_flag": "training_door_open",
     "command": "Walk to training door",
     "locked_speaker": "Alex",
@@ -311,7 +385,10 @@
       "bg": "значка",
       "x": 126,
       "y": 170,
-      "walk_to": { "x": 154, "y": 448 },
+      "walk_to": {
+        "x": 154,
+        "y": 448
+      },
       "radius": 38,
       "intro": {
         "text": "An agent badge is ready on the wall. It needs your name.",
@@ -321,9 +398,16 @@
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Агентска значка е готова на стената. Тя има нужда от твоето име.", "isCorrect": true },
-            { "text": "Световна карта е готова на стената. Тя има нужда от мисия." },
-            { "text": "Профилен формуляр е на масата. Той има нужда от семейна папка." }
+            {
+              "text": "Агентска значка е готова на стената. Тя има нужда от твоето име.",
+              "isCorrect": true
+            },
+            {
+              "text": "Световна карта е готова на стената. Тя има нужда от мисия."
+            },
+            {
+              "text": "Профилен формуляр е на масата. Той има нужда от семейна папка."
+            }
           ]
         }
       },
@@ -331,16 +415,32 @@
         "vocabulary_target": "name",
         "curriculum_source": "James Bond Level 01",
         "curriculum_stage": "new",
-        "grammar_targets": ["verb be: I am", "verb be: it is", "identity question: What is it?"],
-        "exercise_types": ["word choice", "grammar gap-fill", "sentence choice"]
+        "grammar_targets": [
+          "verb be: I am",
+          "verb be: it is",
+          "identity question: What is it?"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 40, "y": 42, "width": 300, "height": 360 }
+          "frame": {
+            "x": 40,
+            "y": 42,
+            "width": 300,
+            "height": 360
+          }
         }
       },
-      "presentation": { "hero_expression": "smile", "portrait_frame": 1 }
+      "presentation": {
+        "hero_expression": "smile",
+        "portrait_frame": 1
+      }
     },
     {
       "id": "dossier_clue",
@@ -350,19 +450,29 @@
       "bg": "досие",
       "x": 292,
       "y": 190,
-      "walk_to": { "x": 306, "y": 414 },
+      "walk_to": {
+        "x": 306,
+        "y": 414
+      },
       "radius": 72,
       "intro": {
-        "text": "The dossier board shows agents and suspects. Who is this?",
-        "bg": "Дъската с досиета показва агенти и заподозрени. Кой е това?",
+        "text": "The dossier board shows agents and suspects.",
+        "bg": "Дъската с досиета показва агенти и заподозрени.",
         "translation_check": {
           "prompt": "Choose the Bulgarian translation before you pick it up.",
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Дъската с досиета показва агенти и заподозрени. Кой е това?", "isCorrect": true },
-            { "text": "Скенерът показва значка и врата. Какво е това?" },
-            { "text": "Масата за брифинг показва семейство и приятели. Къде е това?" }
+            {
+              "text": "Дъската с досиета показва агенти и заподозрени.",
+              "isCorrect": true
+            },
+            {
+              "text": "Скенерът показва значка и врата."
+            },
+            {
+              "text": "Масата за брифинг показва семейство и приятели."
+            }
           ]
         }
       },
@@ -370,16 +480,32 @@
         "vocabulary_target": "boy/girl/man/woman",
         "curriculum_source": "James Bond Level 01",
         "curriculum_stage": "new",
-        "grammar_targets": ["verb be: he is", "verb be: she is", "identity question: Who is this?"],
-        "exercise_types": ["picture-to-word", "sentence choice", "grammar gap-fill"]
+        "grammar_targets": [
+          "verb be: he is",
+          "verb be: she is",
+          "identity question: Who is this?"
+        ],
+        "exercise_types": [
+          "picture-to-word",
+          "sentence choice",
+          "grammar gap-fill"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 990, "y": 40, "width": 470, "height": 375 }
+          "frame": {
+            "x": 990,
+            "y": 40,
+            "width": 470,
+            "height": 375
+          }
         }
       },
-      "presentation": { "hero_expression": "curious", "portrait_frame": 3 }
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
     },
     {
       "id": "profile_form",
@@ -389,19 +515,29 @@
       "bg": "профил",
       "x": 560,
       "y": 348,
-      "walk_to": { "x": 454, "y": 526 },
+      "walk_to": {
+        "x": 454,
+        "y": 526
+      },
       "radius": 42,
       "intro": {
-        "text": "A profile form is on the briefing table. Fill in the family form.",
-        "bg": "Профилен формуляр е на масата за брифинг. Попълни семейния формуляр.",
+        "text": "A profile form is on the briefing table.",
+        "bg": "Профилен формуляр е на масата за брифинг. ",
         "translation_check": {
           "prompt": "Choose the Bulgarian translation before you pick it up.",
           "validating_text": "Validating...",
           "retry_text": "Read the English sentence once more.",
           "options": [
-            { "text": "Профилен формуляр е на масата за брифинг. Попълни семейния формуляр.", "isCorrect": true },
-            { "text": "Агентска значка е до скенера. Попълни тайния екран." },
-            { "text": "Дъската с досиета е на стената. Попълни тренировъчната врата." }
+            {
+              "text": "Профилният формуляр е на масата за брифинг.",
+              "isCorrect": true
+            },
+            {
+              "text": "Агентска значка е до скенера."
+            },
+            {
+              "text": "Дъската с досиета е на стената."
+            }
           ]
         }
       },
@@ -409,16 +545,32 @@
         "vocabulary_target": "family/friend/brother/sister",
         "curriculum_source": "James Bond Level 01",
         "curriculum_stage": "new",
-        "grammar_targets": ["verb be: they are", "yes/no questions with be", "identity words"],
-        "exercise_types": ["word choice", "sentence choice", "grammar gap-fill"]
+        "grammar_targets": [
+          "verb be: they are",
+          "yes/no questions with be",
+          "identity words"
+        ],
+        "exercise_types": [
+          "word choice",
+          "sentence choice",
+          "grammar gap-fill"
+        ]
       },
       "inventory": {
         "icon": {
           "texture": "interactiveProps",
-          "frame": { "x": 410, "y": 62, "width": 510, "height": 360 }
+          "frame": {
+            "x": 410,
+            "y": 62,
+            "width": 510,
+            "height": 360
+          }
         }
       },
-      "presentation": { "hero_expression": "thinking", "portrait_frame": 5 }
+      "presentation": {
+        "hero_expression": "thinking",
+        "portrait_frame": 5
+      }
     },
     {
       "id": "mission_screen",
@@ -428,7 +580,10 @@
       "bg": "екран на мисията",
       "x": 690,
       "y": 192,
-      "walk_to": { "x": 674, "y": 368 },
+      "walk_to": {
+        "x": 674,
+        "y": 368
+      },
       "radius": 78,
       "interaction": "view",
       "description": {
@@ -444,7 +599,10 @@
       "bg": "маса",
       "x": 700,
       "y": 430,
-      "walk_to": { "x": 826, "y": 526 },
+      "walk_to": {
+        "x": 826,
+        "y": 526
+      },
       "radius": 62,
       "interaction": "view",
       "description": {
@@ -460,7 +618,10 @@
       "bg": "карта",
       "x": 940,
       "y": 170,
-      "walk_to": { "x": 820, "y": 386 },
+      "walk_to": {
+        "x": 820,
+        "y": 386
+      },
       "radius": 48,
       "interaction": "view",
       "description": {
@@ -480,9 +641,18 @@
         "text": "Badge challenge 1/3. Which word is on a badge?",
         "bg": "Предизвикателство със значка 1/3. Коя дума е върху значка?",
         "options": [
-          { "text": "name", "isCorrect": true },
-          { "text": "table", "feedback": "Table е предмет. На значката пише име: name." },
-          { "text": "door", "feedback": "Door е врата. Тук търсим name." }
+          {
+            "text": "name",
+            "isCorrect": true
+          },
+          {
+            "text": "table",
+            "feedback": "Table е предмет. На значката пише име: name."
+          },
+          {
+            "text": "door",
+            "feedback": "Door е врата. Тук търсим name."
+          }
         ]
       },
       {
@@ -494,9 +664,18 @@
         "text": "Badge challenge 2/3. I ___ Agent Alex.",
         "bg": "Предизвикателство със значка 2/3. Аз ___ агент Алекс.",
         "options": [
-          { "text": "am", "isCorrect": true },
-          { "text": "is", "feedback": "Is е за he/she/it. С I използваме am." },
-          { "text": "are", "feedback": "Are е за you/we/they. С I използваме am." }
+          {
+            "text": "am",
+            "isCorrect": true
+          },
+          {
+            "text": "is",
+            "feedback": "Is е за he/she/it. С I използваме am."
+          },
+          {
+            "text": "are",
+            "feedback": "Are е за you/we/they. С I използваме am."
+          }
         ]
       },
       {
@@ -505,12 +684,21 @@
         "grammar_target": "identity question: What is it?",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Badge challenge 3/3. Choose the best answer.",
-        "bg": "Предизвикателство със значка 3/3. Избери най-добрия отговор.",
+        "text": "Badge challenge 3/3. The scanner asks, What is it? Tap the agent answer.",
+        "bg": "Предизвикателство със значка 3/3. Скенерът пита: What is it? Докосни агентския отговор.",
         "options": [
-          { "text": "It is a badge.", "isCorrect": true },
-          { "text": "He is a badge.", "feedback": "He е за момче или мъж. Badge е предмет, затова: It is a badge." },
-          { "text": "They is a badge.", "feedback": "They не върви с is. За един предмет: It is a badge." }
+          {
+            "text": "It is a badge.",
+            "isCorrect": true
+          },
+          {
+            "text": "He is a badge.",
+            "feedback": "He е за момче или мъж. Badge е предмет, затова: It is a badge."
+          },
+          {
+            "text": "They is a badge.",
+            "feedback": "They не върви с is. За един предмет: It is a badge."
+          }
         ]
       }
     ],
@@ -521,12 +709,21 @@
         "grammar_target": "identity question: Who is this?",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Dossier challenge 1/3. Which question asks about a person?",
-        "bg": "Предизвикателство с досие 1/3. Кой въпрос пита за човек?",
+        "text": "Dossier challenge 1/3. The agent file shows a person. Ask the right question.",
+        "bg": "Предизвикателство с досие 1/3. Агентското досие показва човек. Задай правилния въпрос.",
         "options": [
-          { "text": "Who is this?", "isCorrect": true },
-          { "text": "What is it?", "feedback": "What is it? пита за предмет. За човек питаме: Who is this?" },
-          { "text": "Where is this?", "feedback": "Where пита за място. За човек питаме: Who is this?" }
+          {
+            "text": "Who is this?",
+            "isCorrect": true
+          },
+          {
+            "text": "What is it?",
+            "feedback": "What is it? пита за предмет. За човек питаме: Who is this?"
+          },
+          {
+            "text": "Where is this?",
+            "feedback": "Where пита за място. За човек питаме: Who is this?"
+          }
         ]
       },
       {
@@ -535,12 +732,21 @@
         "grammar_target": "verb be: he/she is",
         "difficulty": 1,
         "curriculum_stage": "new",
-        "text": "Dossier challenge 2/3. Choose the best sentence for a boy.",
-        "bg": "Предизвикателство с досие 2/3. Избери най-доброто изречение за момче.",
+        "text": "Dossier challenge 2/3. The file shows a boy. Which line belongs in the dossier?",
+        "bg": "Предизвикателство с досие 2/3. Досието показва момче. Кой ред е за досието?",
         "options": [
-          { "text": "He is a boy.", "isCorrect": true },
-          { "text": "She is a boy.", "feedback": "She е за момиче или жена. За момче използваме He." },
-          { "text": "They is a boy.", "feedback": "They е за повече от един човек и не върви с is." }
+          {
+            "text": "He is a boy.",
+            "isCorrect": true
+          },
+          {
+            "text": "She is a boy.",
+            "feedback": "She е за момиче или жена. За момче използваме He."
+          },
+          {
+            "text": "They is a boy.",
+            "feedback": "They е за повече от един човек и не върви с is."
+          }
         ]
       },
       {
@@ -552,9 +758,18 @@
         "text": "Dossier challenge 3/3. She ___ a good agent.",
         "bg": "Предизвикателство с досие 3/3. Тя ___ добър агент.",
         "options": [
-          { "text": "is", "isCorrect": true },
-          { "text": "am", "feedback": "Am се използва с I. С she използваме is." },
-          { "text": "are", "feedback": "Are е за you/we/they. С she използваме is." }
+          {
+            "text": "is",
+            "isCorrect": true
+          },
+          {
+            "text": "am",
+            "feedback": "Am се използва с I. С she използваме is."
+          },
+          {
+            "text": "are",
+            "feedback": "Are е за you/we/they. С she използваме is."
+          }
         ]
       }
     ],
@@ -568,9 +783,18 @@
         "text": "Profile challenge 1/3. Brother, sister, mother, and father are ___.",
         "bg": "Предизвикателство с профил 1/3. Брат, сестра, майка и баща са ___.",
         "options": [
-          { "text": "family", "isCorrect": true },
-          { "text": "friend", "feedback": "Friend е приятел. Brother and sister are family." },
-          { "text": "badge", "feedback": "Badge е значка. Тук търсим family." }
+          {
+            "text": "family",
+            "isCorrect": true
+          },
+          {
+            "text": "friend",
+            "feedback": "Friend е приятел. Brother and sister are family."
+          },
+          {
+            "text": "badge",
+            "feedback": "Badge е значка. Тук търсим family."
+          }
         ]
       },
       {
@@ -582,9 +806,18 @@
         "text": "Profile challenge 2/3. They ___ brother and sister.",
         "bg": "Предизвикателство с профил 2/3. Те ___ брат и сестра.",
         "options": [
-          { "text": "are", "isCorrect": true },
-          { "text": "is", "feedback": "They е за повече от един човек, затова използваме are." },
-          { "text": "am", "feedback": "Am се използва само с I." }
+          {
+            "text": "are",
+            "isCorrect": true
+          },
+          {
+            "text": "is",
+            "feedback": "They е за повече от един човек, затова използваме are."
+          },
+          {
+            "text": "am",
+            "feedback": "Am се използва само с I."
+          }
         ]
       },
       {
@@ -593,12 +826,21 @@
         "grammar_target": "yes/no questions with be",
         "difficulty": 2,
         "curriculum_stage": "new",
-        "text": "Profile challenge 3/3. Choose the correct question.",
-        "bg": "Предизвикателство с профил 3/3. Избери правилния въпрос.",
+        "text": "Profile challenge 3/3. Ask the question that checks the friendship clue.",
+        "bg": "Предизвикателство с профил 3/3. Задай въпроса, който проверява уликата за приятелството.",
         "options": [
-          { "text": "Are they friends?", "isCorrect": true },
-          { "text": "Is they friends?", "feedback": "They върви с are: Are they friends?" },
-          { "text": "They are friends?", "feedback": "За въпрос поставяме Are пред they." }
+          {
+            "text": "Are they friends?",
+            "isCorrect": true
+          },
+          {
+            "text": "Is they friends?",
+            "feedback": "They върви с are: Are they friends?"
+          },
+          {
+            "text": "They are friends?",
+            "feedback": "За въпрос поставяме Are пред they."
+          }
         ]
       }
     ]

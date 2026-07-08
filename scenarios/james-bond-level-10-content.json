@@ -1,0 +1,804 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-10",
+  "content_version": "2026-07-07-earth-helper-embedded-props-1",
+  "level_plan": {
+    "title": "Earth Helper Mission",
+    "mission": "Agent Alex helps Ranger Nia clean the park, reuse useful things, and answer Earth helper action questions.",
+    "mission_bg": "Агент Алекс помага на Ranger Nia да почисти парка, да използва повторно полезни неща и да отговаря на въпроси за действия на помощник на Земята.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        {
+          "text": "Агент Алекс помага на Ranger Nia да почисти парка, да използва повторно полезни неща и да отговаря на въпроси за действия на помощник на Земята.",
+          "isCorrect": true
+        },
+        {
+          "text": "Агент Алекс подготвя фестивална шапка, дрехи и музикален инструмент."
+        },
+        {
+          "text": "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека към планината."
+        }
+      ]
+    },
+    "plan_hotspot_id": "earth_helper_board",
+    "grammar_targets": [
+      "can/can't for helpful actions",
+      "present continuous questions: What are they doing?",
+      "present continuous questions: Are they cleaning?",
+      "review: simple action verbs"
+    ],
+    "vocabulary_targets": [
+      "Earth",
+      "recycling bin",
+      "reuse",
+      "trash",
+      "seed",
+      "park",
+      "bottle",
+      "paper",
+      "clean",
+      "plant",
+      "pick up",
+      "build",
+      "throw away"
+    ],
+    "gate_review_words": [
+      "Earth",
+      "recycling bin",
+      "reuse",
+      "trash",
+      "seed",
+      "bottle",
+      "paper",
+      "clean",
+      "pick up",
+      "plant"
+    ],
+    "flow": [
+      "Read the Earth helper board.",
+      "Collect the recycling bin clue.",
+      "Collect the reuse box.",
+      "Collect the seed packet.",
+      "Talk to Ranger Nia for the Earth helper check.",
+      "Exit through the Earth gate."
+    ]
+  },
+  "assets": {
+    "background": "assets/james-bond/level-10-earth-helper/generated/earth-helper-background-v2.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "interactive_props": "assets/james-bond/level-10-earth-helper/generated/interactive-props.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.7,
+    "guide_scale_multiplier": 1.71
+  ,
+    "character_depth_scale": {
+      "back_y": 342,
+      "back_scale": 0.38,
+      "front_y": 566,
+      "front_scale": 0.666
+  }},
+  "hero_start": {
+    "x": 250,
+    "y": 519
+  },
+  "hud": {
+    "status_text": "Earth helper mission in progress"
+  },
+  "assistant": {
+    "speaker": "Helper",
+    "complete_text": "Excellent Earth helper work, Agent Alex.",
+    "complete_bg": "Отлична работа като помощник на Земята, агент Алекс.",
+    "fallback_bg": "Провери следващата задача.",
+    "hints": {
+      "level10_understand_mission": {
+        "text": "Read the Earth helper board first.",
+        "bg": "Първо прочети дъската на помощника на Земята."
+      },
+      "level10_recycling_bin": {
+        "text": "Find the recycling bin clue.",
+        "bg": "Намери следата за коша за рециклиране."
+      },
+      "level10_reuse_box": {
+        "text": "Find the reuse box.",
+        "bg": "Намери кутията за повторна употреба."
+      },
+      "level10_seed_packet": {
+        "text": "Find the seed packet.",
+        "bg": "Намери пакетчето със семена."
+      },
+      "level10_ranger_check": {
+        "text": "Talk to Ranger Nia.",
+        "bg": "Говори с Ranger Nia."
+      },
+      "level10_earth_gate_exit": {
+        "text": "Use the Earth gate.",
+        "bg": "Използвай портата на Земята."
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 18,
+        "y": 346
+      },
+      {
+        "x": 1006,
+        "y": 346
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
+    ],
+    "clearance": 28,
+    "obstacles": [
+      {
+        "id": "left_recycling_station",
+        "x1": 59,
+        "y1": 136,
+        "x2": 245,
+        "y2": 286
+      },
+      {
+        "id": "helper_table",
+        "x1": 467,
+        "y1": 256,
+        "x2": 701,
+        "y2": 371
+      },
+      {
+        "id": "earth_gate_frame",
+        "x1": 805,
+        "y1": 200,
+        "x2": 953,
+        "y2": 346
+      }
+    ]
+  },
+  "translations": {
+    "a": "един",
+    "action": "действие",
+    "actions": "действия",
+    "after": "след",
+    "agent": "агент",
+    "alex": "Алекс",
+    "and": "и",
+    "answer": "отговарям",
+    "are": "са",
+    "away": "далеч",
+    "bin": "кош",
+    "board": "дъска",
+    "bottle": "бутилка",
+    "box": "кутия",
+    "build": "строя",
+    "bulgarian": "български",
+    "can": "мога",
+    "can't": "не мога",
+    "challenge": "предизвикателство",
+    "check": "проверка",
+    "choose": "избери",
+    "clean": "чистя",
+    "cleaning": "чистят",
+    "closed": "затворен",
+    "clue": "следа",
+    "collect": "събери",
+    "complete": "завърши",
+    "doing": "правят",
+    "earth": "Земя",
+    "excellent": "отличен",
+    "find": "намери",
+    "first": "първо",
+    "gate": "порта",
+    "good": "добре",
+    "helper": "помощник",
+    "helpful": "полезен",
+    "helps": "помага",
+    "i": "аз",
+    "is": "е",
+    "it": "то",
+    "mean": "означават",
+    "means": "означава",
+    "mission": "мисия",
+    "more": "още",
+    "need": "нуждая се",
+    "nia": "Nia",
+    "nia's": "на Nia",
+    "open": "отворен",
+    "opened": "отвори",
+    "pack": "пакет",
+    "packet": "пакетче",
+    "paper": "хартия",
+    "park": "парк",
+    "pick": "вдигам",
+    "pick up": "вдигам",
+    "plan": "план",
+    "plant": "засаждам",
+    "planting": "засаждат",
+    "questions": "въпроси",
+    "ranger": "рейнджър",
+    "read": "прочети",
+    "recycling": "рециклиране",
+    "recycling bin": "кош за рециклиране",
+    "reply": "отговор",
+    "reuse": "използвам повторно",
+    "review": "преговор",
+    "says": "казва",
+    "seed": "семе",
+    "seeds": "семена",
+    "send": "изпрати",
+    "sign": "табела",
+    "sort": "сортирам",
+    "task": "задача",
+    "the": "",
+    "they": "те",
+    "things": "неща",
+    "throw": "хвърлям",
+    "throw away": "изхвърлям",
+    "to": "за/към",
+    "trash": "боклук",
+    "up": "нагоре",
+    "use": "използвай",
+    "useful": "полезен",
+    "validating": "проверка",
+    "we": "ние",
+    "what": "какво",
+    "words": "думи",
+    "work": "работа",
+    "yes": "да",
+    "you": "ти"
+  },
+  "hotspots": [
+    {
+      "id": "earth_helper_board",
+      "kind": "scenery",
+      "label": "Earth helper board",
+      "english": "Earth",
+      "bg": "Земя",
+      "x": 160,
+      "y": 232,
+      "walk_to": {
+        "x": 268,
+        "y": 514
+      },
+      "radius": 62,
+      "interaction": "view",
+      "label_visible": true,
+      "description": {
+        "text": "The Earth helper board says: We can pick up trash. We can reuse paper. What are they doing? They are planting seeds.",
+        "bg": "Дъската на помощника на Земята казва: Можем да вдигаме боклук. Можем да използваме хартия повторно. Какво правят те? Те засаждат семена."
+      }
+    },
+    {
+      "id": "recycling_bin",
+      "kind": "collectible",
+      "label": "recycling bin",
+      "english": "recycling bin",
+      "bg": "кош за рециклиране",
+      "x": 392,
+      "y": 324,
+      "walk_to": {
+        "x": 392,
+        "y": 520
+      },
+      "radius": 52,
+      "intro": {
+        "text": "You find the recycling bin clue. Can we pick up trash? Yes, we can.",
+        "bg": "Намираш следата за коша за рециклиране. Можем ли да вдигаме боклук? Да, можем.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш следата за коша за рециклиране. Можем ли да вдигаме боклук? Да, можем.",
+              "isCorrect": true
+            },
+            {
+              "text": "Кутията използва повторно хартия и бутилки."
+            },
+            {
+              "text": "Те засаждат семена в парка."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "recycling bin/trash/pick up",
+        "curriculum_source": "Blue Dot 1 Unit 17; Blue Dot 2 Entry Review 9",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "can question",
+          "can short answer"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 450,
+            "y": 183,
+            "width": 270,
+            "height": 369
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 2
+      }
+    },
+    {
+      "id": "reuse_box",
+      "kind": "collectible",
+      "label": "reuse box",
+      "english": "reuse",
+      "bg": "използвам повторно",
+      "x": 608,
+      "y": 356,
+      "walk_to": {
+        "x": 554,
+        "y": 522
+      },
+      "radius": 44,
+      "intro": {
+        "text": "The reuse box can build a helper tool. It can't throw away good paper.",
+        "bg": "Кутията за повторна употреба може да построи помощен инструмент. Тя не може да изхвърля добра хартия.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Кутията за повторна употреба може да построи помощен инструмент. Тя не може да изхвърля добра хартия.",
+              "isCorrect": true
+            },
+            {
+              "text": "Кошът за рециклиране е затворен до проверката."
+            },
+            {
+              "text": "Те засаждат семена в парка."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "reuse/bottle/paper/build",
+        "curriculum_source": "Blue Dot 1 Unit 17; Blue Dot 2 Entry Review 9",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "can statement",
+          "can't statement"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 720,
+            "y": 227,
+            "width": 360,
+            "height": 325
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
+    },
+    {
+      "id": "seed_packet",
+      "kind": "collectible",
+      "label": "seed packet",
+      "english": "seed",
+      "bg": "семе",
+      "x": 747,
+      "y": 440,
+      "walk_to": {
+        "x": 626,
+        "y": 522
+      },
+      "radius": 34,
+      "intro": {
+        "text": "You find the seed packet. What are they doing? They are planting seeds in the park.",
+        "bg": "Намираш пакетчето със семена. Какво правят те? Те засаждат семена в парка.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш пакетчето със семена. Какво правят те? Те засаждат семена в парка.",
+              "isCorrect": true
+            },
+            {
+              "text": "Можем да вдигаме боклук и да сортираме хартия."
+            },
+            {
+              "text": "Кутията не може да изхвърля добра хартия."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "seed/plant/park/clean",
+        "curriculum_source": "Blue Dot 1 Unit 17; Blue Dot 1 present continuous review",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "present continuous question: What are they doing?",
+          "present continuous statement: They are planting"
+        ],
+        "exercise_types": [
+          "word choice",
+          "grammar gap-fill",
+          "short answer"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 1080,
+            "y": 242,
+            "width": 310,
+            "height": 310
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "happy",
+        "portrait_frame": 4
+      }
+    },
+    {
+      "id": "cleanup_sign",
+      "kind": "scenery",
+      "label": "clean up sign",
+      "english": "clean",
+      "bg": "чистя",
+      "x": 296,
+      "y": 398,
+      "walk_to": {
+        "x": 332,
+        "y": 522
+      },
+      "radius": 34,
+      "interaction": "view",
+      "description": {
+        "text": "The helper sign says: Are they cleaning the park? Yes, they are.",
+        "bg": "Табелата на помощника казва: Те чистят ли парка? Да, чистят."
+      }
+    }
+  ],
+  "guide": {
+    "speaker": "Ranger Nia",
+    "position": {
+      "x": 539,
+      "y": 534
+    },
+    "required_items": [
+      "recycling_bin",
+      "reuse_box",
+      "seed_packet"
+    ],
+    "walk_to": {
+      "x": 674,
+      "y": 524
+    },
+    "locked_text": "Collect the recycling bin clue, reuse box, and seed packet first.",
+    "locked_text_bg": "Първо събери следата за коша за рециклиране, кутията за повторна употреба и пакетчето със семена.",
+    "completed_messages": [
+      {
+        "text": "The Earth gate is open. Use it after the gate review.",
+        "bg": "Портата на Земята е отворена. Използвай я след преговора на портата."
+      }
+    ],
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Ranger Nia",
+          "npc_text": "Earth helper check. Can we pick up trash?",
+          "npc_text_bg": "Проверка за помощник на Земята. Можем ли да вдигаме боклук?",
+          "options": [
+            {
+              "text": "Yes, we can pick up trash.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "Yes, we can't pick up trash.",
+              "is_correct": false,
+              "feedback_bg": "Can означава можем. Can't означава не можем."
+            },
+            {
+              "text": "Yes, we are trash.",
+              "is_correct": false,
+              "feedback_bg": "Тук говорим за действие: pick up trash."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Ranger Nia",
+          "npc_text": "Good. What are they doing in the park?",
+          "npc_text_bg": "Добре. Какво правят те в парка?",
+          "options": [
+            {
+              "text": "They are planting seeds.",
+              "is_correct": true
+            },
+            {
+              "text": "They planting seeds.",
+              "is_correct": false,
+              "feedback_bg": "В сегашно продължително време използваме are planting."
+            },
+            {
+              "text": "They can seeds.",
+              "is_correct": false,
+              "feedback_bg": "След can ни трябва действие, но тук въпросът е What are they doing?"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "earth_gate",
+    "label": "Earth gate",
+    "x": 880,
+    "y": 220,
+    "zone": {
+      "width": 160,
+      "height": 220
+    },
+    "walk_to": {
+      "x": 842,
+      "y": 522
+    },
+    "required_flag": "earth_gate_open",
+    "command": "Walk to Earth gate",
+    "locked_speaker": "Alex",
+    "locked_text": "The Earth gate is closed. I need Ranger Nia's helper check first.",
+    "locked_text_bg": "Портата на Земята е затворена. Първо ми трябва проверката на Ranger Nia.",
+    "unlocked_command": "The Earth gate is open!",
+    "unlocked_status": "Earth gate open",
+    "unlocked_toast": "Earth helper mission complete."
+  },
+  "quizzes": {
+    "recycling_bin": [
+      {
+        "id": "recycling-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Recycling challenge 1/3. Which words mean кош за рециклиране?",
+        "bg": "Предизвикателство с рециклиране 1/3. Кои думи означават кош за рециклиране?",
+        "options": [
+          {
+            "text": "recycling bin",
+            "isCorrect": true
+          },
+          {
+            "text": "seed packet",
+            "feedback": "Seed packet е пакетче със семена. Кош за рециклиране е recycling bin."
+          },
+          {
+            "text": "park gate",
+            "feedback": "Park gate е порта на парк. Кош за рециклиране е recycling bin."
+          }
+        ]
+      },
+      {
+        "id": "recycling-can",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "can question",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Recycling challenge 2/3. ___ we pick up trash?",
+        "bg": "Предизвикателство с рециклиране 2/3. ___ ли можем да вдигаме боклук?",
+        "options": [
+          {
+            "text": "Can",
+            "isCorrect": true
+          },
+          {
+            "text": "Are",
+            "feedback": "За способност питаме с Can we...?"
+          },
+          {
+            "text": "Is",
+            "feedback": "Is е за един човек или предмет. Тук питаме Can we...?"
+          }
+        ]
+      },
+      {
+        "id": "recycling-sentence",
+        "exercise_type": "sentence choice",
+        "grammar_target": "can short answer",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Recycling challenge 3/3. Send the Earth helper reply.",
+        "bg": "Предизвикателство с рециклиране 3/3. Изпрати отговора на помощника на Земята.",
+        "options": [
+          {
+            "text": "Yes, we can pick up trash.",
+            "isCorrect": true
+          },
+          {
+            "text": "Yes, we can't help Earth.",
+            "feedback": "Can't означава не можем. Помощниците могат да помогнат."
+          },
+          {
+            "text": "Yes, we are trash.",
+            "feedback": "We are trash не е полезно действие."
+          }
+        ]
+      }
+    ],
+    "reuse_box": [
+      {
+        "id": "reuse-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Reuse challenge 1/3. Which word means използвам повторно?",
+        "bg": "Предизвикателство с повторна употреба 1/3. Коя дума означава използвам повторно?",
+        "options": [
+          {
+            "text": "reuse",
+            "isCorrect": true
+          },
+          {
+            "text": "trash",
+            "feedback": "Trash е боклук. Използвам повторно е reuse."
+          },
+          {
+            "text": "seed",
+            "feedback": "Seed е семе. Използвам повторно е reuse."
+          }
+        ]
+      },
+      {
+        "id": "reuse-cant",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "can't statement",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Reuse challenge 2/3. We ___ throw away good paper.",
+        "bg": "Предизвикателство с повторна употреба 2/3. Ние ___ да изхвърляме добра хартия.",
+        "options": [
+          {
+            "text": "can't",
+            "isCorrect": true
+          },
+          {
+            "text": "can",
+            "feedback": "Good paper can be reused. We can't throw it away."
+          },
+          {
+            "text": "are",
+            "feedback": "Are не показва дали можем или не можем."
+          }
+        ]
+      },
+      {
+        "id": "reuse-build",
+        "exercise_type": "sentence choice",
+        "grammar_target": "can statement",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Reuse challenge 3/3. Pick the action for the reuse mission board.",
+        "bg": "Предизвикателство с повторна употреба 3/3. Вземи действието за дъската на мисията за повторна употреба.",
+        "options": [
+          {
+            "text": "We can reuse paper and bottles.",
+            "isCorrect": true
+          },
+          {
+            "text": "We can throw away good paper.",
+            "feedback": "Good paper can be reused, not thrown away."
+          },
+          {
+            "text": "We can't build a helper tool.",
+            "feedback": "A reuse box can build a helper tool."
+          }
+        ]
+      }
+    ],
+    "seed_packet": [
+      {
+        "id": "seed-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Seed challenge 1/3. Which word means семе?",
+        "bg": "Предизвикателство със семе 1/3. Коя дума означава семе?",
+        "options": [
+          {
+            "text": "seed",
+            "isCorrect": true
+          },
+          {
+            "text": "bottle",
+            "feedback": "Bottle е бутилка. Семе е seed."
+          },
+          {
+            "text": "paper",
+            "feedback": "Paper е хартия. Семе е seed."
+          }
+        ]
+      },
+      {
+        "id": "seed-are",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "present continuous question",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Seed challenge 2/3. What ___ they doing?",
+        "bg": "Предизвикателство със семе 2/3. Какво ___ те правят?",
+        "options": [
+          {
+            "text": "are",
+            "isCorrect": true
+          },
+          {
+            "text": "can",
+            "feedback": "За What are they doing? използваме are."
+          },
+          {
+            "text": "is",
+            "feedback": "They е множествено число, затова използваме are."
+          }
+        ]
+      },
+      {
+        "id": "seed-planting",
+        "exercise_type": "short answer",
+        "grammar_target": "present continuous statement",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Seed challenge 3/3. What are they doing in the park?",
+        "bg": "Предизвикателство със семе 3/3. Какво правят те в парка?",
+        "options": [
+          {
+            "text": "They are planting seeds.",
+            "isCorrect": true
+          },
+          {
+            "text": "They plant seeds now.",
+            "feedback": "Въпросът пита какво правят сега: They are planting seeds."
+          },
+          {
+            "text": "They can seeds.",
+            "feedback": "Can се използва с действие, но правилният отговор тук е They are planting seeds."
+          }
+        ]
+      }
+    ]
+  }
+}

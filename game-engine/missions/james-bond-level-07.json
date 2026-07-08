@@ -60,7 +60,7 @@
       "critical": true,
       "final": true,
       "requires": { "puzzle": "level07_host_check", "status": "completed" },
-      "produces": ["level07.complete", "campaign.levels_01_to_07_complete"]
+      "produces": ["level07.complete", "campaign.levels_01_to_07_complete", "level08.unlocked"]
     }
   ],
   "rules": [
@@ -140,12 +140,12 @@
       "actions": [
         { "type": "puzzle.complete", "puzzle": "level07_festival_arch_exit" },
         { "type": "fact.set", "fact": "level07.complete", "value": true },
-        {
-          "type": "campaign.complete",
-          "fact": "campaign.levels_01_to_07_complete",
-          "status_text": "Missions 01 to 07 complete",
-          "toast": "Excellent festival work, Agent Alex!"
-        }
+        { "type": "fact.set", "fact": "campaign.levels_01_to_07_complete", "value": true },
+        { "type": "fact.set", "fact": "level08.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to Pattern Temple" },
+        { "type": "ui.toast", "text": "Mission 08 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-08-content.json", "delay_ms": 450 }
       ]
     }
   ],

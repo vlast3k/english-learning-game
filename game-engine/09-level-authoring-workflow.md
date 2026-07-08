@@ -151,7 +151,7 @@ The Writer chooses the best words for the gate review from the level's vocabular
 - were actually practiced during required level interactions;
 - are important to the level goal, story, objects, or exit;
 - have clear one-to-one Bulgarian translations;
-- are not only easy cognates or decorative background words;
+- are not near-cognates or transliteration pairs that a child can answer by matching letters instead of knowing meaning;
 - mix concrete nouns, useful verbs, and key adjectives when the level supports that;
 - are appropriate distractors for each other without becoming confusing or unfair.
 
@@ -160,7 +160,7 @@ Avoid words that:
 - were never encountered by the child;
 - have missing Bulgarian translations;
 - have multiple likely translations in this level context;
-- are too visually or linguistically obvious unless the level needs an easier review;
+- are too visually or linguistically obvious, including pairs such as `apartment`/`апартамент`, `camera`/`камера`, `instrument`/`инструмент`, or `park`/`парк`;
 - are UI/system words rather than learner vocabulary.
 
 The gate review should be designed as 10 questions:
@@ -174,6 +174,18 @@ The gate review should be designed as 10 questions:
 - once the exit is passed, the review must not appear again for that completed exit.
 
 The selected words should be stored in `level_plan.gate_review_words` when the best review set is narrower than `level_plan.vocabulary_targets`. If `gate_review_words` is absent, the runtime may fall back to `vocabulary_targets`, but authored levels should prefer an explicit review set.
+
+Before handing the design to the JSON Coder, run this dedicated language-quality prompt over the proposed gate review set:
+
+```text
+Review the proposed `gate_review_words` for a 9-year-old English learner in a spy academy game.
+
+Keep the final 10-word gate review mandatory, but reject any word that is answerable by spelling similarity or transliteration rather than meaning. Examples to reject: apartment/апартамент, camera/камера, instrument/инструмент, park/парк. Also reject UI words, decorative background words, words not practiced in required interactions, and words with ambiguous translations in this level.
+
+Return:
+- APPROVED with the 10 review words, or
+- REVISE with replacement words from the level's practiced vocabulary and a one-line reason per rejected word.
+```
 
 Example:
 
@@ -213,9 +225,35 @@ Responsibilities:
 
 The JSON Coder should not create new mechanics. If the design requires unsupported behavior, it should mark the draft for review instead of encoding imaginary fields.
 
+### Hotspot Placement Editor
+
+After the initial scenario JSON is valid and the background art exists, use the Phaser hotspot editor to align click circles with the painted scene instead of estimating coordinates by hand.
+
+Run the local server:
+
+```sh
+npm run serve:editor
+```
+
+Open the level with editor mode enabled:
+
+```text
+http://localhost:9231/phaser.html?level=7&editor=hotspots
+```
+
+The editor keeps every hotspot label visible and adds placement rings for the hero and guide. Purple horizontal guides show the character depth scale: drag the `back` or `front` guide up/down to set the y-position for that depth, and drag its gold handle left/right to tune the character size at that depth. The runtime linearly interpolates character size between those two guides. Blue rectangles show `navigation.obstacles`, the no-walk zones the hero must route around; drag a rectangle to move it, and drag its blue corner handle to resize it. Drag a labeled hotspot circle to move the hotspot, and drag its gold resize handle to change `radius`. Drag the hero or guide ring to move that character, and drag its gold resize handle to change the per-level scale multiplier. Press `S` to save the current placements directly into the scenario JSON on disk. Press `C` to copy a JSON patch containing hotspot, character, obstacle, and depth-scale placement data.
+
+The editor intentionally changes only `hotspots[].x`, `hotspots[].y`, `hotspots[].radius`, `hero_start`, `guide.position`, `presentation.character_scale_multiplier`, `presentation.guide_scale_multiplier`, `presentation.character_depth_scale`, and `navigation.obstacles[]` rectangle coordinates. It does not change mission manifests, puzzles, translations, or walk targets. After saving placement changes, run the normal validator and browser smoke test.
+
 ## Tool: Deterministic Validator
 
 The validator is not an LLM. It is the trusted gatekeeper.
+
+## Art Integration Rule
+
+Final playable levels should not use scene overlays for required in-world props. The background art should include the visible mission board, required collectibles, important scenery, and exit gate/path as painted scene elements. Inventory icons are still allowed because they live in the UI after collection, not in the world.
+
+Before a level is considered art-integrated, open editor mode and verify that every hotspot circle lines up with a visible painted object in the background. Track cleanup status in `10-scene-prop-integration-audit.md`.
 
 It should check:
 

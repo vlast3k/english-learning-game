@@ -1,0 +1,820 @@
+{
+  "schema_version": 1,
+  "scene_id": "james-bond-level-08",
+  "content_version": "2026-07-07-pattern-temple-embedded-props-1",
+  "level_plan": {
+    "title": "Pattern Temple",
+    "mission": "Agent Alex studies the Pattern Temple to sort shapes, count numbers, and finish the secret sequence.",
+    "mission_bg": "Агент Алекс изучава Храма на моделите, за да сортира форми, да брои числа и да завърши тайната последователност.",
+    "translation_check": {
+      "prompt": "Choose the Bulgarian mission plan.",
+      "validating_text": "Validating...",
+      "retry_text": "Read the mission once more.",
+      "options": [
+        {
+          "text": "Агент Алекс изучава Храма на моделите, за да сортира форми, да брои числа и да завърши тайната последователност.",
+          "isCorrect": true
+        },
+        {
+          "text": "Агент Алекс помага на Host Lina да подготви новогодишния фестивал с дрехи и музика."
+        },
+        {
+          "text": "Агент Алекс изучава маршрутна станция, за да намери безопасната пътека към планината."
+        }
+      ]
+    },
+    "plan_hotspot_id": "pattern_wall",
+    "grammar_targets": [
+      "demonstratives: this, that, these, those",
+      "review: There is/There are",
+      "review: singular and plural nouns",
+      "review: count and sort commands"
+    ],
+    "vocabulary_targets": [
+      "circle",
+      "square",
+      "triangle",
+      "rectangle",
+      "star",
+      "line",
+      "dot",
+      "numbers",
+      "even numbers",
+      "odd numbers",
+      "pattern",
+      "sequence",
+      "sort",
+      "count",
+      "shapes"
+    ],
+    "gate_review_words": [
+      "circle",
+      "square",
+      "triangle",
+      "rectangle",
+      "star",
+      "line",
+      "dot",
+      "numbers",
+      "even numbers",
+      "odd numbers"
+    ],
+    "flow": [
+      "Read the pattern wall.",
+      "Collect the shape tiles.",
+      "Collect the number stones.",
+      "Collect the sequence cards.",
+      "Talk to Keeper Maya for the pattern check.",
+      "Exit through the temple gate."
+    ]
+  },
+  "assets": {
+    "background": "assets/james-bond/level-08-pattern-temple/generated/pattern-temple-background-v2.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+    "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+    "interactive_props": "assets/james-bond/level-08-pattern-temple/generated/interactive-props.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.72,
+    "guide_scale_multiplier": 1.82
+  ,
+    "character_depth_scale": {
+      "back_y": 342,
+      "back_scale": 0.3,
+      "front_y": 566,
+      "front_scale": 0.666
+  }},
+  "hero_start": {
+    "x": 180,
+    "y": 521
+  },
+  "hud": {
+    "status_text": "Pattern temple in progress"
+  },
+  "assistant": {
+    "speaker": "Helper",
+    "complete_text": "Excellent pattern work, Agent Alex.",
+    "complete_bg": "Отлична работа с моделите, агент Алекс.",
+    "fallback_bg": "Провери следващата задача.",
+    "hints": {
+      "level08_understand_mission": {
+        "text": "Read the pattern wall first.",
+        "bg": "Първо прочети стената с модели."
+      },
+      "level08_shape_tiles": {
+        "text": "Find the shape tiles.",
+        "bg": "Намери плочките с форми."
+      },
+      "level08_number_stones": {
+        "text": "Find the number stones.",
+        "bg": "Намери камъните с числа."
+      },
+      "level08_sequence_cards": {
+        "text": "Find the sequence cards.",
+        "bg": "Намери картите с последователност."
+      },
+      "level08_keeper_check": {
+        "text": "Talk to Keeper Maya.",
+        "bg": "Говори с Keeper Maya."
+      },
+      "level08_temple_gate_exit": {
+        "text": "Use the temple gate.",
+        "bg": "Използвай храмовата порта."
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 18,
+        "y": 342
+      },
+      {
+        "x": 1006,
+        "y": 342
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 12,
+        "y": 566
+      }
+    ],
+    "clearance": 28,
+    "obstacles": [
+      {
+        "id": "shape_tile_table",
+        "x1": 165,
+        "y1": 293,
+        "x2": 479,
+        "y2": 397
+      },
+      {
+        "id": "pattern_mosaic",
+        "x1": 513,
+        "y1": 246,
+        "x2": 639,
+        "y2": 353
+      },
+      {
+        "id": "temple_gate_frame",
+        "x1": 772,
+        "y1": 146,
+        "x2": 916,
+        "y2": 304
+      }
+    ]
+  },
+  "translations": {
+    "a": "един",
+    "after": "след",
+    "agent": "агент",
+    "alex": "Алекс",
+    "and": "и",
+    "answer": "отговор",
+    "are": "са",
+    "before": "преди",
+    "board": "дъска",
+    "bulgarian": "български",
+    "card": "карта",
+    "cards": "карти",
+    "challenge": "предизвикателство",
+    "check": "проверка",
+    "choose": "избери",
+    "circle": "кръг",
+    "closed": "затворен",
+    "collect": "събери",
+    "comes": "идва",
+    "complete": "завърши",
+    "count": "броя",
+    "decode": "разкодирай",
+    "dot": "точка",
+    "even": "четен",
+    "even numbers": "четни числа",
+    "excellent": "отличен",
+    "exit": "изход",
+    "far": "далечен",
+    "find": "намери",
+    "finish": "завърши",
+    "first": "първо",
+    "four": "четири",
+    "gate": "порта",
+    "good": "добре",
+    "has": "има",
+    "helper": "помощник",
+    "i": "аз",
+    "is": "е",
+    "it": "то",
+    "keeper": "пазител",
+    "line": "линия",
+    "many": "много",
+    "mark": "знак",
+    "maya": "Мая",
+    "maya's": "на Мая",
+    "means": "означава",
+    "mission": "мисия",
+    "more": "още",
+    "mosaic": "мозайка",
+    "near": "близък",
+    "need": "нуждая се",
+    "number": "число",
+    "numbers": "числа",
+    "odd": "нечетен",
+    "odd numbers": "нечетни числа",
+    "once": "веднъж",
+    "online": "включен",
+    "only": "само",
+    "open": "отворен",
+    "opened": "отвори",
+    "pattern": "модел",
+    "plan": "план",
+    "points": "сочи",
+    "read": "прочети",
+    "rectangle": "правоъгълник",
+    "review": "преговор",
+    "says": "казва",
+    "scanner": "скенер",
+    "secret": "тайна",
+    "sentence": "изречение",
+    "sequence": "последователност",
+    "set": "комплект",
+    "shape": "форма",
+    "shapes": "форми",
+    "shows": "показва",
+    "six": "шест",
+    "sort": "сортирам",
+    "square": "квадрат",
+    "star": "звезда",
+    "starts": "започва",
+    "stones": "камъни",
+    "studies": "изучава",
+    "tag": "маркирай",
+    "talk": "говори",
+    "task": "задача",
+    "temple": "храм",
+    "that": "онова",
+    "the": "",
+    "these": "тези",
+    "this": "това",
+    "those": "онези",
+    "tiles": "плочки",
+    "to": "за/към",
+    "triangle": "триъгълник",
+    "true": "вярно",
+    "use": "използвай",
+    "validating": "проверка",
+    "wall": "стена",
+    "what": "какво",
+    "which": "кой",
+    "with": "с",
+    "word": "дума",
+    "work": "работа",
+    "you": "ти"
+  },
+  "hotspots": [
+    {
+      "id": "pattern_wall",
+      "kind": "scenery",
+      "label": "pattern wall",
+      "english": "pattern",
+      "bg": "модел",
+      "x": 304,
+      "y": 230,
+      "walk_to": {
+        "x": 266,
+        "y": 512
+      },
+      "radius": 54,
+      "interaction": "view",
+      "label_visible": true,
+      "description": {
+        "text": "The pattern wall says: These shapes open the temple. Count the numbers. Finish the sequence.",
+        "bg": "Стената с модели казва: Тези форми отварят храма. Брой числата. Завърши последователността."
+      }
+    },
+    {
+      "id": "shape_tiles",
+      "kind": "collectible",
+      "label": "shape tiles",
+      "english": "shapes",
+      "bg": "форми",
+      "x": 347,
+      "y": 338,
+      "walk_to": {
+        "x": 282,
+        "y": 520
+      },
+      "radius": 46,
+      "intro": {
+        "text": "You find the shape tiles. These shapes are a circle, a square, a triangle, and a rectangle.",
+        "bg": "Намираш плочките с форми. Тези форми са кръг, квадрат, триъгълник и правоъгълник.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш плочките с форми. Тези форми са кръг, квадрат, триъгълник и правоъгълник.",
+              "isCorrect": true
+            },
+            {
+              "text": "Камъните с числа показват четни и нечетни числа."
+            },
+            {
+              "text": "Картите с последователност показват точка, линия и звезда."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "circle/square/triangle/rectangle/shapes",
+        "curriculum_source": "Blue Dot 1 Unit 13",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "demonstrative: these",
+          "plural nouns: shapes"
+        ],
+        "exercise_types": [
+          "word choice",
+          "sorting/categorizing",
+          "grammar gap-fill"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 481,
+            "y": 217,
+            "width": 344,
+            "height": 290
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "happy",
+        "portrait_frame": 4
+      }
+    },
+    {
+      "id": "number_stones",
+      "kind": "collectible",
+      "label": "number stones",
+      "english": "numbers",
+      "bg": "числа",
+      "x": 351,
+      "y": 509,
+      "walk_to": {
+        "x": 410,
+        "y": 522
+      },
+      "radius": 52,
+      "intro": {
+        "text": "You find the number stones. These are numbers. Two, four, and six are even numbers.",
+        "bg": "Намираш камъните с числа. Това са числа. Две, четири и шест са четни числа.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш камъните с числа. Това са числа. Две, четири и шест са четни числа.",
+              "isCorrect": true
+            },
+            {
+              "text": "Намираш плочките с форми: кръг, квадрат и триъгълник."
+            },
+            {
+              "text": "Тази звезда е след точката и линията."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "numbers/even numbers/odd numbers/count",
+        "curriculum_source": "Blue Dot 1 Unit 13",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "review: There are",
+          "plural nouns: numbers"
+        ],
+        "exercise_types": [
+          "word choice",
+          "sorting/categorizing",
+          "short answer"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 880,
+            "y": 225,
+            "width": 400,
+            "height": 289
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "focused",
+        "portrait_frame": 2
+      }
+    },
+    {
+      "id": "sequence_cards",
+      "kind": "collectible",
+      "label": "sequence cards",
+      "english": "sequence",
+      "bg": "последователност",
+      "x": 577,
+      "y": 296,
+      "walk_to": {
+        "x": 570,
+        "y": 522
+      },
+      "radius": 44,
+      "intro": {
+        "text": "You find the sequence cards. This dot starts the pattern. That star comes after the line.",
+        "bg": "Намираш картите с последователност. Тази точка започва модела. Онази звезда идва след линията.",
+        "translation_check": {
+          "prompt": "Choose the Bulgarian translation before you pick it up.",
+          "validating_text": "Validating...",
+          "retry_text": "Read the English sentence once more.",
+          "options": [
+            {
+              "text": "Намираш картите с последователност. Тази точка започва модела. Онази звезда идва след линията.",
+              "isCorrect": true
+            },
+            {
+              "text": "Тези форми са кръг, квадрат, триъгълник и правоъгълник."
+            },
+            {
+              "text": "Тези числа са четни, а онези числа са нечетни."
+            }
+          ]
+        }
+      },
+      "learning": {
+        "vocabulary_target": "dot/line/star/pattern/sequence",
+        "curriculum_source": "Blue Dot 1 Unit 13",
+        "curriculum_stage": "new",
+        "grammar_targets": [
+          "demonstrative: this",
+          "demonstrative: that"
+        ],
+        "exercise_types": [
+          "sequence",
+          "word choice",
+          "sentence choice"
+        ]
+      },
+      "inventory": {
+        "icon": {
+          "texture": "interactiveProps",
+          "frame": {
+            "x": 1280,
+            "y": 190,
+            "width": 500,
+            "height": 362
+          }
+        }
+      },
+      "presentation": {
+        "hero_expression": "curious",
+        "portrait_frame": 3
+      }
+    },
+    {
+      "id": "star_mosaic",
+      "kind": "scenery",
+      "label": "star mosaic",
+      "english": "star",
+      "bg": "звезда",
+      "x": 560,
+      "y": 422,
+      "walk_to": {
+        "x": 706,
+        "y": 520
+      },
+      "radius": 54,
+      "interaction": "view",
+      "description": {
+        "text": "The star mosaic shows the secret pattern: dot, line, star, dot, line, star.",
+        "bg": "Звездната мозайка показва тайния модел: точка, линия, звезда, точка, линия, звезда."
+      }
+    }
+  ],
+  "quizzes": {
+    "shape_tiles": [
+      {
+        "id": "shapes-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Shape challenge 1/3. Which word means кръг?",
+        "bg": "Предизвикателство с форми 1/3. Коя дума означава кръг?",
+        "options": [
+          {
+            "text": "circle",
+            "isCorrect": true
+          },
+          {
+            "text": "line",
+            "feedback": "Line е линия. Кръг е circle."
+          },
+          {
+            "text": "star",
+            "feedback": "Star е звезда. Кръг е circle."
+          }
+        ]
+      },
+      {
+        "id": "shapes-sort",
+        "exercise_type": "sorting/categorizing",
+        "grammar_target": "shape vocabulary",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Shape challenge 2/3. Which set has only shapes?",
+        "bg": "Предизвикателство с форми 2/3. Кой комплект има само форми?",
+        "options": [
+          {
+            "text": "circle, square, triangle",
+            "isCorrect": true
+          },
+          {
+            "text": "dot, count, numbers",
+            "feedback": "Dot and numbers help patterns, but this set is not only shapes."
+          },
+          {
+            "text": "sort, line, sequence",
+            "feedback": "Sort and sequence are actions or ideas, not only shapes."
+          }
+        ]
+      },
+      {
+        "id": "shapes-these",
+        "exercise_type": "grammar gap-fill",
+        "grammar_target": "demonstrative: these",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Shape challenge 3/3. ___ shapes open the temple.",
+        "bg": "Предизвикателство с форми 3/3. ___ форми отварят храма.",
+        "options": [
+          {
+            "text": "These",
+            "isCorrect": true
+          },
+          {
+            "text": "This",
+            "feedback": "Shapes са много, затова използваме these."
+          },
+          {
+            "text": "That",
+            "feedback": "That е за едно далечно нещо. Тук shapes са много."
+          }
+        ]
+      }
+    ],
+    "number_stones": [
+      {
+        "id": "numbers-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Number challenge 1/3. Which word means числа?",
+        "bg": "Предизвикателство с числа 1/3. Коя дума означава числа?",
+        "options": [
+          {
+            "text": "numbers",
+            "isCorrect": true
+          },
+          {
+            "text": "shapes",
+            "feedback": "Shapes са форми. Числа е numbers."
+          },
+          {
+            "text": "rectangle",
+            "feedback": "Rectangle е правоъгълник. Числа е numbers."
+          }
+        ]
+      },
+      {
+        "id": "numbers-even",
+        "exercise_type": "sorting/categorizing",
+        "grammar_target": "even numbers",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Number challenge 2/3. Which set has even numbers?",
+        "bg": "Предизвикателство с числа 2/3. Кой комплект има четни числа?",
+        "options": [
+          {
+            "text": "2, 4, 6",
+            "isCorrect": true
+          },
+          {
+            "text": "1, 3, 5",
+            "feedback": "1, 3, and 5 are odd numbers."
+          },
+          {
+            "text": "circle, square, star",
+            "feedback": "Those are shapes, not numbers."
+          }
+        ]
+      },
+      {
+        "id": "numbers-odd",
+        "exercise_type": "short answer",
+        "grammar_target": "odd numbers",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Number challenge 3/3. What are 1, 3, and 5?",
+        "bg": "Предизвикателство с числа 3/3. Какви са 1, 3 и 5?",
+        "options": [
+          {
+            "text": "odd numbers",
+            "isCorrect": true
+          },
+          {
+            "text": "even numbers",
+            "feedback": "Even numbers are 2, 4, and 6."
+          },
+          {
+            "text": "shape tiles",
+            "feedback": "Shape tiles are objects. 1, 3, and 5 are odd numbers."
+          }
+        ]
+      }
+    ],
+    "sequence_cards": [
+      {
+        "id": "sequence-word",
+        "exercise_type": "word choice",
+        "grammar_target": null,
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Sequence challenge 1/3. Which word means звезда?",
+        "bg": "Предизвикателство с последователност 1/3. Коя дума означава звезда?",
+        "options": [
+          {
+            "text": "star",
+            "isCorrect": true
+          },
+          {
+            "text": "dot",
+            "feedback": "Dot е точка. Звезда е star."
+          },
+          {
+            "text": "line",
+            "feedback": "Line е линия. Звезда е star."
+          }
+        ]
+      },
+      {
+        "id": "sequence-order",
+        "exercise_type": "sequence",
+        "grammar_target": "pattern order",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Sequence challenge 2/3. Finish the pattern: dot, line, star, dot, line, ___.",
+        "bg": "Предизвикателство с последователност 2/3. Завърши модела: точка, линия, звезда, точка, линия, ___.",
+        "options": [
+          {
+            "text": "star",
+            "isCorrect": true
+          },
+          {
+            "text": "rectangle",
+            "feedback": "The pattern repeats dot, line, star."
+          },
+          {
+            "text": "numbers",
+            "feedback": "Numbers are not part of this shape sequence."
+          }
+        ]
+      },
+      {
+        "id": "sequence-this-that",
+        "exercise_type": "sentence choice",
+        "grammar_target": "demonstratives: this/that",
+        "difficulty": 1,
+        "curriculum_stage": "new",
+        "text": "Sequence challenge 3/3. Decode the first mark on the pattern card.",
+        "bg": "Предизвикателство с последователност 3/3. Разкодирай първия знак върху картата с модела.",
+        "options": [
+          {
+            "text": "This dot starts the pattern.",
+            "isCorrect": true
+          },
+          {
+            "text": "These dot starts the pattern.",
+            "feedback": "Dot е една точка, затова използваме this dot."
+          },
+          {
+            "text": "Those star start the pattern.",
+            "feedback": "Star е една звезда, а началото е dot."
+          }
+        ]
+      }
+    ]
+  },
+  "guide": {
+    "speaker": "Keeper Maya",
+    "position": {
+      "x": 890,
+      "y": 480
+    },
+    "required_items": [
+      "shape_tiles",
+      "number_stones",
+      "sequence_cards"
+    ],
+    "walk_to": {
+      "x": 670,
+      "y": 524
+    },
+    "locked_text": "Collect the shape tiles, number stones, and sequence cards first.",
+    "locked_text_bg": "Първо събери плочките с форми, камъните с числа и картите с последователност.",
+    "completed_messages": [
+      {
+        "text": "The temple gate is open. Use it after the gate review.",
+        "bg": "Храмовата порта е отворена. Използвай я след преговора на портата."
+      }
+    ],
+    "dialogue_start_node": "node_1",
+    "dialogue_tree": {
+      "start_node": "node_1",
+      "nodes": {
+        "node_1": {
+          "speaker": "Keeper Maya",
+          "npc_text": "Pattern scanner online. Mark the line for many near shapes.",
+          "npc_text_bg": "Скенерът за модели е включен. Отбележи реда за много близки форми.",
+          "options": [
+            {
+              "text": "These shapes are near.",
+              "is_correct": true,
+              "next_node": "node_2"
+            },
+            {
+              "text": "This shapes are near.",
+              "is_correct": false,
+              "feedback_bg": "Shapes са много, затова казваме these shapes."
+            },
+            {
+              "text": "That shapes are near.",
+              "is_correct": false,
+              "feedback_bg": "That е за едно далечно нещо."
+            }
+          ]
+        },
+        "node_2": {
+          "speaker": "Keeper Maya",
+          "npc_text": "Good. Now tag the line for many far numbers.",
+          "npc_text_bg": "Добре. Сега маркирай реда за много далечни числа.",
+          "options": [
+            {
+              "text": "Those numbers are far.",
+              "is_correct": true
+            },
+            {
+              "text": "That numbers are far.",
+              "is_correct": false,
+              "feedback_bg": "Numbers са много, затова използваме those."
+            },
+            {
+              "text": "This numbers is far.",
+              "is_correct": false,
+              "feedback_bg": "This е за едно близко нещо. Numbers са много."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "exit_marker": {
+    "id": "temple_gate",
+    "label": "temple gate",
+    "x": 834,
+    "y": 248,
+    "zone": {
+      "width": 190,
+      "height": 210
+    },
+    "walk_to": {
+      "x": 842,
+      "y": 522
+    },
+    "required_flag": "temple_gate_open",
+    "command": "Walk to temple gate",
+    "locked_speaker": "Alex",
+    "locked_text": "The temple gate is closed. I need Keeper Maya's pattern check first.",
+    "locked_text_bg": "Храмовата порта е затворена. Първо ми трябва проверката на модела от Keeper Maya.",
+    "unlocked_command": "The temple gate is open!",
+    "unlocked_status": "Temple gate open",
+    "unlocked_toast": "Pattern temple complete."
+  }
+}

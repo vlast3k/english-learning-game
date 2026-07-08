@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-10",
+  "mission_puzzle": "level10_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level10_understand_mission",
+      "title": "Read the Earth helper board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level10.mission_understood"]
+    },
+    {
+      "id": "level10_recycling_bin",
+      "title": "Find the recycling bin clue",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level10_understand_mission", "status": "completed" },
+      "produces": ["level10.recycling_bin_collected"]
+    },
+    {
+      "id": "level10_reuse_box",
+      "title": "Check the reuse box",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level10_understand_mission", "status": "completed" },
+      "produces": ["level10.reuse_box_collected"]
+    },
+    {
+      "id": "level10_seed_packet",
+      "title": "Find the seed packet",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level10_understand_mission", "status": "completed" },
+      "produces": ["level10.seed_packet_collected"]
+    },
+    {
+      "id": "level10_ranger_check",
+      "title": "Pass Ranger Nia's Earth helper check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level10_recycling_bin", "status": "completed" },
+          { "puzzle": "level10_reuse_box", "status": "completed" },
+          { "puzzle": "level10_seed_packet", "status": "completed" }
+        ]
+      },
+      "produces": ["level10.ranger_approved"]
+    },
+    {
+      "id": "level10_earth_gate_exit",
+      "title": "Walk through the Earth gate",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level10_ranger_check", "status": "completed" },
+      "produces": ["level10.complete", "campaign.levels_01_to_10_complete"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level10-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-10" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level10_understand_mission" }]
+    },
+    {
+      "id": "level10-collect-recycling-bin",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "recycling_bin" },
+      "condition": { "puzzle": "level10_recycling_bin", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "recycling_bin" },
+        { "type": "puzzle.complete", "puzzle": "level10_recycling_bin" },
+        { "type": "ui.vocab.show", "hotspot": "recycling_bin" }
+      ]
+    },
+    {
+      "id": "level10-collect-reuse-box",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "reuse_box" },
+      "condition": { "puzzle": "level10_reuse_box", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "reuse_box" },
+        { "type": "puzzle.complete", "puzzle": "level10_reuse_box" },
+        { "type": "ui.vocab.show", "hotspot": "reuse_box" }
+      ]
+    },
+    {
+      "id": "level10-collect-seed-packet",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "seed_packet" },
+      "condition": { "puzzle": "level10_seed_packet", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "seed_packet" },
+        { "type": "puzzle.complete", "puzzle": "level10_seed_packet" },
+        { "type": "ui.vocab.show", "hotspot": "seed_packet" }
+      ]
+    },
+    {
+      "id": "level10-ranger-opens-earth-gate",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "ranger_nia" },
+      "condition": { "puzzle": "level10_ranger_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level10_ranger_check" },
+        { "type": "flag.set", "flag": "earth_gate_open", "value": true },
+        { "type": "ui.status.set", "text": "Earth gate open" },
+        { "type": "ui.toast", "text": "Ranger Nia opened the Earth gate!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level10-earth-gate-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "earth_gate" },
+      "condition": { "not": { "puzzle": "level10_ranger_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The Earth gate is closed. I need Ranger Nia's helper check first.",
+          "bg": "Портата на Земята е затворена. Първо ми трябва проверката на Ranger Nia."
+        }
+      ]
+    },
+    {
+      "id": "level10-complete-earth-helper-mission",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "earth_gate" },
+      "condition": { "puzzle": "level10_ranger_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level10_earth_gate_exit" },
+        { "type": "fact.set", "fact": "level10.complete", "value": true },
+        {
+          "type": "campaign.complete",
+          "fact": "campaign.levels_01_to_10_complete",
+          "status_text": "Missions 01 to 10 complete",
+          "toast": "Excellent Earth helper work, Agent Alex!"
+        }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "recycling_bin": { "puzzle_id": "level10_recycling_bin" },
+      "reuse_box": { "puzzle_id": "level10_reuse_box" },
+      "seed_packet": { "puzzle_id": "level10_seed_packet" }
+    },
+    "guide": { "id": "ranger_nia", "puzzle_id": "level10_ranger_check" },
+    "exit": {
+      "id": "earth_gate",
+      "puzzle_id": "level10_earth_gate_exit",
+      "requires_puzzle": "level10_ranger_check"
+    }
+  }
+}

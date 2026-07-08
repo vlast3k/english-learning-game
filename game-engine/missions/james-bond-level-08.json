@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-08",
+  "mission_puzzle": "level08_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level08_understand_mission",
+      "title": "Read the pattern wall",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level08.mission_understood"]
+    },
+    {
+      "id": "level08_shape_tiles",
+      "title": "Sort the shape tiles",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level08_understand_mission", "status": "completed" },
+      "produces": ["level08.shape_tiles_collected"]
+    },
+    {
+      "id": "level08_number_stones",
+      "title": "Count the number stones",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level08_understand_mission", "status": "completed" },
+      "produces": ["level08.number_stones_collected"]
+    },
+    {
+      "id": "level08_sequence_cards",
+      "title": "Complete the sequence cards",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level08_understand_mission", "status": "completed" },
+      "produces": ["level08.sequence_cards_collected"]
+    },
+    {
+      "id": "level08_keeper_check",
+      "title": "Pass Keeper Maya's pattern check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level08_shape_tiles", "status": "completed" },
+          { "puzzle": "level08_number_stones", "status": "completed" },
+          { "puzzle": "level08_sequence_cards", "status": "completed" }
+        ]
+      },
+      "produces": ["level08.keeper_approved"]
+    },
+    {
+      "id": "level08_temple_gate_exit",
+      "title": "Walk through the temple gate",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level08_keeper_check", "status": "completed" },
+      "produces": ["level08.complete", "level09.unlocked"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level08-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-08" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level08_understand_mission" }]
+    },
+    {
+      "id": "level08-collect-shape-tiles",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "shape_tiles" },
+      "condition": { "puzzle": "level08_shape_tiles", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "shape_tiles" },
+        { "type": "puzzle.complete", "puzzle": "level08_shape_tiles" },
+        { "type": "ui.vocab.show", "hotspot": "shape_tiles" }
+      ]
+    },
+    {
+      "id": "level08-collect-number-stones",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "number_stones" },
+      "condition": { "puzzle": "level08_number_stones", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "number_stones" },
+        { "type": "puzzle.complete", "puzzle": "level08_number_stones" },
+        { "type": "ui.vocab.show", "hotspot": "number_stones" }
+      ]
+    },
+    {
+      "id": "level08-collect-sequence-cards",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "sequence_cards" },
+      "condition": { "puzzle": "level08_sequence_cards", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "sequence_cards" },
+        { "type": "puzzle.complete", "puzzle": "level08_sequence_cards" },
+        { "type": "ui.vocab.show", "hotspot": "sequence_cards" }
+      ]
+    },
+    {
+      "id": "level08-keeper-opens-gate",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "keeper_maya" },
+      "condition": { "puzzle": "level08_keeper_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level08_keeper_check" },
+        { "type": "flag.set", "flag": "temple_gate_open", "value": true },
+        { "type": "ui.status.set", "text": "Temple gate open" },
+        { "type": "ui.toast", "text": "Keeper Maya opened the gate!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level08-temple-gate-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "temple_gate" },
+      "condition": { "not": { "puzzle": "level08_keeper_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The temple gate is closed. I need Keeper Maya's pattern check first.",
+          "bg": "Храмовата порта е затворена. Първо ми трябва проверката на модела от Keeper Maya."
+        }
+      ]
+    },
+    {
+      "id": "level08-complete-pattern-temple",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "temple_gate" },
+      "condition": { "puzzle": "level08_keeper_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level08_temple_gate_exit" },
+        { "type": "fact.set", "fact": "level08.complete", "value": true },
+        { "type": "fact.set", "fact": "level09.unlocked", "value": true },
+        { "type": "inventory.clear" },
+        { "type": "ui.status.set", "text": "Travelling to Seasons Garden" },
+        { "type": "ui.toast", "text": "Mission 09 unlocked!" },
+        { "type": "scene.transition", "scenario": "scenarios/james-bond-level-09-content.json", "delay_ms": 450 }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "shape_tiles": { "puzzle_id": "level08_shape_tiles" },
+      "number_stones": { "puzzle_id": "level08_number_stones" },
+      "sequence_cards": { "puzzle_id": "level08_sequence_cards" }
+    },
+    "guide": { "id": "keeper_maya", "puzzle_id": "level08_keeper_check" },
+    "exit": {
+      "id": "temple_gate",
+      "puzzle_id": "level08_temple_gate_exit",
+      "requires_puzzle": "level08_keeper_check"
+    }
+  }
+}

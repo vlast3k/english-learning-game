@@ -1,0 +1,56 @@
+{
+  "scene_id": "james-bond-level-08",
+  "status": "integrated",
+  "style_guide": "Painted kid-friendly spy adventure, readable Pattern Temple objects, no text inside generated images.",
+  "assets": [
+    {
+      "id": "level08_background",
+      "type": "background",
+      "size": "1672x941",
+      "path": "assets/james-bond/level-08-pattern-temple/generated/pattern-temple-background-v2.png",
+      "texture_key": "campBg",
+      "prompt": "A bright jungle stone temple courtyard with a carved pattern wall, bench-sized shape tiles, small number stones, small sequence tablets, floor star mosaic, open lower foreground, and a clear temple gate exit on the right; no floating props or oversized clue objects."
+    },
+    {
+      "id": "level08_interactive_props",
+      "type": "interactive_props",
+      "size": "2172x724",
+      "path": "assets/james-bond/level-08-pattern-temple/generated/interactive-props.png",
+      "texture_key": "interactiveProps",
+      "prompt": "Transparent-background prop atlas for Pattern Temple: pattern wall tablet, shape tiles, number stones, sequence cards, and glowing temple gate marker; no readable text."
+    },
+    {
+      "id": "level08_hero_reuse",
+      "type": "hero_spritesheet",
+      "size": "768x660",
+      "path": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+      "texture_key": "hero",
+      "decision": "Reuse the established Agent Alex spritesheet for campaign continuity."
+    },
+    {
+      "id": "level08_hero_portraits_reuse",
+      "type": "hero_portraits",
+      "size": "1024x1024",
+      "path": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
+      "texture_key": "heroPortraits",
+      "decision": "Reuse the established Agent Alex portrait sheet for dialogue expressions."
+    },
+    {
+      "id": "level08_guide_reuse",
+      "type": "guide_spritesheet",
+      "size": "768x660",
+      "path": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
+      "texture_key": "guide",
+      "decision": "Reuse the polished existing guide spritesheet until a dedicated Keeper Maya sheet can match the same quality and walk-cycle constraints."
+    }
+  ],
+  "generated_outputs": [
+    "assets/james-bond/level-08-pattern-temple/generated/pattern-temple-background-v2.png",
+    "assets/james-bond/level-08-pattern-temple/generated/interactive-props.png"
+  ],
+  "source_outputs": [
+    "/Users/I024148/.codex/generated_images/019f3c7e-2e1a-7c11-bbec-2140ae831828/ig_022d2028857dea57016a4d3a5471848191926f9e40e06b0e87.png",
+    "/Users/I024148/.codex/generated_images/019f38ee-c79a-7992-94c8-999b9b691bf5/ig_074961e165be3439016a4c0a46948c81918e390522519cc60a.png"
+  ],
+  "integration_note": "Level 08 now uses an embedded-prop Pattern Temple background for all world objects. The transparent prop atlas remains referenced only for inventory reward icons; scene hotspots and the temple gate are represented by painted background art."
+}

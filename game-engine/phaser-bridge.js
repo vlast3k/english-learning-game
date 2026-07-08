@@ -2,7 +2,9 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260706-level03-art-1";
+  const ENGINE_ASSET_VERSION = "20260708-dynamic-briefing-panel";
+  const BRIDGE_GAME_WIDTH = 1024;
+  const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
 
   function loadJson(url) {
@@ -19,18 +21,40 @@
     return null;
   }
 
+  function normalizeManifestPath(path) {
+    const value = String(path || "").trim();
+    if (!value || value.includes("://") || value.startsWith("/") || value.includes("..")) {
+      return null;
+    }
+    return value;
+  }
+
   function installEngineScene(SceneClass) {
     return class PuzzleEngineScene extends SceneClass {
+      getEngineManifestUrl() {
+        if (this.contentModel?.engine_manifest === null || this.contentModel?.engine_manifest === false) {
+          return null;
+        }
+        const configuredPath = normalizeManifestPath(this.contentModel?.engine_manifest);
+        if (configuredPath) {
+          return `${configuredPath}?v=${ENGINE_ASSET_VERSION}`;
+        }
+        const sceneId = String(this.contentModel?.scene_id || "").trim();
+        if (!sceneId) {
+          return null;
+        }
+        return `game-engine/missions/${sceneId}.json?v=${ENGINE_ASSET_VERSION}`;
+      }
+
       getEngineConfig() {
         if (this.engineConfig !== undefined) {
           return this.engineConfig;
         }
-        const sceneId = this.contentModel?.scene_id;
-        if (!sceneId?.startsWith("james-bond-")) {
+        const url = this.getEngineManifestUrl();
+        if (!url) {
           this.engineConfig = null;
           return null;
         }
-        const url = `game-engine/missions/${sceneId}.json?v=${ENGINE_ASSET_VERSION}`;
         this.engineConfig = loadJson(url);
         return this.engineConfig;
       }
@@ -195,10 +219,12 @@
         return reviewWords.map((word, index) => {
           const direction = index % 2 === 0 ? "en-bg" : "bg-en";
           const promptWord = direction === "en-bg" ? word.english : word.bulgarian;
-          const targetLanguage = direction === "en-bg" ? "Bulgarian" : "English";
+          const text = direction === "en-bg"
+            ? `Gate review ${index + 1}/10. Decode the field word "${promptWord}". Tap its Bulgarian code word.`
+            : `Gate review ${index + 1}/10. The clue says "${promptWord}". Tap its English code word.`;
           return {
             id: `exit-gate-review-${index + 1}`,
-            text: `Gate review ${index + 1}/10. Choose the ${targetLanguage} word for: ${promptWord}`,
+            text,
             word,
             direction,
           };
@@ -361,14 +387,14 @@
         if (puzzleId === missionPuzzle) {
           const planId = this.contentModel?.level_plan?.plan_hotspot_id;
           const planHotspot = this.hotspots?.find((hotspot) => hotspot.id === planId);
-          return `Read the ${planHotspot?.label || "mission plan"} first.`;
+          return `Read the ${planHotspot?.label || this.contentModel?.level_plan?.title || "plan"} first.`;
         }
         const hotspot = this.getAssistantHotspotForPuzzle(puzzleId);
         if (hotspot) {
           return `Go to the ${hotspot.label}.`;
         }
         if (puzzleId === this.getGuidePuzzleId()) {
-          return `Talk to ${this.contentModel?.guide?.speaker || "the guide"}.`;
+          return `Talk to ${this.contentModel?.guide?.speaker || this.contentModel?.guide?.label || "the helper"}.`;
         }
         const exitNode = this.findAssistantPuzzle(snapshot, puzzleId);
         if (exitNode?.type === "scene_exit") {
@@ -405,8 +431,123 @@
         });
         root.__ENGLISH_GAME_ENGINE__ = this.gameEngine;
         this.restorePuzzleEngineState(bridge);
+        this.createMissionBriefingButton();
+        this.refreshMissionBriefingButton();
+        this.unsubscribeMissionBriefingButton = this.gameEngine.state?.subscribe?.(() => {
+          this.refreshMissionBriefingButton();
+        });
         this.gameEngine.emit("scene.started", { target: this.contentModel.scene_id });
-        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.gameEngine?.destroy());
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+          this.unsubscribeMissionBriefingButton?.();
+          this.gameEngine?.destroy();
+        });
+      }
+
+      createMissionBriefingButton() {
+        if (this.missionBriefingButton || !this.getLevelIntroPlan()?.mission) {
+          return;
+        }
+        const x = BRIDGE_GAME_WIDTH - 190;
+        const y = 98;
+        const button = this.add.container(x, y).setDepth(905).setSize(BRIEFING_BUTTON_WIDTH, 48);
+        const bg = this.add.graphics();
+        const icon = this.add.graphics();
+        const label = this.add.text(8, 0, "BRIEF", {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "14px",
+          fontStyle: "700",
+          color: "#173837",
+        }).setOrigin(0, 0.5);
+        const hitPlate = this.add.zone(0, 0, BRIEFING_BUTTON_WIDTH + 8, 54).setInteractive({ useHandCursor: true });
+        button.add([bg, icon, label, hitPlate]);
+        button.bg = bg;
+        button.icon = icon;
+        button.label = label;
+        button.hitPlate = hitPlate;
+        button.drawState = "idle";
+        const redraw = (state = "idle") => {
+          button.drawState = state;
+          this.drawMissionBriefingButton(state);
+        };
+        hitPlate.on("pointerover", () => {
+          redraw("hover");
+          this.setCommand("Read mission briefing");
+        });
+        hitPlate.on("pointerout", () => redraw("idle"));
+        hitPlate.on("pointerdown", () => {
+          redraw("down");
+          this.openMissionBriefingFromHud();
+        });
+        hitPlate.on("pointerup", () => redraw("hover"));
+        this.missionBriefingButton = button;
+      }
+
+      isMissionBriefingComplete() {
+        const missionPuzzle = this.gameEngine?.config?.mission_puzzle;
+        return Boolean(missionPuzzle && this.gameEngine.getPuzzleStatus(missionPuzzle) === "completed");
+      }
+
+      drawMissionBriefingButton(state = "idle") {
+        const button = this.missionBriefingButton;
+        if (!button) {
+          return;
+        }
+        const complete = this.isMissionBriefingComplete();
+        const hover = state === "hover";
+        const down = state === "down";
+        const fill = complete ? 0x42d982 : 0xf4c44e;
+        const edge = complete ? 0x0f7a4c : 0x9b7343;
+        const halfWidth = BRIEFING_BUTTON_WIDTH / 2;
+        button.bg.clear();
+        button.bg.fillStyle(0x0b1d18, down ? 0.34 : 0.24);
+        button.bg.fillRoundedRect(-halfWidth + 3, -20, BRIEFING_BUTTON_WIDTH, 44, 9);
+        button.bg.fillStyle(fill, down ? 0.84 : 0.96);
+        button.bg.lineStyle(3, hover || down ? 0xfff7d0 : edge, hover || down ? 1 : 0.88);
+        button.bg.fillRoundedRect(-halfWidth, -24, BRIEFING_BUTTON_WIDTH, 44, 9);
+        button.bg.strokeRoundedRect(-halfWidth, -24, BRIEFING_BUTTON_WIDTH, 44, 9);
+        button.bg.fillStyle(0xfffbef, complete ? 0.24 : 0.32);
+        button.bg.fillRoundedRect(-halfWidth + 7, -17, BRIEFING_BUTTON_WIDTH - 14, 12, 6);
+
+        button.icon.clear();
+        button.icon.fillStyle(0xfffbef, 0.92);
+        button.icon.lineStyle(2, 0x173837, 0.74);
+        button.icon.fillRoundedRect(-58, -12, 28, 24, 5);
+        button.icon.strokeRoundedRect(-58, -12, 28, 24, 5);
+        button.icon.lineStyle(1, 0x173837, 0.55);
+        button.icon.beginPath();
+        button.icon.moveTo(-52, -4);
+        button.icon.lineTo(-36, -4);
+        button.icon.moveTo(-52, 3);
+        button.icon.lineTo(-39, 3);
+        button.icon.strokePath();
+        if (complete) {
+          button.icon.lineStyle(3, 0x0f7a4c, 1);
+          button.icon.beginPath();
+          button.icon.moveTo(-51, 12);
+          button.icon.lineTo(-45, 18);
+          button.icon.lineTo(-33, 6);
+          button.icon.strokePath();
+        }
+        button.label.setColor(complete ? "#073b26" : "#4f351c");
+      }
+
+      refreshMissionBriefingButton() {
+        if (!this.missionBriefingButton) {
+          return;
+        }
+        if (this.isMissionBriefingComplete()) {
+          this.validatedSceneIntroTranslations.add(this.getLevelIntroId());
+        }
+        this.drawMissionBriefingButton(this.missionBriefingButton.drawState || "idle");
+      }
+
+      openMissionBriefingFromHud() {
+        this.closeBubble();
+        this.setCommand("Read mission briefing");
+        if (this.isMissionBriefingComplete()) {
+          this.validatedSceneIntroTranslations.add(this.getLevelIntroId());
+        }
+        this.openLevelIntro(true);
       }
 
       resetPuzzleEngineStorageForDev(config) {
@@ -458,7 +599,7 @@
           refreshExit: () => this.refreshEngineExitMarker(),
           refreshHotspots: () => this.refreshEngineHotspots(),
           showDialog: (action) => this.showSpeechBubble({
-            speaker: action.speaker || "Alex",
+            speaker: action.speaker || this.contentModel?.player?.speaker || this.contentModel?.hero?.speaker || "Hero",
             text: action.text || "That path is not ready yet.",
             bg: action.bg || "Този път още не е готов.",
             anchor: action.anchor || { x: this.hero.x + 18, y: this.hero.y - 100 },
@@ -563,9 +704,9 @@
         const puzzleId = this.getHotspotPuzzleId(hotspot);
         if (this.gameEngine && puzzleId && this.gameEngine.getPuzzleStatus(puzzleId) === "locked") {
           this.showSpeechBubble({
-            speaker: "Alex",
-            text: hotspot.locked_text || "I need to understand the mission briefing first.",
-            bg: hotspot.locked_text_bg || "Първо трябва да разбера брифинга за мисията.",
+            speaker: hotspot.locked_speaker || this.contentModel?.player?.speaker || this.contentModel?.hero?.speaker || "Hero",
+            text: hotspot.locked_text || "I need to understand the plan first.",
+            bg: hotspot.locked_text_bg || "Първо трябва да разбера плана.",
             anchor: { x: hotspot.x, y: hotspot.y - 40 },
             options: [{ text: "OK", action: () => this.closeBubble() }],
           });
@@ -672,7 +813,7 @@
           return;
         }
         this.closeBubble();
-        this.setCommand("Talk to guide");
+        this.setCommand(`Talk to ${guide.speaker || guide.label || "helper"}`);
         this.walkHeroTo(guide.walk_to.x, guide.walk_to.y, () => {
           this.faceHeroToward(this.guide.x, this.guide.y, "normal");
           this.playGuideTalk();
@@ -721,8 +862,9 @@
           return;
         }
         this.closeBubble();
+        const guideBinding = this.getEngineConfig().bindings?.guide || {};
         this.gameEngine.emit("guide.completed", {
-          target: this.getEngineConfig().bindings?.guide?.id || "director",
+          target: guideBinding.id || this.contentModel?.guide?.id || this.contentModel?.guide?.speaker || "guide",
           puzzle_id: this.getGuidePuzzleId(),
         });
       }

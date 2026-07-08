@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "campaign_id": "junior-agent-spy-academy",
+  "storage_key": "english-game:junior-agent-spy-academy",
+  "scene_id": "james-bond-level-11",
+  "mission_puzzle": "level11_understand_mission",
+  "debug": { "enabled": true },
+  "initial_state": {
+    "facts": {},
+    "inventory": [],
+    "counters": {},
+    "puzzles": {}
+  },
+  "puzzles": [
+    {
+      "id": "level11_understand_mission",
+      "title": "Read the message board",
+      "type": "mission_briefing",
+      "requires": null,
+      "produces": ["level11.mission_understood"]
+    },
+    {
+      "id": "level11_city_postcard",
+      "title": "Find the city postcard",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level11_understand_mission", "status": "completed" },
+      "produces": ["level11.city_postcard_collected"]
+    },
+    {
+      "id": "level11_country_postcard",
+      "title": "Find the country postcard",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level11_understand_mission", "status": "completed" },
+      "produces": ["level11.country_postcard_collected"]
+    },
+    {
+      "id": "level11_routine_card",
+      "title": "Find the routine card",
+      "type": "learning_puzzle",
+      "requires": { "puzzle": "level11_understand_mission", "status": "completed" },
+      "produces": ["level11.routine_card_collected"]
+    },
+    {
+      "id": "level11_agent_check",
+      "title": "Pass Agent Nora's finale check",
+      "type": "gate",
+      "requires": {
+        "all": [
+          { "puzzle": "level11_city_postcard", "status": "completed" },
+          { "puzzle": "level11_country_postcard", "status": "completed" },
+          { "puzzle": "level11_routine_card", "status": "completed" }
+        ]
+      },
+      "produces": ["level11.agent_approved"]
+    },
+    {
+      "id": "level11_final_gate_exit",
+      "title": "Walk through the final academy gate",
+      "type": "scene_exit",
+      "critical": true,
+      "final": true,
+      "requires": { "puzzle": "level11_agent_check", "status": "completed" },
+      "produces": ["level11.complete", "campaign.levels_01_to_11_complete"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "level11-mission-understood",
+      "once": true,
+      "event": { "type": "mission.understood", "target": "james-bond-level-11" },
+      "actions": [{ "type": "puzzle.complete", "puzzle": "level11_understand_mission" }]
+    },
+    {
+      "id": "level11-collect-city-postcard",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "city_postcard" },
+      "condition": { "puzzle": "level11_city_postcard", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "city_postcard" },
+        { "type": "puzzle.complete", "puzzle": "level11_city_postcard" },
+        { "type": "ui.vocab.show", "hotspot": "city_postcard" }
+      ]
+    },
+    {
+      "id": "level11-collect-country-postcard",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "country_postcard" },
+      "condition": { "puzzle": "level11_country_postcard", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "country_postcard" },
+        { "type": "puzzle.complete", "puzzle": "level11_country_postcard" },
+        { "type": "ui.vocab.show", "hotspot": "country_postcard" }
+      ]
+    },
+    {
+      "id": "level11-collect-routine-card",
+      "once": true,
+      "event": { "type": "collectible.completed", "target": "routine_card" },
+      "condition": { "puzzle": "level11_routine_card", "status": "available" },
+      "actions": [
+        { "type": "inventory.add", "item": "routine_card" },
+        { "type": "puzzle.complete", "puzzle": "level11_routine_card" },
+        { "type": "ui.vocab.show", "hotspot": "routine_card" }
+      ]
+    },
+    {
+      "id": "level11-nora-opens-final-gate",
+      "once": true,
+      "event": { "type": "guide.completed", "target": "agent_nora" },
+      "condition": { "puzzle": "level11_agent_check", "status": "available" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level11_agent_check" },
+        { "type": "flag.set", "flag": "final_academy_gate_open", "value": true },
+        { "type": "ui.status.set", "text": "Final academy gate open" },
+        { "type": "ui.toast", "text": "Agent Nora opened the final gate!" },
+        { "type": "exit.refresh" }
+      ]
+    },
+    {
+      "id": "level11-final-gate-locked",
+      "priority": 10,
+      "event": { "type": "exit.reached", "target": "final_academy_gate" },
+      "condition": { "not": { "puzzle": "level11_agent_check", "status": "completed" } },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The final academy gate is closed. I need Agent Nora's check first.",
+          "bg": "Последната порта на академията е затворена. Първо ми трябва проверката на Agent Nora."
+        }
+      ]
+    },
+    {
+      "id": "level11-complete-city-country-finale",
+      "priority": 20,
+      "once": true,
+      "event": { "type": "exit.reached", "target": "final_academy_gate" },
+      "condition": { "puzzle": "level11_agent_check", "status": "completed" },
+      "actions": [
+        { "type": "puzzle.complete", "puzzle": "level11_final_gate_exit" },
+        { "type": "fact.set", "fact": "level11.complete", "value": true },
+        {
+          "type": "campaign.complete",
+          "fact": "campaign.levels_01_to_11_complete",
+          "status_text": "Missions 01 to 11 complete",
+          "toast": "Excellent finale work, Agent Alex!"
+        }
+      ]
+    }
+  ],
+  "bindings": {
+    "hotspots": {
+      "city_postcard": { "puzzle_id": "level11_city_postcard" },
+      "country_postcard": { "puzzle_id": "level11_country_postcard" },
+      "routine_card": { "puzzle_id": "level11_routine_card" }
+    },
+    "guide": { "id": "agent_nora", "puzzle_id": "level11_agent_check" },
+    "exit": {
+      "id": "final_academy_gate",
+      "puzzle_id": "level11_final_gate_exit",
+      "requires_puzzle": "level11_agent_check"
+    }
+  }
+}

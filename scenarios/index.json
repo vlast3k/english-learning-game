@@ -1,0 +1,16 @@
+{
+  "default_scenario": "scenarios/james-bond-level-01-content.json",
+  "level_scenarios": {
+    "1": "scenarios/james-bond-level-01-content.json",
+    "2": "scenarios/james-bond-level-02-content.json",
+    "3": "scenarios/james-bond-level-03-content.json",
+    "4": "scenarios/james-bond-level-04-content.json",
+    "5": "scenarios/james-bond-level-05-content.json",
+    "6": "scenarios/james-bond-level-06-content.json",
+    "7": "scenarios/james-bond-level-07-content.json",
+    "8": "scenarios/james-bond-level-08-content.json",
+    "9": "scenarios/james-bond-level-09-content.json",
+    "10": "scenarios/james-bond-level-10-content.json",
+    "11": "scenarios/james-bond-level-11-content.json"
+  }
+}

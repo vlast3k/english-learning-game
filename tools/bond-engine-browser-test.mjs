@@ -386,9 +386,9 @@ async function clickExitThroughUi(page, expectedPuzzleId) {
     ) {
       fail("Exit gate review question should have progress, three choices, and no hover translation bars", reviewState);
     }
-    if (reviewState.prompt.includes("Bulgarian word")) {
+    if (reviewState.prompt.includes("Bulgarian code word")) {
       directions.push("en-bg");
-    } else if (reviewState.prompt.includes("English word")) {
+    } else if (reviewState.prompt.includes("English code word")) {
       directions.push("bg-en");
     } else {
       fail("Exit gate review should state the answer direction", reviewState);
@@ -536,11 +536,9 @@ try {
         id: hotspot.id,
         scenery: hotspot.scenery,
         visible: hotspot.marker.visible,
-        hasSceneIcon: Boolean(hotspot.sceneIcon),
         labelAlpha: hotspot.labelText?.alpha ?? 0,
       })),
-      exitHasSceneIcon: Boolean(scene.exitMarker.sceneIcon),
-      exitIconFrame: scene.contentModel.exit_marker.scene_icon.frame,
+      exitZone: scene.contentModel.exit_marker.zone,
       teacherRoleLabel: scene.guide.roleLabel?.text || "",
       teacherHeight: scene.guide.sprite.displayHeight * scene.guide.scaleX,
     };
@@ -549,16 +547,13 @@ try {
     !level3Art.resources.some((resource) => resource.includes("level-03-village-camp/generated/village-camp-background.png"))
     || !level3Art.resources.some((resource) => resource.includes("level-03-village-camp/generated/interactive-props.png"))
     || !level3Art.resources.some((resource) => resource.includes("level-03-village-camp/generated/teacher-guide-spritesheet.png"))
-    || !level3Art.exitHasSceneIcon
     || level3Art.hotspots.some((hotspot) => !hotspot.visible || hotspot.labelAlpha < 0.95)
-    || level3Art.hotspots.some((hotspot) => !hotspot.scenery && hotspot.hasSceneIcon)
-    || level3Art.hotspots.some((hotspot) => hotspot.scenery && !hotspot.hasSceneIcon)
-    || level3Art.exitIconFrame.x !== 1152
-    || level3Art.exitIconFrame.y !== 512
+    || level3Art.exitZone.width <= 0
+    || level3Art.exitZone.height <= 0
     || level3Art.teacherRoleLabel !== "Teacher"
     || level3Art.teacherHeight < 205
   ) {
-    fail("Level 03 should render readable village art, labels, teacher role, and distinct map-room exit cue", level3Art);
+    fail("Level 03 should render embedded village art, labels, teacher role, and a painted map-room exit zone", level3Art);
   }
   await page.evaluate(() => window.__ENGLISH_GAME_ENGINE__.emit("mission.understood", { target: "james-bond-level-03" }));
   await completeCollectibleThroughUi(page, "bread_note", [
@@ -919,7 +914,7 @@ try {
     fail("Level 06 state was not retained after Level 07 navigation", level7);
   }
   if (
-    !level7.resources.some((resource) => resource.includes("level-07-festival-puzzle/generated/festival-background.png"))
+    !level7.resources.some((resource) => resource.includes("level-07-festival-puzzle/generated/festival-background-v2.png"))
     || !level7.resources.some((resource) => resource.includes("level-07-festival-puzzle/generated/interactive-props.png"))
   ) {
     fail("Level 07 should load generated background and prop assets", level7.resources);

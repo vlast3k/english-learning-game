@@ -67,6 +67,80 @@ function englishTokens(text) {
     .filter(Boolean) || [];
 }
 
+const BULGARIAN_LATIN_APPROX = {
+  а: "a",
+  б: "b",
+  в: "v",
+  г: "g",
+  д: "d",
+  е: "e",
+  ж: "zh",
+  з: "z",
+  и: "i",
+  й: "y",
+  к: "k",
+  л: "l",
+  м: "m",
+  н: "n",
+  о: "o",
+  п: "p",
+  р: "r",
+  с: "s",
+  т: "t",
+  у: "u",
+  ф: "f",
+  х: "h",
+  ц: "ts",
+  ч: "ch",
+  ш: "sh",
+  щ: "sht",
+  ъ: "a",
+  ь: "",
+  ю: "yu",
+  я: "ya",
+};
+
+function normalizeLatinWord(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function latinizeBulgarian(value) {
+  return [...String(value || "").toLowerCase()]
+    .map((character) => BULGARIAN_LATIN_APPROX[character] ?? character)
+    .join("")
+    .replace(/[^a-z]/g, "");
+}
+
+function editDistance(left, right) {
+  const table = Array.from({ length: left.length + 1 }, (_, row) => [row]);
+  for (let column = 1; column <= right.length; column += 1) {
+    table[0][column] = column;
+  }
+  for (let row = 1; row <= left.length; row += 1) {
+    for (let column = 1; column <= right.length; column += 1) {
+      table[row][column] = Math.min(
+        table[row - 1][column] + 1,
+        table[row][column - 1] + 1,
+        table[row - 1][column - 1] + (left[row - 1] === right[column - 1] ? 0 : 1),
+      );
+    }
+  }
+  return table[left.length][right.length];
+}
+
+function isNearTransliteration(english, bulgarian) {
+  const normalizedEnglish = normalizeLatinWord(english);
+  const normalizedBulgarian = latinizeBulgarian(bulgarian);
+  if (normalizedEnglish.length < 4 || normalizedBulgarian.length < 4) {
+    return false;
+  }
+  const longestLength = Math.max(normalizedEnglish.length, normalizedBulgarian.length);
+  const similarity = 1 - (editDistance(normalizedEnglish, normalizedBulgarian) / longestLength);
+  return similarity >= 0.78
+    || normalizedEnglish.includes(normalizedBulgarian)
+    || normalizedBulgarian.includes(normalizedEnglish);
+}
+
 function collectTranslatableTexts(content) {
   const texts = [];
   texts.push({ pathLabel: "level_plan.mission", text: content.level_plan.mission });
@@ -148,6 +222,30 @@ function validateTranslationCheck(translationCheck, pathLabel) {
   }
 }
 
+const WORKSHEET_STYLE_PATTERNS = [
+  /choose the (?:best|true|correct) sentence/i,
+  /choose the (?:city|country|garden|summer|festival|boots|food|pattern|route|mountain) sentence/i,
+  /choose the correct question/i,
+  /choose the (?:english|bulgarian) word for/i,
+  /which sentence (?:uses|points|starts|talks)/i,
+  /which question asks/i,
+];
+
+function validateLanguageQuality(content, fileLabel) {
+  const findings = [];
+  for (const { pathLabel, text } of collectTranslatableTexts(content)) {
+    for (const pattern of WORKSHEET_STYLE_PATTERNS) {
+      if (pattern.test(text)) {
+        findings.push(`${pathLabel}: "${text}"`);
+        break;
+      }
+    }
+  }
+  if (findings.length > 0) {
+    fail(`${fileLabel} contains worksheet-style prompt text; rewrite as spy-academy action text: ${findings.join("; ")}`);
+  }
+}
+
 function validateInventoryPresentation(hotspot, pathLabel) {
   if (!hotspot.inventory) {
     return;
@@ -221,6 +319,9 @@ function validateContent(content, fileLabel, assetPlan = null) {
     fail(`${fileLabel}: schema_version must be 1`);
   }
   requireString(content.scene_id, `${fileLabel}.scene_id`);
+  if (content.engine_manifest !== undefined && content.engine_manifest !== null && content.engine_manifest !== false) {
+    requireWorkspaceAsset(content.engine_manifest, `${fileLabel}.engine_manifest`);
+  }
   validateContentAssets(content, fileLabel, assetPlan);
   if (!content.translations || typeof content.translations !== "object") {
     fail(`${fileLabel}.translations must be an object`);
@@ -229,7 +330,7 @@ function validateContent(content, fileLabel, assetPlan = null) {
   requireString(content.level_plan?.mission, `${fileLabel}.level_plan.mission`);
   requireString(content.level_plan?.mission_bg, `${fileLabel}.level_plan.mission_bg`);
   validateTranslationCheck(content.level_plan?.translation_check, `${fileLabel}.level_plan.translation_check`);
-  if (content.scene_id?.startsWith("james-bond-level-")) {
+  if (content.level_plan?.gate_review_words !== undefined) {
     if (!Array.isArray(content.level_plan?.gate_review_words) || content.level_plan.gate_review_words.length !== 10) {
       fail(`${fileLabel}.level_plan.gate_review_words must contain exactly 10 authored review words`);
     }
@@ -407,6 +508,19 @@ function validateContent(content, fileLabel, assetPlan = null) {
     fail(`${fileLabel} missing translations for ${missingTranslations.join(", ")}`);
   }
 
+  validateLanguageQuality(content, fileLabel);
+
+  const weakGateReviewWords = [];
+  for (const word of content.level_plan.gate_review_words || []) {
+    const translation = content.translations[String(word).toLowerCase()] || content.translations[word];
+    if (translation && isNearTransliteration(word, translation)) {
+      weakGateReviewWords.push(`${word}=${translation}`);
+    }
+  }
+  if (weakGateReviewWords.length > 0) {
+    fail(`${fileLabel}.level_plan.gate_review_words contains near-cognate review words: ${weakGateReviewWords.join(", ")}`);
+  }
+
   return {
     fileLabel,
     hotspotCount: content.hotspots.length,
@@ -428,15 +542,24 @@ for (const file of assetPlanFiles) {
 }
 const validationResults = [];
 let content = null;
+let defaultScenarioFile = "james-bond-level-01-content.json";
+try {
+  const scenarioIndex = JSON.parse(await readFile(path.join(SCENARIOS_DIR, "index.json"), "utf8"));
+  if (scenarioIndex.default_scenario) {
+    defaultScenarioFile = path.basename(scenarioIndex.default_scenario);
+  }
+} catch (_error) {
+  // Older checkouts may not have an index; keep the historical default.
+}
 for (const file of scenarioFiles) {
   const parsed = JSON.parse(await readFile(path.join(SCENARIOS_DIR, file), "utf8"));
   validationResults.push(validateContent(parsed, file, assetPlans.get(parsed.scene_id)));
-  if (file === "james-bond-level-01-content.json") {
+  if (file === defaultScenarioFile) {
     content = parsed;
   }
 }
 if (!content) {
-  fail("james-bond-level-01-content.json must exist");
+  fail(`${defaultScenarioFile} from scenarios/index.json must exist`);
 }
 
 const sandbox = {
@@ -480,14 +603,15 @@ const stubGame = new sandbox.Phaser.Game({ scene: [StubScene] });
 const DataDrivenScene = stubGame.config.scene[0];
 const stubScene = new DataDrivenScene();
 stubScene.preload();
-if (stubScene.loadedJson?.key !== "gameContent" || !stubScene.loadedJson.url.includes("james-bond-level-01-content.json")) {
-  fail("data-driven scene must preload james-bond-level-01-content.json by default");
+if (stubScene.loadedJson?.key !== "gameContent" || !stubScene.loadedJson.url.includes(defaultScenarioFile)) {
+  fail(`data-driven scene must preload ${defaultScenarioFile} by default`);
 }
 stubScene.contentModel = content;
 if (stubScene.createObjectQuizzes() !== content.quizzes) {
   fail("data-driven scene must return quizzes from default content");
 }
-if (stubScene.getWordTranslation("Agent!") !== "агент") {
+const translationProbe = Object.entries(content.translations || {}).find(([_key, value]) => typeof value === "string");
+if (translationProbe && stubScene.getWordTranslation(`${translationProbe[0]}!`) !== translationProbe[1]) {
   fail("data-driven scene must resolve translations from default content");
 }
 
