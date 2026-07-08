@@ -445,7 +445,8 @@ async function validateDialogueUx(page) {
 
   const wordPoint = await gamePointToViewport(page, word.x, word.y);
   await page.mouse.move(wordPoint.x, wordPoint.y);
-  await page.waitForTimeout(3200);
+  await page.mouse.down();
+  await page.waitForTimeout(1200);
   await page.screenshot({ path: path.join(OUT_DIR, "dialogue-word-revealed.png"), fullPage: true });
 
   const revealed = await page.evaluate(() => {
@@ -456,15 +457,25 @@ async function validateDialogueUx(page) {
     return {
       english: item.text,
       balloon: item.translationBalloon?.text.text || null,
+      balloonBottom: item.translationBalloon ? bubble.y + flow.y + item.translationBalloon.y + item.translationBalloon.height : null,
+      pressY: bubble.y + flow.y + item.y + 13,
       balloonFillAlpha: item.translationBalloon?.bg.commandBuffer?.some((command) => command === 1) ?? true,
     };
   });
   if (revealed.english !== word.before || revealed.balloon !== "въже") {
-    fail("hover reveal did not translate the word after 3 seconds", { word, revealed });
+    fail("long press reveal did not translate the word", { word, revealed });
+  }
+  if (revealed.balloonBottom === null || revealed.balloonBottom >= revealed.pressY - 4) {
+    fail("long press translation balloon should appear above the pressed point", { word, revealed });
   }
 
+  await page.mouse.up();
+  await page.waitForTimeout(120);
+  await page.mouse.down();
+  await page.waitForTimeout(240);
   const outPoint = await gamePointToViewport(page, 900, 520);
   await page.mouse.move(outPoint.x, outPoint.y);
+  await page.mouse.up();
   await page.waitForTimeout(120);
   const reset = await page.evaluate(() => {
     const scene = window.phaserGame.scene.getScene("CampScene");
@@ -477,7 +488,7 @@ async function validateDialogueUx(page) {
     };
   });
   if (reset.english !== word.before || reset.hasBalloon) {
-    fail("hover reveal did not reset to English after pointerout", { before: word.before, reset });
+    fail("long press reveal did not reset to English after pointerout", { before: word.before, reset });
   }
 
   await page.evaluate(() => {

@@ -1,8 +1,9 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260708-dynamic-briefing-panel";
+const ASSET_VERSION = "20260708-touch-word-reveal";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
+const WORD_REVEAL_HOLD_MS = 1000;
 const REVEAL_TRANSLATIONS = new Map([
   ["a", "един"],
   ["alex", "Алекс"],
@@ -147,6 +148,8 @@ class CampScene extends Phaser.Scene {
       }
     });
     this.input.on("pointermove", (pointer) => this.resetRevealIfPointerLeft(pointer));
+    this.input.on("pointerup", (pointer) => this.endActiveWordReveal(pointer));
+    this.input.on("pointerupoutside", (pointer) => this.endActiveWordReveal(pointer));
     this.time.delayedCall(280, () => this.openLevelIntro());
   }
 
@@ -1918,8 +1921,12 @@ class CampScene extends Phaser.Scene {
         word.revealBar = bar;
         flow.add(bar);
         word.setInteractive(new Phaser.Geom.Rectangle(0, 0, originalWidth, lineHeight), Phaser.Geom.Rectangle.Contains);
-        word.on("pointerover", () => this.beginWordReveal(word));
-        word.on("pointerout", () => this.endWordReveal(word));
+        word.on("pointerdown", (pointer) => this.beginWordReveal(word, pointer));
+        word.on("pointerout", (pointer) => {
+          if (word.revealPointerId === pointer.id) {
+            this.endWordReveal(word);
+          }
+        });
       }
 
       flow.add(word);
@@ -1951,18 +1958,20 @@ class CampScene extends Phaser.Scene {
     return `${prefix}${translation}${suffix}`;
   }
 
-  beginWordReveal(word) {
+  beginWordReveal(word, pointer = null) {
     if (!word.translationText) {
       return;
     }
     this.endWordReveal(word, false);
     this.activeRevealWord = word;
+    word.revealPointerId = pointer?.id ?? null;
+    word.revealPressPoint = this.getRevealPressPoint(word, pointer);
     word.setColor("#0b5f5d");
     word.revealState = { progress: 0 };
     word.revealTween = this.tweens.add({
       targets: word.revealState,
       progress: 1,
-      duration: 1000,
+      duration: WORD_REVEAL_HOLD_MS,
       ease: "Sine.easeInOut",
       onUpdate: () => this.drawRevealProgress(word, word.revealState.progress),
       onComplete: () => {
@@ -1971,6 +1980,22 @@ class CampScene extends Phaser.Scene {
         this.drawRevealProgress(word, 1);
       },
     });
+  }
+
+  getRevealPressPoint(word, pointer) {
+    if (!pointer || !word.revealFlow) {
+      return {
+        x: word.x + word.revealWidth / 2,
+        y: word.y,
+      };
+    }
+
+    const matrix = word.revealFlow.getWorldTransformMatrix();
+    const point = matrix.applyInverse(pointer.worldX, pointer.worldY);
+    return {
+      x: Phaser.Math.Clamp(point.x, word.x, word.x + word.revealWidth),
+      y: Phaser.Math.Clamp(point.y, word.y, word.y + word.height),
+    };
   }
 
   showTranslationBalloon(word) {
@@ -1985,11 +2010,12 @@ class CampScene extends Phaser.Scene {
     const paddingY = 5;
     const balloonWidth = Math.ceil(text.width + paddingX * 2);
     const balloonHeight = Math.ceil(text.height + paddingY * 2);
-    const centerX = word.x + word.revealWidth / 2;
+    const anchor = word.revealPressPoint || { x: word.x + word.revealWidth / 2, y: word.y };
+    const centerX = anchor.x;
     const maxLeft = (word.revealFlow?.maxWidth ?? 620) - balloonWidth + 8;
     const balloonX = Phaser.Math.Clamp(centerX - balloonWidth / 2, -8, maxLeft);
-    const preferredBalloonY = word.y - balloonHeight - 5;
-    const balloonY = Math.max(4, preferredBalloonY);
+    const preferredBalloonY = anchor.y - balloonHeight - 22;
+    const balloonY = Math.min(preferredBalloonY, word.y - balloonHeight - 6);
     const bg = this.add.graphics();
     bg.fillStyle(0x4d3322, 0.18);
     bg.fillRoundedRect(balloonX + 2, balloonY + 3, balloonWidth, balloonHeight, 9);
@@ -1998,7 +2024,7 @@ class CampScene extends Phaser.Scene {
     bg.fillRoundedRect(balloonX, balloonY, balloonWidth, balloonHeight, 9);
     bg.strokeRoundedRect(balloonX, balloonY, balloonWidth, balloonHeight, 9);
     text.setPosition(balloonX + paddingX, balloonY + paddingY - 1);
-    word.translationBalloon = { bg, text };
+    word.translationBalloon = { bg, text, x: balloonX, y: balloonY, width: balloonWidth, height: balloonHeight };
     word.revealFlow.add([bg, text]);
   }
 
@@ -2035,6 +2061,8 @@ class CampScene extends Phaser.Scene {
     if (this.activeRevealWord === word) {
       this.activeRevealWord = null;
     }
+    word.revealPointerId = null;
+    word.revealPressPoint = null;
   }
 
   resetRevealIfPointerLeft(pointer) {
@@ -2043,9 +2071,23 @@ class CampScene extends Phaser.Scene {
       this.activeRevealWord = null;
       return;
     }
+    if (word.revealPointerId !== null && word.revealPointerId !== pointer.id) {
+      return;
+    }
     const bounds = word.getBounds();
     Phaser.Geom.Rectangle.Inflate(bounds, 4, 8);
     if (!Phaser.Geom.Rectangle.Contains(bounds, pointer.worldX, pointer.worldY)) {
+      this.endWordReveal(word);
+    }
+  }
+
+  endActiveWordReveal(pointer) {
+    const word = this.activeRevealWord;
+    if (!word?.active) {
+      this.activeRevealWord = null;
+      return;
+    }
+    if (word.revealPointerId === null || word.revealPointerId === pointer.id) {
       this.endWordReveal(word);
     }
   }
