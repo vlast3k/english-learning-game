@@ -2,59 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>English Adventure Engine</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f7a78'/%3E%3Cpath d='M8 21h16v3H8zM10 8h12l-2 11h-8z' fill='%23f4b942'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="refresh" content="0; url=phaser.html">
+    <title>Junior Agent Spy Academy</title>
+    <link rel="canonical" href="phaser.html">
+    <script>
+      const target = `phaser.html${window.location.search}${window.location.hash}`;
+      window.location.replace(target);
+    </script>
   </head>
   <body>
-    <main class="app-shell" aria-label="English learning adventure game">
-      <section id="game-container" class="game-container" aria-label="Game scene">
-        <div id="background-layer" class="game-layer background-layer"></div>
-        <div id="interactable-layer" class="game-layer interactable-layer" aria-label="Scene interactables"></div>
-        <div id="player-layer" class="game-layer player-layer" aria-label="Player character"></div>
-        <div id="ui-overlay-layer" class="game-layer ui-overlay-layer">
-          <header class="top-hud" aria-label="Player tools">
-            <section class="inventory-panel" aria-label="Inventory">
-              <span class="hud-label">Inventory</span>
-              <ul id="inventory-list" class="inventory-list" aria-live="polite"></ul>
-            </section>
-            <button id="journal-button" class="journal-button" type="button">Vocabulary Journal</button>
-          </header>
-
-          <p id="scene-status" class="scene-status" aria-live="polite"></p>
-          <p id="command-line" class="command-line" aria-live="polite">Walk to...</p>
-
-          <section id="dialogue-box" class="dialogue-box" aria-live="polite" hidden>
-            <div class="dialogue-header">
-              <p id="dialogue-speaker" class="dialogue-speaker"></p>
-              <button id="dialogue-translate-button" class="translate-button" type="button" aria-label="Show Bulgarian translation">BG</button>
-            </div>
-            <p id="dialogue-text" class="dialogue-text"></p>
-            <p id="dialogue-translation" class="dialogue-translation" aria-live="polite" hidden></p>
-            <p id="dialogue-feedback" class="dialogue-feedback" aria-live="assertive" hidden></p>
-            <div id="dialogue-options" class="dialogue-options"></div>
-          </section>
-
-          <section id="vocabulary-popup" class="vocabulary-popup" aria-live="polite" hidden>
-            <span class="hud-label">New Word</span>
-            <strong id="vocabulary-english"></strong>
-            <span id="vocabulary-bulgarian"></span>
-          </section>
-
-          <section id="journal-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden>
-            <div class="journal-modal">
-              <div class="modal-header">
-                <h2 id="journal-title">Vocabulary Journal</h2>
-                <button id="journal-close-button" class="icon-button" type="button" aria-label="Close journal">X</button>
-              </div>
-              <ul id="journal-list" class="journal-list" aria-live="polite"></ul>
-            </div>
-          </section>
-        </div>
-      </section>
+    <main>
+      <p><a href="phaser.html">Open Junior Agent Spy Academy</a></p>
     </main>
-
-    <script src="main.js"></script>
   </body>
 </html>
