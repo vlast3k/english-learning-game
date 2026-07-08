@@ -1753,7 +1753,9 @@ class CampScene extends Phaser.Scene {
     const feedbackReserve = 104;
     const hiddenFeedbackReserve = 26;
     const speakerTitle = speaker ? `${speaker[0].toUpperCase()}${speaker.slice(1)}` : "";
-    const textFlow = this.createRevealTextFlow(30, 61, text, width - 62, {
+    const textX = 30;
+    const textY = 61;
+    const textFlow = this.createRevealTextFlow(textX, textY, text, width - 62, {
       fontFamily: UI_FONT,
       fontSize: "23px",
       fontStyle: "700",
@@ -1771,6 +1773,9 @@ class CampScene extends Phaser.Scene {
 
     const panel = this.add.graphics();
     this.drawDialoguePanel(panel, width, initialHeight);
+    const textShield = this.add.zone(textX, textY, width - 62, Math.max(48, textFlow.contentHeight))
+      .setOrigin(0, 0)
+      .setInteractive();
 
     const speakerRibbon = this.add.graphics();
     const ribbonWidth = Phaser.Math.Clamp(speakerTitle.length * 16 + 40, 132, 236);
@@ -1805,7 +1810,7 @@ class CampScene extends Phaser.Scene {
       return choice;
     });
 
-    bubble.add([panel, speakerRibbon, speakerBadge, textFlow, ...choices]);
+    bubble.add([panel, textShield, speakerRibbon, speakerBadge, textFlow, ...choices]);
     if (closeButton) {
       bubble.add(closeButton);
     }
