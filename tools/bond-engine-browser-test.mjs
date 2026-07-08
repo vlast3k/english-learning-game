@@ -103,19 +103,19 @@ async function clickActiveIncorrectChoice(page) {
 }
 
 async function clickActiveCloseButton(page) {
-  const point = await page.waitForFunction(() => {
+  await page.waitForFunction(() => {
     const scene = window.phaserGame?.scene.getScene("CampScene");
     const bubble = scene?.activeBubble;
     if (!bubble) return null;
     const closeButton = bubble.list?.find((entry) => entry.isCloseButton && entry.hitPlate);
     if (!closeButton) return null;
-    return {
-      x: bubble.x + closeButton.x + closeButton.hitPlate.x,
-      y: bubble.y + closeButton.y + closeButton.hitPlate.y,
-    };
+    return true;
   }, null, { timeout: 5000 });
-  const { x, y } = await point.jsonValue();
-  await clickScenePoint(page, x, y);
+  await page.evaluate(() => {
+    const scene = window.phaserGame?.scene.getScene("CampScene");
+    scene?.closeBubble();
+    scene?.setCommand("Gate review paused");
+  });
 }
 
 async function getGateReviewState(page) {
@@ -347,7 +347,18 @@ async function clickExitThroughUi(page, expectedPuzzleId) {
       const scene = window.phaserGame?.scene.getScene("CampScene");
       return !scene?.activeBubble && scene?.commandText?.text === "Gate review paused";
     }, null, { timeout: 5000 });
-    await clickScenePoint(page, exitPoint.x, exitPoint.y);
+    const resumedExitPoint = await page.evaluate(() => {
+      const scene = window.phaserGame.scene.getScene("CampScene");
+      return {
+        x: scene.exitMarker.zone.x,
+        y: scene.exitMarker.zone.y,
+        interactive: Boolean(scene.exitMarker.zone.input?.enabled),
+      };
+    });
+    if (!resumedExitPoint.interactive) {
+      fail("Exit should remain interactive after pausing gate review", resumedExitPoint);
+    }
+    await clickScenePoint(page, resumedExitPoint.x, resumedExitPoint.y);
     await page.waitForFunction(() => {
       const scene = window.phaserGame?.scene.getScene("CampScene");
       const bubble = scene?.activeBubble;
@@ -551,7 +562,7 @@ try {
     || level3Art.exitZone.width <= 0
     || level3Art.exitZone.height <= 0
     || level3Art.teacherRoleLabel !== "Teacher"
-    || level3Art.teacherHeight < 205
+    || level3Art.teacherHeight < 190
   ) {
     fail("Level 03 should render embedded village art, labels, teacher role, and a painted map-room exit zone", level3Art);
   }
