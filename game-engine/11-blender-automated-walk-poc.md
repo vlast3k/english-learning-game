@@ -142,3 +142,47 @@ the swing/bend amounts in the `WALK` dict inside `render_hero_articulated_walk.p
 Keep the proximal segment (thigh/upper arm) drawn in front of the distal segment so
 the joint cut stays hidden, and keep `torso_sway` small so the walk row passes the
 character-sprite center-drift check.
+
+## Rig V2 Reboot: Generated Parts First
+
+The next reboot follows the better art-direction approach: generate a puppet kit
+first, then animate parts with Blender. This avoids slicing full-body generated
+walk frames, which bakes in inconsistent feet, neighboring hands, shadows, JPEG
+halos, and frame-to-frame identity drift.
+
+### Current Files
+
+- `assets/james-bond/level-01-briefing/rig-v2/source/hero-puppet-parts-chromakey.png` - selected generated body-part sheet on flat green.
+- `assets/james-bond/level-01-briefing/rig-v2/source/hero-puppet-parts-alpha-preview.png` - extracted alpha preview of the source sheet.
+- `assets/james-bond/level-01-briefing/rig-v2/parts/*.png` - isolated puppet parts.
+- `assets/james-bond/level-01-briefing/rig-v2/parts/contact-sheet.png` - quick visual audit of part names.
+- `assets/james-bond/level-01-briefing/rig-v2/hero-rig-v2.json` - metadata with source bboxes, part sizes, and pivots.
+- `tools/blender/build_hero_rig_v2_parts.py` - green-key removal, component extraction, part naming, pivot metadata.
+- `tools/blender/render_hero_walk_v2.py` - Blender orthographic renderer that places the parts on pivot empties and animates an 8-frame walk.
+
+### Commands
+
+```sh
+python3 tools/blender/build_hero_rig_v2_parts.py
+blender --background --python tools/blender/render_hero_walk_v2.py -- \
+  --output-dir test-results/hero-rig-v2/candidate-04/frames \
+  --frame-count 8
+```
+
+The rendered review artifacts from the first reboot pass are under:
+
+```text
+test-results/hero-rig-v2/
+```
+
+### Current Status
+
+This pipeline is now real and reproducible, but it has not replaced the runtime
+hero yet. The generated parts are clean and alpha-friendly, but the assembled
+candidate still does not beat the installed Gemini component-clean walk strip.
+The main remaining art issue is source-kit anatomy: the torso and limb parts need
+to be generated or edited with more compatible side-view proportions before the
+Blender rig can produce a polished final sprite.
+
+Keep the currently installed `hero-spy-natural-spritesheet.png` until a `rig-v2`
+candidate is reviewed as visually better.

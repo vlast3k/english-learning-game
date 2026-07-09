@@ -4,7 +4,7 @@
   const CONTENT_CACHE_KEY = "gameContent";
   const SCENE_WIDTH = 1024;
   const SCENE_HEIGHT = 576;
-  const ASSET_OVERRIDE_VERSION = "20260708-dynamic-briefing-panel";
+  const ASSET_OVERRIDE_VERSION = "20260709-balanced-spy-walk";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
   const BUILTIN_DEFAULT_SCENARIO = "scenarios/james-bond-level-01-content.json";
   const BUILTIN_LEVEL_SCENARIOS = {

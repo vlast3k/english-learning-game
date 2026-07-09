@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260708-dynamic-briefing-panel";
+  const ENGINE_ASSET_VERSION = "20260709-balanced-spy-walk";
   const BRIDGE_GAME_WIDTH = 1024;
   const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';

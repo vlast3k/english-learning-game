@@ -70,7 +70,7 @@
   },
   "assets": {
     "background": "assets/james-bond/level-03-village-camp/generated/village-camp-background.png",
-    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-balanced-phaser-spritesheet.png",
     "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
     "guide_spritesheet": "assets/james-bond/level-03-village-camp/generated/teacher-guide-spritesheet.png",
     "interactive_props": "assets/james-bond/level-03-village-camp/generated/interactive-props.png"

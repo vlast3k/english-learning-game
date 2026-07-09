@@ -966,6 +966,7 @@ try {
       guideTexture: scene.guide.sprite.texture.key,
       heroSource: scene.textures.get("heroSprite").source[0].image?.src || "",
       guideSource: scene.textures.get("guideSprite").source[0].image?.src || "",
+      heroFrameCount: scene.textures.get("heroSprite").getFrameNames().length,
       heroHeight: Number(scene.hero.sprite.displayHeight.toFixed(1)),
       guideHeight: Number(scene.guide.sprite.displayHeight.toFixed(1)),
       heroScale: Number(scene.hero.scaleX.toFixed(3)),
@@ -991,8 +992,9 @@ try {
     fail("Direct Level 02 test URL should start Level 02 from clean campaign state", directLevel2);
   }
   if (
-    !directLevel2.resources.some((resource) => resource.includes("hero-spy-natural-spritesheet.png"))
+    !directLevel2.resources.some((resource) => resource.includes("hero-spy-balanced-phaser-spritesheet.png"))
     || !directLevel2.resources.some((resource) => resource.includes("director-guide-spritesheet.png"))
+    || directLevel2.characterCheck.heroFrameCount !== 40
     || directLevel2.characterCheck.renderedHeroHeight < 230
     || directLevel2.characterCheck.renderedGuideHeight < 250
   ) {

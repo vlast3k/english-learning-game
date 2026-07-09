@@ -68,16 +68,26 @@
   },
   "assets": {
     "background": "assets/james-bond/level-01-briefing/generated/briefing-room-background.png",
-    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png",
+    "hero_spritesheet": "assets/james-bond/level-01-briefing/generated/hero-spy-balanced-phaser-spritesheet.png",
     "hero_portraits": "assets/james-bond/level-01-briefing/generated/hero-spy-portraits.png",
     "guide_spritesheet": "assets/james-bond/level-01-briefing/generated/director-guide-spritesheet.png",
     "guide_spritesheet_source": "assets/james-bond/level-01-briefing/generated/director-guide-source-panel.png",
     "dossier_pictures": "assets/james-bond/level-01-briefing/generated/agent-dossier-pictures.png",
     "interactive_props": "assets/james-bond/level-01-briefing/generated/interactive-props.png"
   },
+  "presentation": {
+    "character_scale_multiplier": 1.6,
+    "guide_scale_multiplier": 1.59,
+    "character_depth_scale": {
+      "back_y": 342,
+      "back_scale": 0.4,
+      "front_y": 566,
+      "front_scale": 0.666
+    }
+  },
   "hero_start": {
-    "x": 260,
-    "y": 500
+    "x": 320,
+    "y": 566
   },
   "hud": {
     "status_text": "Briefing in progress"
@@ -137,38 +147,38 @@
     "obstacles": [
       {
         "id": "briefing_table",
-        "x1": 420,
-        "y1": 398,
-        "x2": 802,
-        "y2": 514
+        "x1": 489,
+        "y1": 312,
+        "x2": 871,
+        "y2": 428
       },
       {
         "id": "front_chair",
-        "x1": 588,
-        "y1": 474,
-        "x2": 680,
-        "y2": 566
+        "x1": 646,
+        "y1": 422,
+        "x2": 738,
+        "y2": 514
       },
       {
         "id": "scanner_station",
-        "x1": 26,
-        "y1": 290,
-        "x2": 128,
-        "y2": 426
+        "x1": 60,
+        "y1": 230,
+        "x2": 162,
+        "y2": 366
       },
       {
         "id": "plant",
         "x1": 138,
-        "y1": 306,
+        "y1": 270,
         "x2": 230,
-        "y2": 430
+        "y2": 394
       },
       {
         "id": "right_cabinets",
-        "x1": 842,
-        "y1": 302,
-        "x2": 1000,
-        "y2": 448
+        "x1": 856,
+        "y1": 203,
+        "x2": 1014,
+        "y2": 349
       }
     ]
   },
@@ -284,8 +294,8 @@
   "guide": {
     "speaker": "Director",
     "position": {
-      "x": 870,
-      "y": 470
+      "x": 856,
+      "y": 560
     },
     "required_items": [
       "agent_badge",
@@ -616,8 +626,8 @@
       "label": "world map",
       "english": "map",
       "bg": "карта",
-      "x": 940,
-      "y": 170,
+      "x": 941,
+      "y": 156,
       "walk_to": {
         "x": 820,
         "y": 386

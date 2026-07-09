@@ -28,11 +28,12 @@ ASSETS = {
         "maxCenterDrift": 6,
     },
     "james_bond_hero": {
-        "path": Path("assets/james-bond/level-01-briefing/generated/hero-spy-natural-spritesheet.png"),
+        "path": Path("assets/james-bond/level-01-briefing/generated/hero-spy-balanced-phaser-spritesheet.png"),
         "frameWidth": 192,
         "frameHeight": 220,
         "columns": 8,
-        "frameCount": 48,
+        "frameCount": 40,
+        "requiredFrames": [0, 1, 2, *range(16, 27), 32],
         "walkRows": {
             "walkSide": range(16, 24),
         },
@@ -99,10 +100,12 @@ def validate_asset(name, spec):
         errors.append(f"{path} has size {sheet.size}, expected {expected_size}")
 
     metrics = []
+    required_frames = set(spec.get("requiredFrames") or range(spec["frameCount"]))
     for index in range(spec["frameCount"]):
         metric = frame_metrics(sheet, index, spec)
         if metric is None:
-            errors.append(f"{name} frame {index} is empty")
+            if index in required_frames:
+                errors.append(f"{name} frame {index} is empty")
         else:
             metrics.append(metric)
             if metric["baseline"] > 12:

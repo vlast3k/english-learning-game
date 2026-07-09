@@ -198,6 +198,64 @@ function findPropertyObject(text, property, fromIndex = 0) {
   return { start, end, matchIndex: match.index };
 }
 
+function findTopLevelPropertyObject(text, property) {
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let position = 0; position < text.length; position += 1) {
+    const character = text[position];
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (character === "\\") {
+      escaped = inString;
+      continue;
+    }
+    if (character === "\"") {
+      if (!inString && depth === 1) {
+        const keyStart = position + 1;
+        let keyEnd = keyStart;
+        let keyEscaped = false;
+        while (keyEnd < text.length) {
+          const keyCharacter = text[keyEnd];
+          if (keyEscaped) {
+            keyEscaped = false;
+          } else if (keyCharacter === "\\") {
+            keyEscaped = true;
+          } else if (keyCharacter === "\"") {
+            break;
+          }
+          keyEnd += 1;
+        }
+        if (keyEnd < text.length && text.slice(keyStart, keyEnd) === property) {
+          let valueStart = keyEnd + 1;
+          while (/\s|:/.test(text[valueStart] || "")) {
+            valueStart += 1;
+          }
+          if (text[valueStart] === "{") {
+            const end = findObjectEnd(text, valueStart);
+            if (end > 0) {
+              return { start: valueStart, end, matchIndex: position };
+            }
+          }
+        }
+      }
+      inString = !inString;
+      continue;
+    }
+    if (inString) {
+      continue;
+    }
+    if (character === "{") {
+      depth += 1;
+    } else if (character === "}") {
+      depth -= 1;
+    }
+  }
+  return null;
+}
+
 function findArrayEnd(text, start) {
   let depth = 0;
   let inString = false;
@@ -328,11 +386,45 @@ function patchPropertyObjectNumber(text, property, values, fromIndex = 0) {
   return `${text.slice(0, objectRange.start)}${objectText}${text.slice(objectRange.end)}`;
 }
 
+function upsertNumberProperty(objectText, property, value) {
+  const pattern = new RegExp(`("${property}"\\s*:\\s*)-?\\d+(?:\\.\\d+)?`);
+  if (pattern.test(objectText)) {
+    return objectText.replace(pattern, `$1${value}`);
+  }
+  const insertAt = objectText.lastIndexOf("}");
+  if (insertAt < 0) {
+    throw new Error(`object is missing closing brace for ${property}`);
+  }
+  const indent = objectText.match(/\n(\s*)"[^"]+"\s*:/)?.[1] || "  ";
+  const outerIndent = indent.slice(0, Math.max(0, indent.length - 2));
+  const hasProperties = /{\s*"[^"]+"\s*:/.test(objectText);
+  const prefix = hasProperties ? "," : "";
+  return `${objectText.slice(0, insertAt)}${prefix}\n${indent}"${property}": ${value}\n${outerIndent}${objectText.slice(insertAt)}`;
+}
+
+function patchObjectRangeNumber(text, objectRange, values, { allowMissing = false } = {}) {
+  let objectText = text.slice(objectRange.start, objectRange.end);
+  for (const [key, value] of Object.entries(values)) {
+    objectText = allowMissing
+      ? upsertNumberProperty(objectText, key, value)
+      : replaceNumberProperty(objectText, key, value);
+  }
+  return `${text.slice(0, objectRange.start)}${objectText}${text.slice(objectRange.end)}`;
+}
+
+function patchTopLevelPropertyObjectNumber(text, property, values, options = {}) {
+  const objectRange = findTopLevelPropertyObject(text, property);
+  if (!objectRange) {
+    throw new Error(`could not find top-level ${property}`);
+  }
+  return patchObjectRangeNumber(text, objectRange, values, options);
+}
+
 function ensurePresentationText(text, actors) {
   if (!actors.hero && !actors.guide && !actors.depthScale) {
     return text;
   }
-  if (findPropertyObject(text, "presentation")) {
+  if (findTopLevelPropertyObject(text, "presentation")) {
     return text;
   }
   const heroStartMatch = /,\n\s*"hero_start"\s*:/.exec(text);
@@ -356,9 +448,9 @@ function patchActorText(originalText, actors, depthScale = null) {
       x: actors.hero.x,
       y: actors.hero.y,
     });
-    text = patchPropertyObjectNumber(text, "presentation", {
+    text = patchTopLevelPropertyObjectNumber(text, "presentation", {
       character_scale_multiplier: actors.hero.scale_multiplier,
-    });
+    }, { allowMissing: true });
   }
   if (actors.guide) {
     const guideRange = findPropertyObject(text, "guide");
@@ -369,9 +461,9 @@ function patchActorText(originalText, actors, depthScale = null) {
       x: actors.guide.x,
       y: actors.guide.y,
     }, guideRange.start);
-    text = patchPropertyObjectNumber(text, "presentation", {
+    text = patchTopLevelPropertyObjectNumber(text, "presentation", {
       guide_scale_multiplier: actors.guide.scale_multiplier,
-    });
+    }, { allowMissing: true });
   }
   if (depthScale) {
     text = patchDepthScaleText(text, depthScale);
@@ -380,7 +472,7 @@ function patchActorText(originalText, actors, depthScale = null) {
 }
 
 function patchDepthScaleText(originalText, depthScale) {
-  const presentationRange = findPropertyObject(originalText, "presentation");
+  const presentationRange = findTopLevelPropertyObject(originalText, "presentation");
   if (!presentationRange) {
     throw new Error("could not find presentation");
   }
@@ -520,19 +612,26 @@ async function serveStatic(request, response) {
   createReadStream(statPath).pipe(response);
 }
 
-const server = http.createServer((request, response) => {
-  if (request.method === "POST" && request.url?.startsWith("/__level-editor/save-hotspots")) {
-    saveHotspots(request, response);
-    return;
-  }
-  if (request.method === "GET" || request.method === "HEAD") {
-    serveStatic(request, response);
-    return;
-  }
-  response.writeHead(405);
-  response.end("Method not allowed");
-});
+export function createLevelEditorServer() {
+  return http.createServer((request, response) => {
+    if (request.method === "POST" && request.url?.startsWith("/__level-editor/save-hotspots")) {
+      saveHotspots(request, response);
+      return;
+    }
+    if (request.method === "GET" || request.method === "HEAD") {
+      serveStatic(request, response);
+      return;
+    }
+    response.writeHead(405);
+    response.end("Method not allowed");
+  });
+}
 
-server.listen(PORT, () => {
-  console.log(`Level editor server running at http://localhost:${PORT}/`);
-});
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isMain) {
+  const server = createLevelEditorServer();
+  server.listen(PORT, () => {
+    console.log(`Level editor server running at http://localhost:${PORT}/`);
+  });
+}
