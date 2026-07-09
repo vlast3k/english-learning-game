@@ -1,0 +1,21 @@
+name: Export Level 5 snapshot
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create source archive
+        run: |
+          mkdir -p .snapshot
+          tar --exclude=.git --exclude=node_modules --exclude=test-results --exclude=.snapshot -czf .snapshot/source-snapshot.tar.gz .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: level5-source-snapshot
+          path: .snapshot/source-snapshot.tar.gz
+          retention-days: 1
