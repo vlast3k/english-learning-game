@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260710-slice04-mirror-hall";
+const ASSET_VERSION = "20260710-save-resume-fix";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const WORD_REVEAL_HOLD_MS = 1000;

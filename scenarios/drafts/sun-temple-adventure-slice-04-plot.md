@@ -253,4 +253,4 @@ Each mirror must have only two child-readable states. The state names, art frame
 
 ## Compaction Handoff
 
-The Slice 4 plot is drafted. Next, create `sun-temple-adventure-slice-04-dependency-graph.md`. It must turn this exact two-mirror path into facts, gates, state transitions, map states, failure-safe interaction rules, and a smoke-testable happy path before any art or runtime implementation begins.
+Status: implemented and browser-smoke-tested. The remaining Slice 4 task is user-led hotspot alignment in the level editor; do not change the initial coordinates or radii during normal polish.

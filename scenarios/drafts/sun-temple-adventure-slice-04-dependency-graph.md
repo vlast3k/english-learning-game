@@ -4,7 +4,7 @@ This file turns `sun-temple-adventure-slice-04-plot.md` into a data-driven, fail
 
 ## Current Status
 
-Status: design approved for the asset-planning stage. Nothing in this graph is implemented yet.
+Status: implemented in `game-engine/missions/sun-temple-adventure-slice-01.json` and verified by `tools/sun-temple-adventure-slice-04-smoke-test.mjs`.
 
 ## Entry Requirements
 
@@ -141,7 +141,7 @@ slice.stone_lens_complete
 
 ## Smoke-Test Happy Path
 
-The eventual Slice 4 browser test must establish a Slice-3-complete state, then prove:
+The Slice 4 browser test establishes a Slice-3-complete state and proves:
 
 1. Mirror Hall map travel is enabled.
 2. Initial beam/state overlays render and the Mirror Lens is absent or blocked.

@@ -4,7 +4,7 @@ This file turns the approved Mirror Hall dependency graph into scene and asset r
 
 ## Current Status
 
-Status: design approved for asset planning. No Slice 4 scenario, hotspot, or art asset exists yet.
+Status: implemented in `scenarios/sun-temple-adventure-mirror-hall-content.json`. The user owns the remaining hotspot-alignment pass; existing starter coordinates and radii must not be changed during normal polish.
 
 ## Global Requirements
 
@@ -115,4 +115,3 @@ The marker needs a distinct architectural/beam emblem. It must not look like a s
 - no dense vine cover, deep black corridor, or branching doorway that reads as an unexplained route;
 - no background beam that bypasses the two required mirror states;
 - no labels such as `turn`, `light`, arrows, numbers, or letters painted in the scene.
-

@@ -4,7 +4,7 @@
   const CONTENT_CACHE_KEY = "gameContent";
   const SCENE_WIDTH = 1024;
   const SCENE_HEIGHT = 576;
-  const ASSET_OVERRIDE_VERSION = "20260710-slice04-mirror-hall";
+  const ASSET_OVERRIDE_VERSION = "20260710-save-resume-fix";
   const LAST_CAMPAIGN_KEY = "english-game:last-campaign";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
   const BUILTIN_DEFAULT_SCENARIO = "scenarios/james-bond-level-01-content.json";
@@ -21,6 +21,20 @@
     10: "scenarios/james-bond-level-10-content.json",
     11: "scenarios/james-bond-level-11-content.json",
   };
+  const SUN_TEMPLE_EDITOR_SCENARIOS = [
+    "scenarios/sun-temple-adventure-base-camp-table-content.json",
+    "scenarios/sun-temple-adventure-camp-supply-tent-content.json",
+    "scenarios/sun-temple-adventure-camp-edge-content.json",
+    "scenarios/sun-temple-adventure-jungle-path-content.json",
+    "scenarios/sun-temple-adventure-broken-bridge-content.json",
+    "scenarios/sun-temple-adventure-village-garden-content.json",
+    "scenarios/sun-temple-adventure-keeper-hut-content.json",
+    "scenarios/sun-temple-adventure-waterfall-mouth-content.json",
+    "scenarios/sun-temple-adventure-dark-cave-content.json",
+    "scenarios/sun-temple-adventure-temple-steps-content.json",
+    "scenarios/sun-temple-adventure-sun-courtyard-content.json",
+    "scenarios/sun-temple-adventure-mirror-hall-content.json",
+  ];
 
   function loadJsonSync(url) {
     if (typeof XMLHttpRequest === "undefined") {
@@ -48,8 +62,14 @@
     String(LEVEL_EDITOR_PARAMS.get("editor") || LEVEL_EDITOR_PARAMS.get("levelEditor") || "").toLowerCase(),
   );
 
+  function normalizeScenarioPath(value) {
+    const path = String(value || "").trim().split(/[?#]/, 1)[0].replace(/^\/+/, "");
+    const scenarioOffset = path.indexOf("scenarios/");
+    return scenarioOffset >= 0 ? path.slice(scenarioOffset) : path;
+  }
+
   function isSafeScenarioPath(value) {
-    const path = String(value || "").trim();
+    const path = normalizeScenarioPath(value);
     return path.startsWith("scenarios/") && path.endsWith(".json") && !path.includes("..") && !path.includes("://");
   }
 
@@ -60,10 +80,11 @@
         return null;
       }
       const save = JSON.parse(window.localStorage.getItem(latest.storageKey) || "null");
-      if (save?.campaignId !== latest.campaignId || !isSafeScenarioPath(save?.resume?.scenario)) {
+      const scenario = normalizeScenarioPath(save?.resume?.scenario);
+      if (save?.campaignId !== latest.campaignId || !isSafeScenarioPath(scenario)) {
         return null;
       }
-      return save.resume.scenario;
+      return scenario;
     } catch (_error) {
       return null;
     }
@@ -439,8 +460,80 @@
         this.hotspots.forEach((hotspot) => this.createHotspotEditorControls(hotspot));
         this.createObstacleEditorControls();
         this.createHotspotEditorPanel();
+        this.createEditorScreenNavigator();
         this.updateHotspotEditorPanel();
         this.time.delayedCall(0, () => this.setCommand("Editor: drag circles/characters; drag gold handles to resize"));
+      }
+
+      getEditorScreenScenarios() {
+        if (this.contentModel?.scene_id?.startsWith("sun-temple-adventure-")) {
+          return SUN_TEMPLE_EDITOR_SCENARIOS;
+        }
+        if (this.contentModel?.scene_id?.startsWith("james-bond-level-")) {
+          return Object.entries(LEVEL_SCENARIOS)
+            .sort(([left], [right]) => Number(left) - Number(right))
+            .map(([, scenario]) => scenario);
+        }
+        return [];
+      }
+
+      getCurrentEditorScenarioPath() {
+        return normalizeScenarioPath(window.EnglishGameContent?.url || "");
+      }
+
+      navigateEditorScreen(offset) {
+        const screens = this.getEditorScreenScenarios();
+        const currentIndex = screens.indexOf(this.getCurrentEditorScenarioPath());
+        const nextScenario = screens[currentIndex + offset];
+        if (!nextScenario) {
+          return;
+        }
+        const url = new URL(window.location.href);
+        url.searchParams.delete("level");
+        url.searchParams.set("scenario", nextScenario);
+        url.searchParams.set("editor", "hotspots");
+        window.location.assign(url.toString());
+      }
+
+      createEditorScreenNavigator() {
+        const screens = this.getEditorScreenScenarios();
+        const currentIndex = screens.indexOf(this.getCurrentEditorScenarioPath());
+        if (currentIndex < 0 || screens.length < 2) {
+          return;
+        }
+        const panel = this.add.container(SCENE_WIDTH - 324, 14).setDepth(945);
+        const bg = this.add.graphics();
+        bg.fillStyle(0x173837, 0.93);
+        bg.fillRoundedRect(0, 0, 306, 38, 8);
+        const previous = this.add.text(12, 9, "←", {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "20px",
+          fontStyle: "700",
+          color: currentIndex > 0 ? "#fff4cf" : "#819797",
+        }).setInteractive({ useHandCursor: currentIndex > 0 });
+        const next = this.add.text(278, 9, "→", {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "20px",
+          fontStyle: "700",
+          color: currentIndex < screens.length - 1 ? "#fff4cf" : "#819797",
+        }).setInteractive({ useHandCursor: currentIndex < screens.length - 1 });
+        const label = this.add.text(40, 12, `Screen ${currentIndex + 1}/${screens.length}: ${this.contentModel.scene_name || this.contentModel.scene_id}`, {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "11px",
+          fontStyle: "700",
+          color: "#fff4cf",
+          wordWrap: { width: 224 },
+        });
+        if (currentIndex > 0) {
+          previous.on("pointerdown", () => this.navigateEditorScreen(-1));
+        }
+        if (currentIndex < screens.length - 1) {
+          next.on("pointerdown", () => this.navigateEditorScreen(1));
+        }
+        panel.add([bg, previous, label, next]);
+        this.editorScreenNavigator = panel;
+        this.input.keyboard?.on("keydown-LEFT", () => this.navigateEditorScreen(-1));
+        this.input.keyboard?.on("keydown-RIGHT", () => this.navigateEditorScreen(1));
       }
 
       installActorEditor() {

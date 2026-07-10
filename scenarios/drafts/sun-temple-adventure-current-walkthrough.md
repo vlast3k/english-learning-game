@@ -443,7 +443,7 @@ These are not collectable items, but they provide information, a visible obstacl
 | Dark Cave | light cave with glow jar | key, box, Blue Lens |
 | Temple Steps | place Blue Lens | cup and water-channel puzzle |
 | Sun Courtyard | fill the sun channel | Stone Lens reward |
-| Mirror Hall | place Stone Lens | visible but locked future hook |
+| Mirror Hall | place Stone Lens | usable destination; Mirror Lens can be earned |
 
 ## Story Information The Child Currently Receives
 
@@ -487,7 +487,7 @@ At the observatory, Alex turns the sun mirror.
 Sunlight reaches the valley garden again.
 ```
 
-The original premise includes a gentle environmental problem: the old light path is broken, and a small sun flower near Base Camp is drooping because it needs sun. The completed mirror should return light to the valley garden. This consequence is planned story material; the drooping flower and final valley-wide light state are not yet implemented in the current build.
+The original premise includes a gentle environmental problem: the old light path is broken, and a small sun flower near Base Camp is drooping because it needs sun. The completed mirror should return light to the valley garden. The drooping flower is implemented as the opening mystery; its restored state and the final valley-wide light state remain planned story material.
 
 The tone must remain warm, practical, and non-combat-focused. The valley itself supplies the obstacles: blocked routes, dark places, old light mechanisms, and objects that need to be used in the right place. There is no planned rival explorer, villain, weapon, trap sequence, or frightening temple guardian.
 

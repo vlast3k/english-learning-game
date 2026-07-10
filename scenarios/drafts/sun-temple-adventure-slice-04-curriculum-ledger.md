@@ -4,7 +4,7 @@ This ledger checks Mirror Hall language against `curriculum-scope.md`. The slice
 
 ## Current Status
 
-Status: design approved for art planning. No new player-facing Slice 4 dialogue is live yet.
+Status: implemented as Bulgarian-supported adventure dialogue with no grammar-question progression.
 
 ## Language Policy
 

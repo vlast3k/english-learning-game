@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260710-slice04-mirror-hall";
+  const ENGINE_ASSET_VERSION = "20260710-save-resume-fix";
   const BRIDGE_GAME_WIDTH = 1024;
   const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
@@ -542,8 +542,9 @@
       }
 
       getCurrentScenarioPath() {
-        const contentUrl = new URL(root.EnglishGameContent?.url || "", root.location.href);
-        return contentUrl.pathname.replace(/^\//, "");
+        const contentUrl = String(root.EnglishGameContent?.url || "").split(/[?#]/, 1)[0].replace(/^\/+/, "");
+        const scenarioOffset = contentUrl.indexOf("scenarios/");
+        return scenarioOffset >= 0 ? contentUrl.slice(scenarioOffset) : contentUrl;
       }
 
       createMissionBriefingButton() {
