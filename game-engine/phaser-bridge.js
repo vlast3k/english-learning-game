@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260710-adventure-polish";
+  const ENGINE_ASSET_VERSION = "20260710-slice04-mirror-hall";
   const BRIDGE_GAME_WIDTH = 1024;
   const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
@@ -133,6 +133,32 @@
 
       isAdventureMode() {
         return this.contentModel?.gameplay_mode === "adventure";
+      }
+
+      isExplorationMode() {
+        const params = new URLSearchParams(root.location?.search || "");
+        return ["1", "true", "yes"].includes((params.get("explore") || "").toLowerCase());
+      }
+
+      getExplorationDestination(eventType, target) {
+        const rule = (this.getEngineConfig()?.rules || []).find((entry) => (
+          entry.event?.type === eventType
+          && entry.event?.target === target
+          && entry.actions?.some((action) => action.type === "scene.transition" && action.scenario)
+        ));
+        return rule?.actions?.find((action) => action.type === "scene.transition" && action.scenario)?.scenario || null;
+      }
+
+      tryExplorationTransition(eventType, target, event = {}) {
+        if (!this.isExplorationMode()) {
+          return false;
+        }
+        const scenario = this.getExplorationDestination(eventType, target);
+        if (!scenario) {
+          return false;
+        }
+        this.transitionToEngineScenario({ scenario }, { ...event, type: eventType, target });
+        return true;
       }
 
       getEngineFacts() {
@@ -479,6 +505,10 @@
           this.createAdventureOverlays();
           this.createAdventureMapButton();
           this.refreshAdventureScreenState();
+          this.gameEngine?.emit("scene.entered", {
+            target: this.contentModel.scene_id,
+            screen: this.contentModel.scene_id,
+          });
         }
       }
 
@@ -493,6 +523,10 @@
           content: this.contentModel,
           bridge,
         });
+        this.gameEngine.setResumeLocation({
+          scenario: this.getCurrentScenarioPath(),
+          sceneId: this.contentModel.scene_id,
+        });
         root.__ENGLISH_GAME_ENGINE__ = this.gameEngine;
         this.restorePuzzleEngineState(bridge);
         this.createMissionBriefingButton();
@@ -505,6 +539,11 @@
           this.unsubscribeMissionBriefingButton?.();
           this.gameEngine?.destroy();
         });
+      }
+
+      getCurrentScenarioPath() {
+        const contentUrl = new URL(root.EnglishGameContent?.url || "", root.location.href);
+        return contentUrl.pathname.replace(/^\//, "");
       }
 
       createMissionBriefingButton() {
@@ -620,6 +659,13 @@
           return;
         }
         try {
+          root.localStorage?.removeItem(config.storage_key);
+          const latest = JSON.parse(root.localStorage?.getItem("english-game:last-campaign") || "null");
+          if (latest?.storageKey === config.storage_key) {
+            root.localStorage?.removeItem("english-game:last-campaign");
+          }
+          // Clear the former session-only save too, so a reset stays complete
+          // for people returning from an older build.
           root.sessionStorage?.removeItem(config.storage_key);
         } catch (_error) {
           // If storage is unavailable, the runtime will fall back to memory storage.
@@ -673,7 +719,7 @@
             anchor: action.anchor || { x: this.hero.x + 18, y: this.hero.y - 100 },
             options: [{ text: "OK", action: () => this.closeBubble() }],
           }),
-          transitionScene: (action) => this.transitionToEngineScenario(action),
+          transitionScene: (action, event) => this.transitionToEngineScenario(action, event),
         };
       }
 
@@ -745,6 +791,27 @@
         }
         this.adventureOverlays = [];
         for (const spec of this.contentModel?.overlays || []) {
+          if (spec.kind === "water_path") {
+            const points = Array.isArray(spec.points) ? spec.points : [];
+            if (points.length < 2) {
+              continue;
+            }
+            const water = this.add.graphics().setDepth(spec.depth ?? 415);
+            const drawPath = (width, color, alpha) => {
+              water.lineStyle(width, color, alpha);
+              water.beginPath();
+              water.moveTo(points[0].x, points[0].y);
+              for (const point of points.slice(1)) {
+                water.lineTo(point.x, point.y);
+              }
+              water.strokePath();
+            };
+            drawPath(spec.bank_width ?? 20, spec.bank_color ?? 0x2b83a0, 0.82);
+            drawPath(spec.water_width ?? 13, spec.water_color ?? 0x38c7e9, 0.96);
+            drawPath(spec.highlight_width ?? 3, spec.highlight_color ?? 0xe7fbff, 0.56);
+            this.adventureOverlays.push({ spec, image: water });
+            continue;
+          }
           const frameName = this.ensureAdventureTextureFrame(spec.texture, spec.frame);
           if (!frameName && !this.textures.exists(spec.texture)) {
             continue;
@@ -754,6 +821,9 @@
             .setDepth(spec.depth ?? Math.round(spec.y || 500));
           if (Number.isFinite(spec.scale)) {
             image.setScale(spec.scale);
+          }
+          if (Number.isFinite(spec.angle)) {
+            image.setAngle(spec.angle);
           }
           if (Number.isFinite(spec.display_width) || Number.isFinite(spec.display_height)) {
             image.setDisplaySize(spec.display_width || image.displayWidth, spec.display_height || image.displayHeight);
@@ -874,6 +944,9 @@
       }
 
       isAdventureMapEnabled() {
+        if (this.isExplorationMode()) {
+          return true;
+        }
         const config = this.getAdventureMapConfig();
         return this.bridgeConditionMatches(config?.button?.enabled_when);
       }
@@ -934,7 +1007,7 @@
         const closeButton = this.makeCloseButton(width - 50, 22, () => this.closeAdventureMapPanel());
         panel.add([bg, title, closeButton]);
         const markers = (this.getAdventureMapConfig().markers || [])
-          .filter((marker) => this.bridgeConditionMatches(marker.visible_when));
+          .filter((marker) => this.isExplorationMode() || this.bridgeConditionMatches(marker.visible_when));
         markers.forEach((marker, index) => {
           const x = marker.x !== undefined ? marker.x + width / 2 : 98 + (index % 3) * 220;
           const y = marker.y !== undefined ? marker.y + height / 2 : 124 + Math.floor(index / 3) * 112;
@@ -944,7 +1017,7 @@
       }
 
       createAdventureMapMarker(marker, x, y) {
-        const enabled = this.bridgeConditionMatches(marker.enabled_when);
+        const enabled = this.isExplorationMode() || this.bridgeConditionMatches(marker.enabled_when);
         const container = this.add.container(x, y).setSize(188, 72);
         const bg = this.add.graphics();
         bg.fillStyle(enabled ? 0xffedbd : 0xd7ccb2, enabled ? 0.98 : 0.64);
@@ -967,6 +1040,15 @@
             return;
           }
           this.closeAdventureMapPanel();
+          if (this.isExplorationMode()) {
+            this.transitionToEngineScenario({ scenario: marker.destination }, {
+              type: "location.travel_requested",
+              target: marker.id,
+              location: marker.id,
+              scenario: marker.destination,
+            });
+            return;
+          }
           this.gameEngine.emit("location.travel_requested", {
             target: marker.id,
             location: marker.id,
@@ -1003,7 +1085,7 @@
         }
       }
 
-      transitionToEngineScenario(action) {
+      transitionToEngineScenario(action, event = {}) {
         if (!action.scenario) {
           return;
         }
@@ -1011,10 +1093,20 @@
           const url = new URL(root.location.href);
           const test = url.searchParams.get("test");
           const debug = url.searchParams.get("debug");
+          const explore = url.searchParams.get("explore");
           url.search = "";
           url.searchParams.set("scenario", action.scenario);
+          if (event.type === "exit.reached" && event.screen && event.exit_id) {
+            url.searchParams.set("arrival_from_scene", event.screen);
+            url.searchParams.set("arrival_from_exit", event.exit_id);
+            if (Number.isFinite(event.exit_x) && Number.isFinite(event.exit_y)) {
+              url.searchParams.set("arrival_x", event.exit_x);
+              url.searchParams.set("arrival_y", event.exit_y);
+            }
+          }
           if (test) url.searchParams.set("test", test);
           if (debug) url.searchParams.set("debug", debug);
+          if (explore) url.searchParams.set("explore", explore);
           root.location.assign(url.toString());
         };
         if (action.delay_ms) {
@@ -1034,9 +1126,9 @@
           this.exitMarker.label.setText(presentation.label);
         }
         const requiredPuzzle = this.getExitRequiredPuzzleForState();
-        const unlocked = requiredPuzzle
+        const unlocked = this.isExplorationMode() || (requiredPuzzle
           ? this.gameEngine?.getPuzzleStatus(requiredPuzzle) === "completed"
-          : Boolean(this.flags[exit.required_flag]);
+          : Boolean(this.flags[exit.required_flag]));
         const glow = this.exitMarker.engineGlow;
         glow.clear();
         glow.fillStyle(unlocked ? 0x42d982 : 0xf4c44e, 0.96);
@@ -1124,10 +1216,20 @@
           return;
         }
         if (kind === "exit") {
+          if (this.tryExplorationTransition("exit.reached", hotspot.id, {
+            exit_id: hotspot.id,
+            screen: this.contentModel?.scene_id,
+            exit_x: hotspot.x,
+            exit_y: hotspot.y,
+          })) {
+            return;
+          }
           this.gameEngine.emit("exit.reached", {
             target: hotspot.id,
             exit_id: hotspot.id,
             screen: this.contentModel?.scene_id,
+            exit_x: hotspot.x,
+            exit_y: hotspot.y,
           });
           return;
         }
@@ -1214,10 +1316,18 @@
           this.setCommand(currentExit.command || `Walk to ${currentExit.label || exit.label}`);
           const walkTo = currentExit.walk_to || exit.walk_to || { x, y };
           this.walkHeroTo(walkTo.x, walkTo.y, () => {
+            if (this.tryExplorationTransition("exit.reached", exit.id, {
+              exit_id: exit.id,
+              puzzle_id: this.getExitBinding().puzzle_id,
+              screen: this.contentModel?.scene_id,
+            })) {
+              return;
+            }
             const emitExitReached = () => this.gameEngine.emit("exit.reached", {
               target: exit.id,
               exit_id: exit.id,
               puzzle_id: this.getExitBinding().puzzle_id,
+              screen: this.contentModel?.scene_id,
             });
             if (this.shouldRunExitVocabularyGate()) {
               this.setCommand("Pass the gate review");

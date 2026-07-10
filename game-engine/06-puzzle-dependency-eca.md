@@ -235,7 +235,9 @@ Level 02 currently ends with `campaign.complete`. When Level 03 is ready, the fi
 
 ## Persistent state
 
-The runtime stores campaign state in `sessionStorage`:
+The runtime stores campaign state in `localStorage`, so campaign progress survives browser restarts on the same device. The latest campaign also records its resume scenario; opening the bare game URL continues there unless an explicit `scenario`, `level`, `reset`, or `new` parameter is supplied.
+
+For development exploration, append `explore=1` to any game URL. The flag is kept during navigation and allows direct travel through gates without completing their normal requirements. Adventure maps also open immediately and show every configured destination. This mode works in both Sun Temple and Junior Agent Spy Academy.
 
 ```json
 {

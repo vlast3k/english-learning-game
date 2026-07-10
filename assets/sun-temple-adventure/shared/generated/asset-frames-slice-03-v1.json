@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": [
+    "Frame rectangles are starter crops for the Temple Steps slice-three prop atlas.",
+    "Rectangles include transparent padding for painted edges, water highlights, and glow effects.",
+    "Review and tune after the first Phaser layout pass; they do not define hotspot positions."
+  ],
+  "textures": {
+    "propAtlasSlice03": {
+      "path": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "stone_cup": { "x": 55, "y": 195, "width": 245, "height": 260 },
+        "water_cup": { "x": 350, "y": 195, "width": 240, "height": 260 },
+        "closed_gate": { "x": 630, "y": 105, "width": 300, "height": 370 },
+        "open_gate": { "x": 945, "y": 105, "width": 300, "height": 370 },
+        "channel_flow_start": { "x": 1245, "y": 190, "width": 250, "height": 300 },
+        "channel_flow_gate": { "x": 50, "y": 510, "width": 280, "height": 335 },
+        "channel_flow_beyond_gate": { "x": 345, "y": 540, "width": 235, "height": 315 },
+        "water_flow": { "x": 1335, "y": 210, "width": 90, "height": 245 },
+        "stone_lens": { "x": 620, "y": 565, "width": 320, "height": 285 },
+        "sun_compass_stone_lens": { "x": 960, "y": 535, "width": 280, "height": 320 },
+        "map_marker_mirror_hall_locked": { "x": 1240, "y": 525, "width": 270, "height": 345 }
+      }
+    }
+  },
+  "inventory_icons": {
+    "stone_cup": { "texture": "propAtlasSlice03", "frame": "stone_cup" },
+    "water_cup": { "texture": "propAtlasSlice03", "frame": "water_cup" },
+    "stone_lens": { "texture": "propAtlasSlice03", "frame": "stone_lens" }
+  },
+  "recommended_overlays": {
+    "temple-steps": [
+      { "id": "closed_gate", "texture": "propAtlasSlice03", "frame": "closed_gate", "visible_when": { "fact": "temple_steps.channel_open", "equals": false } },
+      { "id": "channel_flow_start", "texture": "propAtlasSlice03", "frame": "channel_flow_start", "visible_when": { "fact": "temple_steps.channel_open", "equals": true } },
+      { "id": "channel_flow_gate", "texture": "propAtlasSlice03", "frame": "channel_flow_gate", "visible_when": { "fact": "temple_steps.channel_open", "equals": true } },
+      { "id": "channel_flow_beyond_gate", "texture": "propAtlasSlice03", "frame": "channel_flow_beyond_gate", "visible_when": { "fact": "temple_steps.channel_open", "equals": true } }
+    ],
+    "sun-courtyard": [
+      { "id": "stone_lens", "texture": "propAtlasSlice03", "frame": "stone_lens", "visible_when": { "fact": "sun_courtyard.lens_taken", "equals": false } }
+    ],
+    "base-camp-table": [
+      { "id": "sun_compass_stone_lens", "texture": "propAtlasSlice03", "frame": "sun_compass_stone_lens", "visible_when": { "fact": "compass.stone_lens_placed", "equals": true } }
+    ],
+    "hud-map": [
+      { "id": "map_marker_mirror_hall_locked", "texture": "propAtlasSlice03", "frame": "map_marker_mirror_hall_locked", "visible_when": { "fact": "compass.stone_lens_placed", "equals": true } }
+    ]
+  }
+}

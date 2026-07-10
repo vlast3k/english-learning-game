@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "scene_id": "sun-temple-adventure-sun-courtyard",
+  "content_version": "2026-07-10-slice-03",
+  "gameplay_mode": "adventure",
+  "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
+  "assets": {
+    "background": "assets/sun-temple-adventure/sun-courtyard/generated/background-v1.png",
+    "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
+    "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
+    "extra_textures": {
+      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png",
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
+    },
+    "extra_asset_frames": [
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
+    ],
+    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.45,
+    "character_depth_scale": {
+      "back_y": 300,
+      "back_scale": 0.36,
+      "front_y": 566,
+      "front_scale": 0.66
+    }
+  },
+  "hero_start": {
+    "x": 220,
+    "y": 505
+  },
+  "hud": {
+    "status_text": "Sun Courtyard"
+  },
+  "player": {
+    "speaker": "Alex"
+  },
+  "inventory": {
+    "max_slots": 6
+  },
+  "inventory_items": {
+    "empty_jar": {
+      "label": "empty jar",
+      "english": "empty jar",
+      "bg": "празен буркан",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "empty_jar"
+      }
+    },
+    "glow_leaf": {
+      "label": "glow leaf",
+      "english": "glow leaf",
+      "bg": "светещ лист",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "glow_leaf"
+      }
+    },
+    "glow_jar": {
+      "label": "glow jar",
+      "english": "glow jar",
+      "bg": "светещ буркан",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "glow_jar"
+      }
+    },
+    "stone_key": {
+      "label": "stone key",
+      "english": "stone key",
+      "bg": "каменен ключ",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "stone_key"
+      }
+    },
+    "blue_lens": {
+      "label": "Blue Lens",
+      "english": "Blue Lens",
+      "bg": "Синя леща",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "blue_lens"
+      }
+    },
+    "stone_cup": {
+      "label": "stone cup",
+      "english": "stone cup",
+      "bg": "каменна чаша",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_cup"
+      }
+    },
+    "water_cup": {
+      "label": "water cup",
+      "english": "water cup",
+      "bg": "чаша с вода",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "water_cup"
+      }
+    },
+    "stone_lens": {
+      "label": "Stone Lens",
+      "english": "Stone Lens",
+      "bg": "Каменна леща",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_lens"
+      }
+    }
+  },
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 18,
+        "y": 344
+      },
+      {
+        "x": 1006,
+        "y": 344
+      },
+      {
+        "x": 1014,
+        "y": 566
+      },
+      {
+        "x": 18,
+        "y": 566
+      }
+    ],
+    "clearance": 30,
+    "obstacles": []
+  },
+  "hotspots": [
+    {
+      "id": "stone_lens",
+      "kind": "takeable",
+      "item_id": "stone_lens",
+      "label": "Stone Lens",
+      "english": "Stone Lens",
+      "bg": "Каменна леща",
+      "x": 512,
+      "y": 331,
+      "radius": 68,
+      "walk_to": {
+        "x": 512,
+        "y": 470
+      },
+      "hidden_when": {
+        "fact": "item.stone_lens.taken",
+        "equals": true
+      }
+    },
+    {
+      "id": "exit_temple_steps",
+      "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-temple-steps",
+      "label": "Temple Steps",
+      "x": 94,
+      "y": 332,
+      "radius": 56,
+      "walk_to": {
+        "x": 162,
+        "y": 500
+      }
+    }
+  ],
+  "overlays": [
+    {
+      "id": "stone_lens",
+      "texture": "propAtlasSlice03",
+      "frame": "stone_lens",
+      "x": 512,
+      "y": 331,
+      "scale": 0.27,
+      "depth": 423,
+      "visible_when": {
+        "fact": "item.stone_lens.taken",
+        "equals": false
+      }
+    }
+  ],
+  "map": {
+    "button": {
+      "visible": true,
+      "enabled_when": {
+        "fact": "map.ui_unlocked",
+        "equals": true
+      }
+    },
+    "markers": [
+      {
+        "id": "base-camp-table",
+        "label": "Base Camp",
+        "destination": "scenarios/sun-temple-adventure-base-camp-table-content.json",
+        "x": -250,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "camp-edge",
+        "label": "Camp Edge",
+        "destination": "scenarios/sun-temple-adventure-camp-edge-content.json",
+        "x": -20,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "jungle-path",
+        "label": "Jungle Path",
+        "destination": "scenarios/sun-temple-adventure-jungle-path-content.json",
+        "x": 210,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "broken-bridge",
+        "label": "Broken Bridge",
+        "destination": "scenarios/sun-temple-adventure-broken-bridge-content.json",
+        "x": -250,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "village-garden",
+        "label": "Village Garden",
+        "destination": "scenarios/sun-temple-adventure-village-garden-content.json",
+        "x": -20,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "keeper-hut",
+        "label": "Keeper Hut",
+        "destination": "scenarios/sun-temple-adventure-keeper-hut-content.json",
+        "x": 210,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "waterfall-mouth",
+        "label": "Waterfall Cave",
+        "destination": "scenarios/sun-temple-adventure-waterfall-mouth-content.json",
+        "x": -250,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        }
+      },
+      {
+        "id": "dark-cave",
+        "label": "Dark Cave",
+        "destination": "scenarios/sun-temple-adventure-dark-cave-content.json",
+        "x": -20,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "temple-steps",
+        "label": "Temple Steps",
+        "destination": "scenarios/sun-temple-adventure-temple-steps-content.json",
+        "x": 210,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.temple_steps.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.blue_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "sun-courtyard",
+        "label": "Sun Courtyard",
+        "destination": "scenarios/sun-temple-adventure-sun-courtyard-content.json",
+        "x": -250,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "mirror-hall",
+        "label": "Mirror Hall",
+        "destination": "scenarios/sun-temple-adventure-mirror-hall-content.json",
+        "x": 210,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.mirror_hall.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.stone_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "observatory-approach",
+        "label": "High Observatory",
+        "destination": "scenarios/sun-temple-adventure-observatory-approach-content.json",
+        "x": -20,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.observatory_approach.revealed",
+          "equals": true
+        },
+        "enabled_when": false,
+        "locked_text": "The high path is not ready yet."
+      }
+    ]
+  },
+  "translations": {
+    "courtyard": "двор",
+    "flower": "цвете",
+    "lens": "леща",
+    "stone": "камък",
+    "sun": "слънце",
+    "water": "вода",
+    "opens": "отваря"
+  }
+}

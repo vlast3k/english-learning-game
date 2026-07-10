@@ -4,6 +4,7 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const ENGINE_VERSION = 1;
   const MAX_EVENT_HISTORY = 120;
+  const LAST_CAMPAIGN_KEY = "english-game:last-campaign";
 
   function clone(value) {
     return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
@@ -48,11 +49,11 @@
       return candidate;
     }
     try {
-      if (root.sessionStorage?.getItem) {
-        return root.sessionStorage;
+      if (root.localStorage?.getItem) {
+        return root.localStorage;
       }
     } catch (_error) {
-      // Sandboxed documents may deny access to sessionStorage.
+      // Sandboxed documents may deny access to localStorage.
     }
     return fallbackStorage;
   }
@@ -71,12 +72,14 @@
         version: ENGINE_VERSION,
         campaignId: this.campaignId,
         currentScene: null,
+        resume: null,
         facts: { ...(initialState.facts || {}) },
         inventory: [...(initialState.inventory || [])],
         counters: { ...(initialState.counters || {}) },
         puzzles: { ...(initialState.puzzles || {}) },
         firedRules: [...(initialState.firedRules || [])],
         eventHistory: [],
+        updatedAt: null,
       };
     }
 
@@ -84,6 +87,11 @@
       let stored = null;
       try {
         stored = JSON.parse(this.storage.getItem(this.storageKey) || "null");
+        // Move a valid save from the previous session-only implementation into
+        // the durable store the next time the game changes state.
+        if (!stored && this.storage !== root.sessionStorage) {
+          stored = JSON.parse(root.sessionStorage?.getItem(this.storageKey) || "null");
+        }
       } catch (_error) {
         stored = null;
       }
@@ -99,6 +107,10 @@
         puzzles: { ...(initialState.puzzles || {}), ...(stored.puzzles || {}) },
         firedRules: [...new Set(stored.firedRules || [])],
         eventHistory: [...(stored.eventHistory || [])].slice(-MAX_EVENT_HISTORY),
+        resume: stored.resume?.scenario ? {
+          scenario: stored.resume.scenario,
+          sceneId: stored.resume.sceneId || stored.currentScene || null,
+        } : null,
       };
     }
 
@@ -115,7 +127,12 @@
     }
 
     persist() {
+      this.data.updatedAt = new Date().toISOString();
       this.storage.setItem(this.storageKey, JSON.stringify(this.data));
+      this.storage.setItem(LAST_CAMPAIGN_KEY, JSON.stringify({
+        campaignId: this.campaignId,
+        storageKey: this.storageKey,
+      }));
     }
 
     reset(initialState = {}) {
@@ -129,6 +146,21 @@
       }
       this.data.currentScene = sceneId;
       this.changed("scene.current");
+    }
+
+    setResumeLocation({ scenario, sceneId }) {
+      if (!scenario || !sceneId) {
+        return;
+      }
+      const unchanged = this.data.currentScene === sceneId
+        && this.data.resume?.scenario === scenario
+        && this.data.resume?.sceneId === sceneId;
+      if (unchanged) {
+        return;
+      }
+      this.data.currentScene = sceneId;
+      this.data.resume = { scenario, sceneId };
+      this.changed("scene.resume");
     }
 
     getFact(name) {
@@ -513,7 +545,7 @@
           return;
         case "scene.transition":
           state.persist();
-          bridge?.transitionScene?.(action);
+          bridge?.transitionScene?.(action, event);
           return;
         case "campaign.complete":
           state.setFact(action.fact || "campaign.complete", true);
@@ -722,6 +754,10 @@
 
     getPuzzle(puzzleId) {
       return this.graph.describe(puzzleId);
+    }
+
+    setResumeLocation(location) {
+      this.state.setResumeLocation(location);
     }
 
     getSnapshot() {

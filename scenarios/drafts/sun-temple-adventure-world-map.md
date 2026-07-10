@@ -26,7 +26,7 @@ Recommended first implementation: build a vertical slice with four to six screen
 | Jungle Path | First exploration route and bridge gate | Find or repair first map piece at camp edge | `jungle-path`, `broken-bridge` | Use rope, revisit after bridge repair |
 | River Garden Village | First friendly NPC region and first lens | Repair bridge | `village-garden`, `keeper-hut` | Give items to NPC, receive lens, later get lamp part |
 | Waterfall Cave | Dark side region with second lens | Discover cave marker from village or river path; needs lamp/torch | `waterfall-mouth`, `dark-cave` | Use light item, find old clue, return with temple symbol |
-| Temple Courtyard | Main ancient site and lens placement | Compass has first lens and cave clue, or map marker from cave | `temple-steps`, `sun-courtyard` | Place lenses, unlock inner temple |
+| Temple Courtyard | Open-air temple site and third lens | Blue Lens placed in Sun Compass | `temple-steps`, `sun-courtyard` | Fill water channel, reveal Stone Lens |
 | Inner Temple | Late campaign puzzle space | Courtyard mechanism repaired | `mirror-hall`, `observatory-door` | Use completed compass, unlock finale |
 | Sun Observatory | Finale | Complete Sun Compass | `sun-observatory` | Final mirror action and ending |
 
@@ -41,8 +41,8 @@ Suggested map states:
 3. Torn map combined with first map piece: Jungle Path marker appears.
 4. Bridge repaired: River Garden Village marker appears after reaching it once.
 5. Green Lens placed in the Sun Compass: Waterfall Cave marker appears but is locked until the player has a light item.
-6. Cave clue found: Temple Courtyard marker appears.
-7. Courtyard mechanism repaired: Inner Temple marker appears.
+6. Blue Lens placed: Temple Steps marker appears.
+7. Stone Lens placed: Mirror Hall marker appears.
 8. Compass completed: Sun Observatory marker appears.
 
 ## Screen List
@@ -60,8 +60,8 @@ This is a first-pass screen list. Each screen must survive later prop-budget rev
 | `keeper-hut` | River Garden Village | Get hint or part for light item; possible map clue | village garden | hut shelf, lamp part or cloth, wall map | Lina or helper | locked shelf / item taken |
 | `waterfall-mouth` | Waterfall Cave | Cave entrance is dark; use lamp/torch | village garden or map, dark cave when lit | waterfall, cave mouth, dark entrance | none | dark / lit |
 | `dark-cave` | Waterfall Cave | Find old clue and second lens | waterfall mouth | cave wall symbols, second lens, stone box | none or echo hint | closed box / box open |
-| `temple-steps` | Temple Courtyard | Approach temple, inspect outer symbols | map, sun courtyard | stone steps, animal/shape symbols, sealed door | Keeper Maya optional | sealed / courtyard open |
-| `sun-courtyard` | Temple Courtyard | Place lenses or symbols to open inner temple | temple steps, mirror hall | compass pedestal, lens slots, stone panels | Keeper Maya optional | slots empty / slots filled |
+| `temple-steps` | Temple Courtyard | Take stone cup; fill dry sun channel with waterfall water | map, sun courtyard after gate opens | stone cup, dry sun channel, sealed gate | none | channel dry / flowing; gate closed / open |
+| `sun-courtyard` | Temple Courtyard | Inspect stone sun flower; take Stone Lens | temple steps | stone flower, flowing water, Stone Lens | none | flower closed / open; lens visible / taken |
 | `mirror-hall` | Inner Temple | Align path toward observatory door | sun courtyard, observatory door | mirrors, light beam, moveable panel | none | beam off / beam on |
 | `observatory-door` | Inner Temple | Use completed compass to unlock final area | mirror hall, sun observatory | final door, compass socket | Mira voice hint | locked / open |
 | `sun-observatory` | Sun Observatory | Turn mirror and finish campaign | map or ending only | sun mirror, valley view, completed compass place | Mira | before mirror / after mirror |
@@ -111,7 +111,7 @@ Unlocked walking links:
 - `village-garden` -> `keeper-hut` after Lina intro
 - `village-garden` -> `waterfall-mouth` after cave clue
 - `waterfall-mouth` -> `dark-cave` after light item
-- `dark-cave` -> `temple-steps` after cave clue
+- `dark-cave` -> `temple-steps` after Blue Lens is placed at Base Camp
 - `temple-steps` -> `sun-courtyard` after outer gate opens
 - `sun-courtyard` -> `mirror-hall` after lens mechanism
 - `mirror-hall` -> `observatory-door`
@@ -152,8 +152,9 @@ Waterfall Cave:
 
 Temple Courtyard:
 
-- turns collected lenses into visible world progress;
-- connects symbols, shapes, and map clues.
+- turns the Blue Lens into a real new map destination;
+- makes water travel from the known waterfall to a new temple gate;
+- reveals the Stone Lens through one central flower state change.
 
 Inner Temple:
 

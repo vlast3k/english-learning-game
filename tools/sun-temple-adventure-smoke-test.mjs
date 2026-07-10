@@ -227,6 +227,12 @@ async function runSunTempleSmokeTest(baseUrl) {
       state.npcId === "mira" && state.mapButton?.visible === true && state.mapButton.enabled === false
     ));
     await saveScreenshot(page, "01-base-start");
+    await page.waitForFunction(() => Boolean(window.phaserGame?.scene?.getScene?.("CampScene")?.activeBubble), null, { timeout: 12000 });
+    await closeBubble(page);
+
+    await clickHotspot(page, "sun_flower");
+    await page.waitForFunction(() => Boolean(window.phaserGame?.scene?.getScene?.("CampScene")?.activeBubble), null, { timeout: 12000 });
+    await closeBubble(page);
 
     await clickHotspot(page, "sun_compass");
     await assertState(page, "Sun Compass inspection should set progress fact", (state) => (
@@ -390,6 +396,16 @@ async function runSunTempleSmokeTest(baseUrl) {
     await closeBubble(page);
     await saveScreenshot(page, "06-slice-complete");
 
+    await clickGame(page, 872, 92);
+    await clickMapMarker(page, "waterfall-mouth");
+    await waitForScene(page, "sun-temple-adventure-waterfall-mouth");
+    await page.goto(`${baseUrl}/phaser.html`, { waitUntil: "domcontentloaded" });
+    await waitForScene(page, "sun-temple-adventure-waterfall-mouth");
+    await assertState(page, "bare game URL should resume the saved room and campaign state", (state) => (
+      state.facts["compass.green_lens_placed"] === true
+      && JSON.stringify(state.inventory) === JSON.stringify(["valley_map"])
+    ));
+
     if (pageErrors.length > 0) {
       fail("browser page error", { pageErrors });
     }
@@ -398,8 +414,29 @@ async function runSunTempleSmokeTest(baseUrl) {
   }
 }
 
+async function runExplorationModeSmokeTest(baseUrl) {
+  const browser = await launchBrowser();
+  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  try {
+    await page.goto(
+      `${baseUrl}/phaser.html?scenario=scenarios/sun-temple-adventure-camp-edge-content.json&reset=1&explore=1`,
+      { waitUntil: "domcontentloaded" },
+    );
+    await waitForScene(page, "sun-temple-adventure-camp-edge");
+    await assertState(page, "exploration mode should unlock the HUD map immediately", (state) => state.mapButton?.enabled === true);
+    await clickHotspot(page, "exit_jungle_path");
+    await waitForScene(page, "sun-temple-adventure-jungle-path");
+    if (new URL(page.url()).searchParams.get("explore") !== "1") {
+      fail("exploration mode should remain enabled after room travel", { url: page.url() });
+    }
+  } finally {
+    await browser.close();
+  }
+}
+
 const { server, url } = await startServer();
 try {
+  await runExplorationModeSmokeTest(url);
   await runSunTempleSmokeTest(url);
   console.log("Sun Temple adventure smoke test passed.");
 } finally {

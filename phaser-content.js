@@ -4,7 +4,8 @@
   const CONTENT_CACHE_KEY = "gameContent";
   const SCENE_WIDTH = 1024;
   const SCENE_HEIGHT = 576;
-  const ASSET_OVERRIDE_VERSION = "20260710-adventure-polish";
+  const ASSET_OVERRIDE_VERSION = "20260710-slice04-mirror-hall";
+  const LAST_CAMPAIGN_KEY = "english-game:last-campaign";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
   const BUILTIN_DEFAULT_SCENARIO = "scenarios/james-bond-level-01-content.json";
   const BUILTIN_LEVEL_SCENARIOS = {
@@ -46,6 +47,28 @@
   const LEVEL_EDITOR_ENABLED = ["1", "true", "hotspots"].includes(
     String(LEVEL_EDITOR_PARAMS.get("editor") || LEVEL_EDITOR_PARAMS.get("levelEditor") || "").toLowerCase(),
   );
+
+  function isSafeScenarioPath(value) {
+    const path = String(value || "").trim();
+    return path.startsWith("scenarios/") && path.endsWith(".json") && !path.includes("..") && !path.includes("://");
+  }
+
+  function getSavedResumeScenario() {
+    try {
+      const latest = JSON.parse(window.localStorage?.getItem(LAST_CAMPAIGN_KEY) || "null");
+      if (!latest?.campaignId || !latest?.storageKey) {
+        return null;
+      }
+      const save = JSON.parse(window.localStorage.getItem(latest.storageKey) || "null");
+      if (save?.campaignId !== latest.campaignId || !isSafeScenarioPath(save?.resume?.scenario)) {
+        return null;
+      }
+      return save.resume.scenario;
+    } catch (_error) {
+      return null;
+    }
+  }
+
   function getContentUrl() {
     const locationSearch = window.location?.search || "";
     const params = new URLSearchParams(locationSearch);
@@ -54,6 +77,10 @@
     if (!scenario) {
       if (LEVEL_SCENARIOS[level]) {
         return `${LEVEL_SCENARIOS[level]}?v=${ASSET_OVERRIDE_VERSION}`;
+      }
+      const resumeScenario = params.has("reset") || params.has("new") ? null : getSavedResumeScenario();
+      if (resumeScenario) {
+        return `${resumeScenario}?v=${ASSET_OVERRIDE_VERSION}`;
       }
       return DEFAULT_CONTENT_URL;
     }
@@ -76,6 +103,39 @@
       walkTo: rawHotspot.walk_to,
       scenery: rawHotspot.kind === "scenery",
     };
+  }
+
+  function getSceneArrival(content) {
+    const params = new URLSearchParams(window.location?.search || "");
+    const fromScene = params.get("arrival_from_scene");
+    if (!fromScene || !Array.isArray(content?.hotspots)) {
+      return null;
+    }
+    const entrance = content.hotspots.find((hotspot) =>
+      hotspot.kind === "exit" && hotspot.arrival_from_scene === fromScene,
+    );
+    const sourceXParam = params.get("arrival_x");
+    const sourceYParam = params.get("arrival_y");
+    const sourceX = Number(sourceXParam);
+    const sourceY = Number(sourceYParam);
+    const fallbackEntrance = sourceXParam !== null && sourceYParam !== null && Number.isFinite(sourceX) && Number.isFinite(sourceY)
+      ? { x: sourceX, y: sourceY, label: "the passage" }
+      : null;
+    const arrivalEntrance = entrance?.walk_to ? entrance : fallbackEntrance;
+    const destination = entrance?.walk_to || content.hero_start;
+    if (!arrivalEntrance || !destination) {
+      return null;
+    }
+    // Arrival parameters are only for this load. Removing them prevents a browser
+    // refresh from replaying the entrance walk.
+    params.delete("arrival_from_scene");
+    params.delete("arrival_from_exit");
+    params.delete("arrival_x");
+    params.delete("arrival_y");
+    const url = new URL(window.location.href);
+    url.search = params.toString();
+    window.history?.replaceState?.(window.history.state, "", url.toString());
+    return { entrance: arrivalEntrance, destination };
   }
 
   function installDataDrivenScene(SceneClass) {
@@ -253,10 +313,12 @@
         } else if (this.guide?.roleLabel) {
           this.guide.roleLabel.setVisible(false);
         }
-        if (content.hero_start && this.hero) {
-          this.hero.setPosition(content.hero_start.x, content.hero_start.y);
-          this.hero.setDepth(Math.round(content.hero_start.y));
-          this.hero.setScale(this.getCharacterScale(content.hero_start.y));
+        const arrival = this.levelEditorEnabled ? null : getSceneArrival(content);
+        const initialPosition = arrival?.entrance || content.hero_start;
+        if (initialPosition && this.hero) {
+          this.hero.setPosition(initialPosition.x, initialPosition.y);
+          this.hero.setDepth(Math.round(initialPosition.y));
+          this.hero.setScale(this.getCharacterScale(initialPosition.y));
           this.setHeroIdle("down");
         }
         if (content.hud?.status_text && this.statusText) {
@@ -264,6 +326,12 @@
         }
         if (this.levelEditorEnabled) {
           this.installActorEditor();
+        }
+        if (arrival && this.hero) {
+          this.time.delayedCall(80, () => {
+            this.setCommand(`Arriving from ${arrival.entrance.label}`);
+            this.walkHeroTo(arrival.destination.x, arrival.destination.y);
+          });
         }
       }
 

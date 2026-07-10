@@ -453,7 +453,22 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
 
   const level1Scenario = "scenarios/james-bond-level-01-content.json";
-  await page.goto(`${url}/phaser.html?scenario=${encodeURIComponent(level1Scenario)}&test=bond-engine`, {
+  await page.goto(`${url}/phaser.html?scenario=${encodeURIComponent(level1Scenario)}&reset=1&explore=1&test=bond-explore`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForFunction(() => window.__ENGLISH_GAME_ENGINE__?.config?.scene_id === "james-bond-level-01");
+  const explorationExit = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return { x: scene.exitMarker.zone.x, y: scene.exitMarker.zone.y };
+  });
+  await clickScenePoint(page, explorationExit.x, explorationExit.y);
+  await page.waitForURL(
+    (current) => current.searchParams.get("scenario") === "scenarios/james-bond-level-02-content.json"
+      && current.searchParams.get("explore") === "1",
+    { timeout: 5000 },
+  );
+
+  await page.goto(`${url}/phaser.html?scenario=${encodeURIComponent(level1Scenario)}&reset=1&test=bond-engine`, {
     waitUntil: "networkidle",
   });
   await page.waitForFunction(() => window.__ENGLISH_GAME_ENGINE__?.config?.scene_id === "james-bond-level-01");

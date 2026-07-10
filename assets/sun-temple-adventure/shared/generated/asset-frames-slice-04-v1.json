@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": [
+    "Frame rectangles are starter crops for the Mirror Hall Slice 4 prop atlas.",
+    "The generated background determines final overlay placement; these frames do not define hotspot positions.",
+    "Beam paths are drawn as stateful Phaser graphic paths in the live scene so they remain continuous on the painted room geometry."
+  ],
+  "textures": {
+    "propAtlasSlice04": {
+      "path": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-04-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "near_mirror_start": { "x": 50, "y": 35, "width": 265, "height": 325 },
+        "near_mirror_aligned": { "x": 390, "y": 55, "width": 305, "height": 305 },
+        "far_mirror_start": { "x": 770, "y": 35, "width": 300, "height": 330 },
+        "far_mirror_aligned": { "x": 1145, "y": 45, "width": 315, "height": 325 },
+        "beam_source_fixed": { "x": 45, "y": 365, "width": 245, "height": 190 },
+        "beam_fixed_near": { "x": 320, "y": 365, "width": 265, "height": 200 },
+        "beam_near_wrong": { "x": 600, "y": 405, "width": 180, "height": 95 },
+        "beam_near_far": { "x": 780, "y": 405, "width": 310, "height": 105 },
+        "beam_far_wrong": { "x": 1105, "y": 405, "width": 170, "height": 95 },
+        "beam_far_panel": { "x": 1280, "y": 365, "width": 220, "height": 200 },
+        "sun_panel_closed": { "x": 55, "y": 555, "width": 350, "height": 245 },
+        "sun_panel_open": { "x": 410, "y": 550, "width": 340, "height": 250 },
+        "sun_panel_glow": { "x": 800, "y": 545, "width": 270, "height": 260 },
+        "mirror_lens": { "x": 1130, "y": 545, "width": 340, "height": 270 },
+        "sun_compass_mirror_lens": { "x": 345, "y": 790, "width": 430, "height": 225 },
+        "map_marker_observatory_approach_locked": { "x": 770, "y": 770, "width": 350, "height": 250 }
+      }
+    }
+  },
+  "inventory_icons": {
+    "mirror_lens": { "texture": "propAtlasSlice04", "frame": "mirror_lens" }
+  }
+}

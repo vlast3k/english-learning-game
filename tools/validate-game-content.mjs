@@ -415,6 +415,15 @@ function validateAdventureContent(content, fileLabel) {
 
   for (const [index, overlay] of (content.overlays || []).entries()) {
     requireString(overlay.id, `${fileLabel}.overlays[${index}].id`);
+    if (overlay.kind === "water_path") {
+      if (!Array.isArray(overlay.points) || overlay.points.length < 2) {
+        fail(`${fileLabel}.overlays[${index}].points must contain at least two points`);
+      }
+      for (const [pointIndex, point] of overlay.points.entries()) {
+        requirePoint(point, `${fileLabel}.overlays[${index}].points[${pointIndex}]`);
+      }
+      continue;
+    }
     requireString(overlay.texture, `${fileLabel}.overlays[${index}].texture`);
     requireString(overlay.frame, `${fileLabel}.overlays[${index}].frame`);
     if (!Number.isFinite(overlay.x) || !Number.isFinite(overlay.y)) {

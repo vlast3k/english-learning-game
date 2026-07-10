@@ -9,10 +9,14 @@
     "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
     "extra_textures": {
-      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png"
+      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png",
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
+      "propAtlasSlice04": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-04-v1.png"
     },
     "extra_asset_frames": [
-      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json"
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-04-v1.json"
     ],
     "npc_mira": "assets/sun-temple-adventure/shared/generated/npc-mira-v1.png",
     "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
@@ -139,6 +143,42 @@
         "texture": "propAtlasSlice02",
         "frame": "blue_lens"
       }
+    },
+    "stone_cup": {
+      "label": "stone cup",
+      "english": "stone cup",
+      "bg": "каменна чаша",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_cup"
+      }
+    },
+    "water_cup": {
+      "label": "water cup",
+      "english": "water cup",
+      "bg": "чаша с вода",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "water_cup"
+      }
+    },
+    "stone_lens": {
+      "label": "Stone Lens",
+      "english": "Stone Lens",
+      "bg": "Каменна леща",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_lens"
+      }
+    },
+    "mirror_lens": {
+      "label": "Mirror Lens",
+      "english": "Mirror Lens",
+      "bg": "Огледална леща",
+      "icon": {
+        "texture": "propAtlasSlice04",
+        "frame": "mirror_lens"
+      }
     }
   },
   "npcs": [
@@ -209,6 +249,18 @@
       "wrong_item_bg": "Това е за леща."
     },
     {
+      "id": "sun_flower",
+      "kind": "inspect",
+      "label": "sun flower",
+      "x": 735,
+      "y": 360,
+      "radius": 38,
+      "walk_to": {
+        "x": 690,
+        "y": 470
+      }
+    },
+    {
       "id": "torn_map",
       "kind": "takeable",
       "item_id": "torn_map",
@@ -230,6 +282,7 @@
     {
       "id": "exit_supply_tent",
       "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-camp-supply-tent",
       "label": "supply tent",
       "x": 142,
       "y": 203,
@@ -242,6 +295,7 @@
     {
       "id": "exit_camp_edge",
       "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-camp-edge",
       "label": "camp edge",
       "x": 965,
       "y": 376,
@@ -276,6 +330,32 @@
       "depth": 522,
       "visible_when": {
         "fact": "compass.blue_lens_placed",
+        "equals": true
+      }
+    },
+    {
+      "id": "sun_compass_stone_lens",
+      "texture": "propAtlasSlice03",
+      "frame": "sun_compass_stone_lens",
+      "x": 520,
+      "y": 318,
+      "scale": 0.28,
+      "depth": 524,
+      "visible_when": {
+        "fact": "compass.stone_lens_placed",
+        "equals": true
+      }
+    },
+    {
+      "id": "sun_compass_mirror_lens",
+      "texture": "propAtlasSlice04",
+      "frame": "sun_compass_mirror_lens",
+      "x": 520,
+      "y": 318,
+      "scale": 0.28,
+      "depth": 526,
+      "visible_when": {
+        "fact": "compass.mirror_lens_placed",
         "equals": true
       }
     }
@@ -419,8 +499,53 @@
           "fact": "location.temple_steps.revealed",
           "equals": true
         },
+        "enabled_when": {
+          "fact": "compass.blue_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "sun-courtyard",
+        "label": "Sun Courtyard",
+        "destination": "scenarios/sun-temple-adventure-sun-courtyard-content.json",
+        "x": -250,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "mirror-hall",
+        "label": "Mirror Hall",
+        "destination": "scenarios/sun-temple-adventure-mirror-hall-content.json",
+        "x": 210,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.mirror_hall.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.stone_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "observatory-approach",
+        "label": "High Observatory",
+        "destination": "scenarios/sun-temple-adventure-observatory-approach-content.json",
+        "x": -20,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.observatory_approach.revealed",
+          "equals": true
+        },
         "enabled_when": false,
-        "locked_text": "The temple steps are not ready yet."
+        "locked_text": "The high path is not ready yet."
       }
     ]
   },
@@ -431,11 +556,15 @@
     "cave": "пещера",
     "compass": "компас",
     "five": "пет",
+    "flower": "цвете",
     "green": "зелен",
+    "light": "светлина",
     "lens": "леща",
     "map": "карта",
+    "mirror": "огледало",
     "needs": "има нужда",
     "rope": "въже",
-    "sun": "слънце"
+    "sun": "слънце",
+    "temple": "храм"
   }
 }

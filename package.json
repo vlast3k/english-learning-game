@@ -12,8 +12,10 @@
     "test:browser": "npm run test:browser:base && npm run test:browser:bond && npm run test:browser:sun-temple",
     "test:browser:base": "node tools/run-browser-smoke-test.mjs",
     "test:browser:bond": "node tools/bond-engine-browser-test.mjs",
-    "test:browser:sun-temple": "node tools/sun-temple-adventure-smoke-test.mjs && node tools/sun-temple-adventure-slice-02-smoke-test.mjs",
+    "test:browser:sun-temple": "node tools/sun-temple-adventure-smoke-test.mjs && node tools/sun-temple-adventure-slice-02-smoke-test.mjs && node tools/sun-temple-adventure-slice-03-smoke-test.mjs && node tools/sun-temple-adventure-slice-04-smoke-test.mjs",
     "test:browser:sun-temple:slice-02": "node tools/sun-temple-adventure-slice-02-smoke-test.mjs",
+    "test:browser:sun-temple:slice-03": "node tools/sun-temple-adventure-slice-03-smoke-test.mjs",
+    "test:browser:sun-temple:slice-04": "node tools/sun-temple-adventure-slice-04-smoke-test.mjs",
     "serve": "python3 -m http.server 9231",
     "serve:editor": "node tools/level-editor-server.mjs"
   },

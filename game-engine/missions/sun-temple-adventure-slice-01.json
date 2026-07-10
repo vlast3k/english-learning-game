@@ -3,12 +3,25 @@
   "campaign_id": "sun-temple-adventure",
   "storage_key": "english-game:sun-temple-adventure",
   "scene_id": "sun-temple-adventure-base-camp-table",
-  "debug": { "enabled": true },
+  "debug": {
+    "enabled": true
+  },
   "initial_state": {
     "facts": {
       "location.base_camp.discovered": true,
       "location.camp_supply_tent.discovered": true,
-      "location.camp_edge.discovered": true
+      "location.camp_edge.discovered": true,
+      "item.stone_cup.taken": false,
+      "item.stone_lens.taken": false,
+      "item.mirror_lens.taken": false,
+      "temple.channel_filled": false,
+      "temple.gate_open": false,
+      "temple.sun_flower_open": false,
+      "mirror_hall.light_source_seen": false,
+      "mirror_hall.near_mirror_aligned": false,
+      "mirror_hall.far_mirror_aligned": false,
+      "mirror_hall.beam_path_complete": false,
+      "mirror_hall.sun_panel_open": false
     },
     "inventory": [],
     "counters": {},
@@ -20,621 +33,2229 @@
       "title": "Place the Green Lens in the Sun Compass",
       "type": "adventure_milestone",
       "final": false,
-      "requires": { "fact": "slice.green_lens_complete", "equals": true },
-      "produces": ["sun_temple.slice_01.complete"]
+      "requires": {
+        "fact": "slice.green_lens_complete",
+        "equals": true
+      },
+      "produces": [
+        "sun_temple.slice_01.complete"
+      ]
     },
     {
       "id": "sun_temple_slice_02_complete",
       "title": "Place the Blue Lens in the Sun Compass",
       "type": "adventure_milestone",
+      "final": false,
+      "requires": {
+        "fact": "slice.blue_lens_complete",
+        "equals": true
+      },
+      "produces": [
+        "sun_temple.slice_02.complete"
+      ]
+    },
+    {
+      "id": "sun_temple_slice_03_complete",
+      "title": "Place the Stone Lens in the Sun Compass",
+      "type": "adventure_milestone",
+      "final": false,
+      "requires": {
+        "fact": "slice.stone_lens_complete",
+        "equals": true
+      },
+      "produces": [
+        "sun_temple.slice_03.complete"
+      ]
+    },
+    {
+      "id": "sun_temple_slice_04_complete",
+      "title": "Place the Mirror Lens in the Sun Compass",
+      "type": "adventure_milestone",
       "final": true,
-      "requires": { "fact": "slice.blue_lens_complete", "equals": true },
-      "produces": ["sun_temple.slice_02.complete"]
+      "requires": {
+        "fact": "slice.mirror_lens_complete",
+        "equals": true
+      },
+      "produces": [
+        "sun_temple.slice_04.complete"
+      ]
     }
   ],
   "rules": [
     {
       "id": "inspect-sun-compass",
-      "event": { "type": "hotspot.inspected", "target": "sun_compass" },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_compass"
+      },
       "actions": [
-        { "type": "fact.set", "fact": "compass.inspected", "value": true },
-        { "type": "dialog.show", "speaker": "Mira", "text": "This is the Sun Compass. It has five empty spots.", "bg": "Това е Слънчевият компас. Има пет празни места." }
+        {
+          "type": "fact.set",
+          "fact": "compass.inspected",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "This is the Sun Compass. Five lenses are missing.",
+          "bg": "Това е Слънчевият компас. Липсват пет лещи."
+        }
+      ]
+    },
+    {
+      "id": "opening-sunlight-mystery",
+      "once": true,
+      "event": {
+        "type": "scene.entered",
+        "target": "sun-temple-adventure-base-camp-table"
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "That flower faces the temple. Now it has no light.",
+          "bg": "Това цвете гледа към храма. Сега няма светлина."
+        }
+      ]
+    },
+    {
+      "id": "inspect-sun-flower",
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_flower"
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "This flower needs light.",
+          "bg": "Това цвете има нужда от светлина."
+        }
       ]
     },
     {
       "id": "take-torn-map",
       "once": true,
-      "event": { "type": "item.taken", "target": "torn_map" },
+      "event": {
+        "type": "item.taken",
+        "target": "torn_map"
+      },
       "actions": [
-        { "type": "inventory.add", "item": "torn_map" },
-        { "type": "fact.set", "fact": "item.torn_map.taken", "value": true },
-        { "type": "fact.set", "fact": "map.ui_unlocked", "value": true },
-        { "type": "ui.toast", "text": "The map is open." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "torn_map"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.torn_map.taken",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "map.ui_unlocked",
+          "value": true
+        },
+        {
+          "type": "ui.toast",
+          "text": "The map is open."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "take-rope",
       "once": true,
-      "event": { "type": "item.taken", "target": "rope" },
+      "event": {
+        "type": "item.taken",
+        "target": "rope"
+      },
       "actions": [
-        { "type": "inventory.add", "item": "rope" },
-        { "type": "fact.set", "fact": "item.rope.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I have a rope.", "bg": "Имам въже." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "rope"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.rope.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have a rope.",
+          "bg": "Имам въже."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-branch-first",
       "priority": 5,
       "once": true,
-      "event": { "type": "hotspot.inspected", "target": "fallen_branch" },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "fallen_branch"
+      },
       "stop_propagation": true,
       "actions": [
-        { "type": "fact.set", "fact": "camp_edge.branch_inspected", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "There is a map piece under the branch.", "bg": "Има парче от карта под клона." }
+        {
+          "type": "fact.set",
+          "fact": "camp_edge.branch_inspected",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "A piece of paper is under the branch.",
+          "bg": "Има парче хартия под клона."
+        }
       ]
     },
     {
       "id": "move-branch",
       "priority": 10,
       "once": true,
-      "event": { "type": "hotspot.inspected", "target": "fallen_branch" },
-      "condition": { "fact": "camp_edge.branch_inspected", "equals": true },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "fallen_branch"
+      },
+      "condition": {
+        "fact": "camp_edge.branch_inspected",
+        "equals": true
+      },
       "actions": [
-        { "type": "fact.set", "fact": "camp_edge.branch_moved", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The map piece is here.", "bg": "Парчето от карта е тук." },
-        { "type": "screen.refresh" }
+        {
+          "type": "fact.set",
+          "fact": "camp_edge.branch_moved",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The map piece is here.",
+          "bg": "Парчето от карта е тук."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "take-map-piece",
       "once": true,
-      "event": { "type": "item.taken", "target": "map_piece_01" },
-      "condition": { "fact": "camp_edge.branch_moved", "equals": true },
+      "event": {
+        "type": "item.taken",
+        "target": "map_piece_01"
+      },
+      "condition": {
+        "fact": "camp_edge.branch_moved",
+        "equals": true
+      },
       "actions": [
-        { "type": "inventory.add", "item": "map_piece_01" },
-        { "type": "fact.set", "fact": "item.map_piece_01.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I have a map piece.", "bg": "Имам парче от карта." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "map_piece_01"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.map_piece_01.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have a map piece.",
+          "bg": "Имам парче от карта."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "combine-valley-map",
       "once": true,
-      "event": { "type": "inventory.items_combined" },
+      "event": {
+        "type": "inventory.items_combined"
+      },
       "condition": {
         "all": [
-          { "event": "items.0", "equals": "map_piece_01" },
-          { "event": "items.1", "equals": "torn_map" },
-          { "inventory_contains": "torn_map" },
-          { "inventory_contains": "map_piece_01" }
+          {
+            "event": "items.0",
+            "equals": "map_piece_01"
+          },
+          {
+            "event": "items.1",
+            "equals": "torn_map"
+          },
+          {
+            "inventory_contains": "torn_map"
+          },
+          {
+            "inventory_contains": "map_piece_01"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "torn_map" },
-        { "type": "inventory.remove", "item": "map_piece_01" },
-        { "type": "inventory.add", "item": "valley_map" },
-        { "type": "fact.set", "fact": "map.valley_map_made", "value": true },
-        { "type": "fact.set", "fact": "location.jungle_path.discovered", "value": true },
-        { "type": "ui.toast", "text": "This is the map." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "torn_map"
+        },
+        {
+          "type": "inventory.remove",
+          "item": "map_piece_01"
+        },
+        {
+          "type": "inventory.add",
+          "item": "valley_map"
+        },
+        {
+          "type": "fact.set",
+          "fact": "map.valley_map_made",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.jungle_path.discovered",
+          "value": true
+        },
+        {
+          "type": "ui.toast",
+          "text": "This is the map."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-path-marker",
-      "event": { "type": "hotspot.inspected", "target": "path_marker" },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "path_marker"
+      },
       "actions": [
-        { "type": "fact.set", "fact": "jungle_path.marker_seen", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The river path is here.", "bg": "Пътеката към реката е тук." }
+        {
+          "type": "fact.set",
+          "fact": "jungle_path.marker_seen",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "This path has a sun mark.",
+          "bg": "Тази пътека има слънчев знак."
+        }
       ]
     },
     {
       "id": "inspect-bridge-without-rope",
       "priority": 5,
-      "event": { "type": "hotspot.inspected", "target": "broken_bridge" },
-      "condition": { "not": { "fact": "bridge.repaired", "equals": true } },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "broken_bridge"
+      },
+      "condition": {
+        "not": {
+          "fact": "bridge.repaired",
+          "equals": true
+        }
+      },
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "The bridge is not safe. I need a rope.", "bg": "Мостът не е безопасен. Трябва ми въже." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The bridge is not safe. I need a rope.",
+          "bg": "Мостът не е безопасен. Трябва ми въже."
+        }
       ]
     },
     {
       "id": "repair-bridge",
       "once": true,
-      "event": { "type": "inventory.item_used_on_hotspot", "target": "broken_bridge" },
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "broken_bridge"
+      },
       "condition": {
         "all": [
-          { "event": "item", "equals": "rope" },
-          { "inventory_contains": "rope" }
+          {
+            "event": "item",
+            "equals": "rope"
+          },
+          {
+            "inventory_contains": "rope"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "rope" },
-        { "type": "fact.set", "fact": "bridge.repaired", "value": true },
-        { "type": "fact.set", "fact": "location.broken_bridge.discovered", "value": true },
-        { "type": "fact.set", "fact": "location.village_garden.discovered", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The bridge is safe now.", "bg": "Мостът вече е безопасен." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "rope"
+        },
+        {
+          "type": "fact.set",
+          "fact": "bridge.repaired",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.broken_bridge.discovered",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.village_garden.discovered",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The bridge is safe now.",
+          "bg": "Мостът вече е безопасен."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "inspect-far-basket",
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "lost_basket_far"
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "A basket is over there. Someone needs it.",
+          "bg": "Има кошница там. Някой има нужда от нея."
+        }
       ]
     },
     {
       "id": "take-lost-basket",
       "once": true,
-      "event": { "type": "item.taken", "target": "lost_basket" },
-      "condition": { "fact": "bridge.repaired", "equals": true },
+      "event": {
+        "type": "item.taken",
+        "target": "lost_basket"
+      },
+      "condition": {
+        "fact": "bridge.repaired",
+        "equals": true
+      },
       "actions": [
-        { "type": "inventory.add", "item": "lost_basket" },
-        { "type": "fact.set", "fact": "item.lost_basket.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I have Lina's basket.", "bg": "Имам кошницата на Лина." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "lost_basket"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.lost_basket.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have Lina's basket.",
+          "bg": "Имам кошницата на Лина."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "talk-to-mira",
-      "event": { "type": "npc.talked", "target": "mira" },
+      "event": {
+        "type": "npc.talked",
+        "target": "mira"
+      },
       "actions": [
-        { "type": "dialog.show", "speaker": "Mira", "text": "The Sun Compass needs five lenses.", "bg": "Слънчевият компас има нужда от пет лещи." }
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "The Sun Compass needs five lenses.",
+          "bg": "Слънчевият компас има нужда от пет лещи."
+        }
       ]
     },
     {
       "id": "talk-to-lina-before-basket",
       "priority": 5,
-      "event": { "type": "npc.talked", "target": "lina" },
-      "condition": { "not": { "fact": "lina.helped", "equals": true } },
+      "event": {
+        "type": "npc.talked",
+        "target": "lina"
+      },
+      "condition": {
+        "not": {
+          "fact": "lina.helped",
+          "equals": true
+        }
+      },
       "actions": [
-        { "type": "fact.set", "fact": "lina.asked_for_basket", "value": true },
-        { "type": "dialog.show", "speaker": "Lina", "text": "Where is my basket?", "bg": "Къде е моята кошница?" }
+        {
+          "type": "fact.set",
+          "fact": "lina.asked_for_basket",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Lina",
+          "text": "My seed basket is near the old bridge. I need it.",
+          "bg": "Моята кошница със семена е до стария мост. Имам нужда от нея."
+        }
       ]
     },
     {
       "id": "talk-to-lina-after-basket",
       "priority": 10,
-      "event": { "type": "npc.talked", "target": "lina" },
-      "condition": { "fact": "lina.helped", "equals": true },
+      "event": {
+        "type": "npc.talked",
+        "target": "lina"
+      },
+      "condition": {
+        "fact": "lina.helped",
+        "equals": true
+      },
       "actions": [
-        { "type": "dialog.show", "speaker": "Lina", "text": "The Green Lens is under the flower pot.", "bg": "Зелената леща е под саксията." }
+        {
+          "type": "dialog.show",
+          "speaker": "Lina",
+          "text": "The Green Lens is under the flower pot.",
+          "bg": "Зелената леща е под саксията."
+        }
       ]
     },
     {
       "id": "talk-to-lina-after-green-lens",
       "priority": 15,
-      "event": { "type": "npc.talked", "target": "lina" },
-      "condition": { "fact": "compass.green_lens_placed", "equals": true },
+      "event": {
+        "type": "npc.talked",
+        "target": "lina"
+      },
+      "condition": {
+        "fact": "compass.green_lens_placed",
+        "equals": true
+      },
       "stop_propagation": true,
       "actions": [
-        { "type": "dialog.show", "speaker": "Lina", "text": "The hut has a jar. A jar can hold light.", "bg": "В колибата има буркан. Бурканът може да държи светлина." }
+        {
+          "type": "dialog.show",
+          "speaker": "Lina",
+          "text": "The hut has a jar. Waterfall leaves glow at night.",
+          "bg": "В колибата има буркан. Листата край водопада светят нощем."
+        }
       ]
     },
     {
       "id": "give-basket-to-lina",
       "once": true,
-      "event": { "type": "inventory.item_given_to_npc", "target": "lina" },
+      "event": {
+        "type": "inventory.item_given_to_npc",
+        "target": "lina"
+      },
       "condition": {
         "all": [
-          { "event": "item", "equals": "lost_basket" },
-          { "inventory_contains": "lost_basket" }
+          {
+            "event": "item",
+            "equals": "lost_basket"
+          },
+          {
+            "inventory_contains": "lost_basket"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "lost_basket" },
-        { "type": "fact.set", "fact": "lina.helped", "value": true },
-        { "type": "dialog.show", "speaker": "Lina", "text": "My seeds are here. Thank you.", "bg": "Семената ми са тук. Благодаря." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "lost_basket"
+        },
+        {
+          "type": "fact.set",
+          "fact": "lina.helped",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Lina",
+          "text": "My seeds are safe. Thank you.",
+          "bg": "Семената ми са в безопасност. Благодаря."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-flower-pot-before-hint",
       "priority": 5,
-      "event": { "type": "hotspot.inspected", "target": "flower_pot" },
-      "condition": { "not": { "fact": "lina.helped", "equals": true } },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "flower_pot"
+      },
+      "condition": {
+        "not": {
+          "fact": "lina.helped",
+          "equals": true
+        }
+      },
       "stop_propagation": true,
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "There are flowers here.", "bg": "Тук има цветя." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "There are flowers here.",
+          "bg": "Тук има цветя."
+        }
       ]
     },
     {
       "id": "inspect-flower-pot-after-hint",
       "priority": 10,
       "once": true,
-      "event": { "type": "hotspot.inspected", "target": "flower_pot" },
-      "condition": { "fact": "lina.helped", "equals": true },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "flower_pot"
+      },
+      "condition": {
+        "fact": "lina.helped",
+        "equals": true
+      },
       "actions": [
-        { "type": "fact.set", "fact": "village.flower_pot_checked", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The Green Lens is here.", "bg": "Зелената леща е тук." },
-        { "type": "screen.refresh" }
+        {
+          "type": "fact.set",
+          "fact": "village.flower_pot_checked",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The Green Lens is here.",
+          "bg": "Зелената леща е тук."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "take-green-lens",
       "once": true,
-      "event": { "type": "item.taken", "target": "green_lens" },
-      "condition": { "fact": "village.flower_pot_checked", "equals": true },
+      "event": {
+        "type": "item.taken",
+        "target": "green_lens"
+      },
+      "condition": {
+        "fact": "village.flower_pot_checked",
+        "equals": true
+      },
       "actions": [
-        { "type": "inventory.add", "item": "green_lens" },
-        { "type": "fact.set", "fact": "item.green_lens.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I have the Green Lens.", "bg": "Имам Зелената леща." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "green_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.green_lens.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have the Green Lens.",
+          "bg": "Имам Зелената леща."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "place-green-lens",
       "once": true,
-      "event": { "type": "inventory.item_used_on_hotspot", "target": "sun_compass" },
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "sun_compass"
+      },
       "condition": {
         "all": [
-          { "event": "item", "equals": "green_lens" },
-          { "inventory_contains": "green_lens" }
+          {
+            "event": "item",
+            "equals": "green_lens"
+          },
+          {
+            "inventory_contains": "green_lens"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "green_lens" },
-        { "type": "fact.set", "fact": "compass.green_lens_placed", "value": true },
-        { "type": "fact.set", "fact": "location.waterfall_cave.revealed", "value": true },
-        { "type": "fact.set", "fact": "slice.green_lens_complete", "value": true },
-        { "type": "puzzle.complete", "puzzle": "sun_temple_slice_01_complete" },
-        { "type": "dialog.show", "speaker": "Mira", "text": "The cave is on the map.", "bg": "Пещерата е на картата." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "green_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "compass.green_lens_placed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.waterfall_cave.revealed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "slice.green_lens_complete",
+          "value": true
+        },
+        {
+          "type": "puzzle.complete",
+          "puzzle": "sun_temple_slice_01_complete"
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "The lens shows an old water path.",
+          "bg": "Лещата показва стар път до водата."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "exit-village-to-keeper-locked",
       "priority": 5,
-      "event": { "type": "exit.reached", "target": "exit_keeper_hut" },
-      "condition": { "not": { "fact": "lina.helped", "equals": true } },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_keeper_hut"
+      },
+      "condition": {
+        "not": {
+          "fact": "lina.helped",
+          "equals": true
+        }
+      },
       "stop_propagation": true,
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "I should help Lina first.", "bg": "Първо трябва да помогна на Лина." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I should help Lina first.",
+          "bg": "Първо трябва да помогна на Лина."
+        }
       ]
     },
     {
       "id": "exit-village-to-keeper",
       "priority": 10,
-      "event": { "type": "exit.reached", "target": "exit_keeper_hut" },
-      "condition": { "fact": "lina.helped", "equals": true },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_keeper_hut"
+      },
+      "condition": {
+        "fact": "lina.helped",
+        "equals": true
+      },
       "actions": [
-        { "type": "fact.set", "fact": "location.keeper_hut.discovered", "value": true },
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-keeper-hut-content.json" }
+        {
+          "type": "fact.set",
+          "fact": "location.keeper_hut.discovered",
+          "value": true
+        },
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-keeper-hut-content.json"
+        }
       ]
     },
     {
       "id": "take-empty-jar",
       "once": true,
-      "event": { "type": "item.taken", "target": "empty_jar" },
+      "event": {
+        "type": "item.taken",
+        "target": "empty_jar"
+      },
       "actions": [
-        { "type": "inventory.add", "item": "empty_jar" },
-        { "type": "fact.set", "fact": "item.empty_jar.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "This is an empty jar.", "bg": "Това е празен буркан." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "empty_jar"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.empty_jar.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "This is an empty jar.",
+          "bg": "Това е празен буркан."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-hut-shelf",
-      "event": { "type": "hotspot.inspected", "target": "hut_shelf" },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "hut_shelf"
+      },
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "These are small plants.", "bg": "Това са малки растения." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "These plants open in sunlight.",
+          "bg": "Тези растения се отварят на слънце."
+        }
       ]
     },
     {
       "id": "take-glow-leaf",
       "once": true,
-      "event": { "type": "item.taken", "target": "glow_leaf" },
+      "event": {
+        "type": "item.taken",
+        "target": "glow_leaf"
+      },
       "actions": [
-        { "type": "inventory.add", "item": "glow_leaf" },
-        { "type": "fact.set", "fact": "item.glow_leaf.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "This leaf has light.", "bg": "Този лист има светлина." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "glow_leaf"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.glow_leaf.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "This leaf has light. It is not warm.",
+          "bg": "Този лист има светлина. Не е топъл."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "combine-glow-jar",
       "once": true,
-      "event": { "type": "inventory.items_combined" },
+      "event": {
+        "type": "inventory.items_combined"
+      },
       "condition": {
         "all": [
-          { "event": "items.0", "equals": "empty_jar" },
-          { "event": "items.1", "equals": "glow_leaf" },
-          { "inventory_contains": "empty_jar" },
-          { "inventory_contains": "glow_leaf" }
+          {
+            "event": "items.0",
+            "equals": "empty_jar"
+          },
+          {
+            "event": "items.1",
+            "equals": "glow_leaf"
+          },
+          {
+            "inventory_contains": "empty_jar"
+          },
+          {
+            "inventory_contains": "glow_leaf"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "empty_jar" },
-        { "type": "inventory.remove", "item": "glow_leaf" },
-        { "type": "inventory.add", "item": "glow_jar" },
-        { "type": "fact.set", "fact": "craft.glow_jar_made", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The jar holds the light.", "bg": "Бурканът държи светлината." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "empty_jar"
+        },
+        {
+          "type": "inventory.remove",
+          "item": "glow_leaf"
+        },
+        {
+          "type": "inventory.add",
+          "item": "glow_jar"
+        },
+        {
+          "type": "fact.set",
+          "fact": "craft.glow_jar_made",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The jar holds the light.",
+          "bg": "Бурканът държи светлината."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-dark-cave-before-light",
       "priority": 5,
-      "event": { "type": "hotspot.inspected", "target": "dark_cave_entrance" },
-      "condition": { "not": { "fact": "waterfall.cave_lit", "equals": true } },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "dark_cave_entrance"
+      },
+      "condition": {
+        "not": {
+          "fact": "waterfall.cave_lit",
+          "equals": true
+        }
+      },
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "The cave is dark. I need light.", "bg": "Пещерата е тъмна. Трябва ми светлина." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The cave is dark. I need light.",
+          "bg": "Пещерата е тъмна. Трябва ми светлина."
+        }
       ]
     },
     {
       "id": "light-dark-cave",
       "once": true,
-      "event": { "type": "inventory.item_used_on_hotspot", "target": "dark_cave_entrance" },
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "dark_cave_entrance"
+      },
       "condition": {
         "all": [
-          { "event": "item", "equals": "glow_jar" },
-          { "inventory_contains": "glow_jar" }
+          {
+            "event": "item",
+            "equals": "glow_jar"
+          },
+          {
+            "inventory_contains": "glow_jar"
+          }
         ]
       },
       "actions": [
-        { "type": "fact.set", "fact": "waterfall.cave_lit", "value": true },
-        { "type": "fact.set", "fact": "location.dark_cave.discovered", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I can see now.", "bg": "Вече виждам." },
-        { "type": "screen.refresh" }
+        {
+          "type": "fact.set",
+          "fact": "waterfall.cave_lit",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.dark_cave.discovered",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I can see now.",
+          "bg": "Вече виждам."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-cave-wall",
       "once": true,
-      "event": { "type": "hotspot.inspected", "target": "cave_wall" },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "cave_wall"
+      },
       "actions": [
-        { "type": "fact.set", "fact": "dark_cave.wall_checked", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "There is a key in the wall.", "bg": "Има ключ в стената." },
-        { "type": "screen.refresh" }
+        {
+          "type": "fact.set",
+          "fact": "dark_cave.wall_checked",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "One stone has a thin line.",
+          "bg": "Един камък има тънка линия."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "take-stone-key",
       "once": true,
-      "event": { "type": "item.taken", "target": "stone_key" },
-      "condition": { "fact": "dark_cave.wall_checked", "equals": true },
+      "event": {
+        "type": "item.taken",
+        "target": "stone_key"
+      },
+      "condition": {
+        "fact": "dark_cave.wall_checked",
+        "equals": true
+      },
       "actions": [
-        { "type": "inventory.add", "item": "stone_key" },
-        { "type": "fact.set", "fact": "item.stone_key.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I have a stone key.", "bg": "Имам каменен ключ." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "stone_key"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.stone_key.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have a stone key.",
+          "bg": "Имам каменен ключ."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "inspect-blue-stone-box",
       "priority": 5,
-      "event": { "type": "hotspot.inspected", "target": "blue_stone_box" },
-      "condition": { "not": { "fact": "dark_cave.box_open", "equals": true } },
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "blue_stone_box"
+      },
+      "condition": {
+        "not": {
+          "fact": "dark_cave.box_open",
+          "equals": true
+        }
+      },
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "The box is closed.", "bg": "Кутията е затворена." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The box is closed.",
+          "bg": "Кутията е затворена."
+        }
       ]
     },
     {
       "id": "open-blue-stone-box",
       "once": true,
-      "event": { "type": "inventory.item_used_on_hotspot", "target": "blue_stone_box" },
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "blue_stone_box"
+      },
       "condition": {
         "all": [
-          { "event": "item", "equals": "stone_key" },
-          { "inventory_contains": "stone_key" }
+          {
+            "event": "item",
+            "equals": "stone_key"
+          },
+          {
+            "inventory_contains": "stone_key"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "stone_key" },
-        { "type": "fact.set", "fact": "dark_cave.box_open", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The box is open.", "bg": "Кутията е отворена." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "stone_key"
+        },
+        {
+          "type": "fact.set",
+          "fact": "dark_cave.box_open",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The box is open.",
+          "bg": "Кутията е отворена."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "take-blue-lens",
       "once": true,
-      "event": { "type": "item.taken", "target": "blue_lens" },
-      "condition": { "fact": "dark_cave.box_open", "equals": true },
+      "event": {
+        "type": "item.taken",
+        "target": "blue_lens"
+      },
+      "condition": {
+        "fact": "dark_cave.box_open",
+        "equals": true
+      },
       "actions": [
-        { "type": "inventory.add", "item": "blue_lens" },
-        { "type": "fact.set", "fact": "item.blue_lens.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "I have the Blue Lens.", "bg": "Имам Синята леща." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.add",
+          "item": "blue_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.blue_lens.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have the Blue Lens.",
+          "bg": "Имам Синята леща."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "place-blue-lens",
       "once": true,
-      "event": { "type": "inventory.item_used_on_hotspot", "target": "sun_compass" },
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "sun_compass"
+      },
       "condition": {
         "all": [
-          { "event": "item", "equals": "blue_lens" },
-          { "inventory_contains": "blue_lens" }
+          {
+            "event": "item",
+            "equals": "blue_lens"
+          },
+          {
+            "inventory_contains": "blue_lens"
+          }
         ]
       },
       "actions": [
-        { "type": "inventory.remove", "item": "blue_lens" },
-        { "type": "fact.set", "fact": "compass.blue_lens_placed", "value": true },
-        { "type": "fact.set", "fact": "location.temple_steps.revealed", "value": true },
-        { "type": "fact.set", "fact": "slice.blue_lens_complete", "value": true },
-        { "type": "puzzle.complete", "puzzle": "sun_temple_slice_02_complete" },
-        { "type": "dialog.show", "speaker": "Mira", "text": "The temple steps are on the map.", "bg": "Стъпалата към храма са на картата." },
-        { "type": "screen.refresh" }
+        {
+          "type": "inventory.remove",
+          "item": "blue_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "compass.blue_lens_placed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.temple_steps.revealed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "slice.blue_lens_complete",
+          "value": true
+        },
+        {
+          "type": "puzzle.complete",
+          "puzzle": "sun_temple_slice_02_complete"
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "The cave path joins the river path.",
+          "bg": "Пътят през пещерата се свързва с пътя край реката."
+        },
+        {
+          "type": "screen.refresh"
+        }
       ]
     },
     {
       "id": "exit-supply-to-base",
-      "event": { "type": "exit.reached", "target": "exit_base_camp" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_base_camp"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-base-camp-table-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-base-camp-table-content.json"
+        }
       ]
     },
     {
       "id": "exit-base-to-supply",
-      "event": { "type": "exit.reached", "target": "exit_supply_tent" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_supply_tent"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-camp-supply-tent-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-camp-supply-tent-content.json"
+        }
       ]
     },
     {
       "id": "exit-base-to-edge",
-      "event": { "type": "exit.reached", "target": "exit_camp_edge" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_camp_edge"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-camp-edge-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-camp-edge-content.json"
+        }
       ]
     },
     {
       "id": "exit-edge-to-jungle-locked",
       "priority": 5,
-      "event": { "type": "exit.reached", "target": "exit_jungle_path" },
-      "condition": { "not": { "fact": "map.valley_map_made", "equals": true } },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_jungle_path"
+      },
+      "condition": {
+        "not": {
+          "fact": "map.valley_map_made",
+          "equals": true
+        }
+      },
       "stop_propagation": true,
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "I need the map.", "bg": "Трябва ми картата." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I need the map.",
+          "bg": "Трябва ми картата."
+        }
       ]
     },
     {
       "id": "exit-edge-to-jungle",
       "priority": 10,
-      "event": { "type": "exit.reached", "target": "exit_jungle_path" },
-      "condition": { "fact": "map.valley_map_made", "equals": true },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_jungle_path"
+      },
+      "condition": {
+        "fact": "map.valley_map_made",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-jungle-path-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-jungle-path-content.json"
+        }
       ]
     },
     {
       "id": "exit-jungle-to-edge",
-      "event": { "type": "exit.reached", "target": "exit_camp_edge" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_camp_edge"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-camp-edge-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-camp-edge-content.json"
+        }
       ]
     },
     {
       "id": "exit-jungle-to-bridge",
-      "event": { "type": "exit.reached", "target": "exit_broken_bridge" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_broken_bridge"
+      },
       "actions": [
-        { "type": "fact.set", "fact": "location.broken_bridge.discovered", "value": true },
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-broken-bridge-content.json" }
+        {
+          "type": "fact.set",
+          "fact": "location.broken_bridge.discovered",
+          "value": true
+        },
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-broken-bridge-content.json"
+        }
       ]
     },
     {
       "id": "exit-bridge-to-jungle",
-      "event": { "type": "exit.reached", "target": "exit_jungle_path" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_jungle_path"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-jungle-path-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-jungle-path-content.json"
+        }
       ]
     },
     {
       "id": "exit-bridge-to-village-locked",
       "priority": 5,
-      "event": { "type": "exit.reached", "target": "exit_village_garden" },
-      "condition": { "not": { "fact": "bridge.repaired", "equals": true } },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_village_garden"
+      },
+      "condition": {
+        "not": {
+          "fact": "bridge.repaired",
+          "equals": true
+        }
+      },
       "stop_propagation": true,
       "actions": [
-        { "type": "dialog.show", "speaker": "Alex", "text": "The bridge is not safe.", "bg": "Мостът не е безопасен." }
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The bridge is not safe.",
+          "bg": "Мостът не е безопасен."
+        }
       ]
     },
     {
       "id": "exit-bridge-to-village",
       "priority": 10,
-      "event": { "type": "exit.reached", "target": "exit_village_garden" },
-      "condition": { "fact": "bridge.repaired", "equals": true },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_village_garden"
+      },
+      "condition": {
+        "fact": "bridge.repaired",
+        "equals": true
+      },
       "actions": [
-        { "type": "fact.set", "fact": "location.village_garden.discovered", "value": true },
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-village-garden-content.json" }
+        {
+          "type": "fact.set",
+          "fact": "location.village_garden.discovered",
+          "value": true
+        },
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-village-garden-content.json"
+        }
       ]
     },
     {
       "id": "exit-village-to-bridge",
-      "event": { "type": "exit.reached", "target": "exit_broken_bridge" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_broken_bridge"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-broken-bridge-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-broken-bridge-content.json"
+        }
       ]
     },
     {
       "id": "exit-keeper-to-village",
-      "event": { "type": "exit.reached", "target": "exit_village_garden" },
-      "condition": { "event": "screen", "equals": "sun-temple-adventure-keeper-hut" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_village_garden"
+      },
+      "condition": {
+        "event": "screen",
+        "equals": "sun-temple-adventure-keeper-hut"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-village-garden-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-village-garden-content.json"
+        }
       ]
     },
     {
       "id": "exit-waterfall-to-village",
-      "event": { "type": "exit.reached", "target": "exit_village_garden" },
-      "condition": { "event": "screen", "equals": "sun-temple-adventure-waterfall-mouth" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_village_garden"
+      },
+      "condition": {
+        "event": "screen",
+        "equals": "sun-temple-adventure-waterfall-mouth"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-village-garden-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-village-garden-content.json"
+        }
       ]
     },
     {
       "id": "exit-waterfall-to-dark-cave",
-      "event": { "type": "exit.reached", "target": "exit_dark_cave" },
-      "condition": { "fact": "waterfall.cave_lit", "equals": true },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_dark_cave"
+      },
+      "condition": {
+        "fact": "waterfall.cave_lit",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-dark-cave-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-dark-cave-content.json"
+        }
       ]
     },
     {
       "id": "exit-dark-cave-to-waterfall",
-      "event": { "type": "exit.reached", "target": "exit_waterfall_mouth" },
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_waterfall_mouth"
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-waterfall-mouth-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-waterfall-mouth-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-base",
-      "event": { "type": "location.travel_requested", "target": "base-camp-table" },
-      "condition": { "fact": "location.base_camp.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "base-camp-table"
+      },
+      "condition": {
+        "fact": "location.base_camp.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-base-camp-table-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-base-camp-table-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-edge",
-      "event": { "type": "location.travel_requested", "target": "camp-edge" },
-      "condition": { "fact": "location.camp_edge.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "camp-edge"
+      },
+      "condition": {
+        "fact": "location.camp_edge.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-camp-edge-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-camp-edge-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-jungle",
-      "event": { "type": "location.travel_requested", "target": "jungle-path" },
-      "condition": { "fact": "location.jungle_path.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "jungle-path"
+      },
+      "condition": {
+        "fact": "location.jungle_path.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-jungle-path-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-jungle-path-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-bridge",
-      "event": { "type": "location.travel_requested", "target": "broken-bridge" },
-      "condition": { "fact": "location.broken_bridge.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "broken-bridge"
+      },
+      "condition": {
+        "fact": "location.broken_bridge.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-broken-bridge-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-broken-bridge-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-village",
-      "event": { "type": "location.travel_requested", "target": "village-garden" },
-      "condition": { "fact": "location.village_garden.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "village-garden"
+      },
+      "condition": {
+        "fact": "location.village_garden.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-village-garden-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-village-garden-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-keeper",
-      "event": { "type": "location.travel_requested", "target": "keeper-hut" },
-      "condition": { "fact": "location.keeper_hut.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "keeper-hut"
+      },
+      "condition": {
+        "fact": "location.keeper_hut.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-keeper-hut-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-keeper-hut-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-waterfall",
-      "event": { "type": "location.travel_requested", "target": "waterfall-mouth" },
-      "condition": { "fact": "location.waterfall_cave.revealed", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "waterfall-mouth"
+      },
+      "condition": {
+        "fact": "location.waterfall_cave.revealed",
+        "equals": true
+      },
       "actions": [
-        { "type": "fact.set", "fact": "location.waterfall_mouth.discovered", "value": true },
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-waterfall-mouth-content.json" }
+        {
+          "type": "fact.set",
+          "fact": "location.waterfall_mouth.discovered",
+          "value": true
+        },
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-waterfall-mouth-content.json"
+        }
       ]
     },
     {
       "id": "map-travel-dark-cave",
-      "event": { "type": "location.travel_requested", "target": "dark-cave" },
-      "condition": { "fact": "location.dark_cave.discovered", "equals": true },
+      "event": {
+        "type": "location.travel_requested",
+        "target": "dark-cave"
+      },
+      "condition": {
+        "fact": "location.dark_cave.discovered",
+        "equals": true
+      },
       "actions": [
-        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-dark-cave-content.json" }
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-dark-cave-content.json"
+        }
+      ]
+    },
+    {
+      "id": "inspect-sun-channel-dry",
+      "priority": 20,
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_channel"
+      },
+      "condition": {
+        "fact": "temple.gate_open",
+        "equals": false
+      },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "temple.channel_dry_seen",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The channel is dry.",
+          "bg": "Каналът е сух."
+        }
+      ]
+    },
+    {
+      "id": "inspect-sun-channel-marks",
+      "priority": 20,
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_channel"
+      },
+      "condition": {
+        "all": [
+          {
+            "fact": "temple.channel_dry_seen",
+            "equals": true
+          },
+          {
+            "fact": "temple.gate_open",
+            "equals": false
+          }
+        ]
+      },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "temple.channel_marks_seen",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "These marks are water paths.",
+          "bg": "Тези знаци са пътища за вода."
+        }
+      ]
+    },
+    {
+      "id": "inspect-sun-channel-cup-hint",
+      "priority": 25,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_channel"
+      },
+      "condition": {
+        "all": [
+          {
+            "inventory_contains": "stone_cup"
+          },
+          {
+            "fact": "temple.gate_open",
+            "equals": false
+          }
+        ]
+      },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The waterfall can fill this cup.",
+          "bg": "Водопадът може да напълни тази чаша."
+        }
+      ]
+    },
+    {
+      "id": "inspect-sun-channel-water-needed",
+      "priority": 5,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_channel"
+      },
+      "condition": {
+        "fact": "temple.gate_open",
+        "equals": false
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The stone gate needs water.",
+          "bg": "Каменната порта има нужда от вода."
+        }
+      ]
+    },
+    {
+      "id": "take-stone-cup",
+      "once": true,
+      "event": {
+        "type": "item.taken",
+        "target": "stone_cup"
+      },
+      "actions": [
+        {
+          "type": "inventory.add",
+          "item": "stone_cup"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.stone_cup.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "This cup is empty.",
+          "bg": "Тази чаша е празна."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "fill-stone-cup",
+      "once": true,
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "waterfall_pool"
+      },
+      "condition": {
+        "all": [
+          {
+            "event": "item",
+            "equals": "stone_cup"
+          },
+          {
+            "inventory_contains": "stone_cup"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "inventory.remove",
+          "item": "stone_cup"
+        },
+        {
+          "type": "inventory.add",
+          "item": "water_cup"
+        },
+        {
+          "type": "fact.set",
+          "fact": "craft.water_cup_made",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have water now.",
+          "bg": "Сега имам вода."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "open-temple-gate",
+      "once": true,
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "sun_channel"
+      },
+      "condition": {
+        "all": [
+          {
+            "event": "item",
+            "equals": "water_cup"
+          },
+          {
+            "inventory_contains": "water_cup"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "inventory.remove",
+          "item": "water_cup"
+        },
+        {
+          "type": "fact.set",
+          "fact": "temple.channel_filled",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "temple.gate_open",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "temple.sun_flower_open",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.sun_courtyard.discovered",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The water follows the sun marks! The gate is open.",
+          "bg": "Водата следва слънчевите знаци! Портата е отворена."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "arrive-sun-courtyard",
+      "once": true,
+      "event": {
+        "type": "scene.entered",
+        "target": "sun-temple-adventure-sun-courtyard"
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The water opens the stone flower.",
+          "bg": "Водата отваря каменното цвете."
+        }
+      ]
+    },
+    {
+      "id": "take-stone-lens",
+      "once": true,
+      "event": {
+        "type": "item.taken",
+        "target": "stone_lens"
+      },
+      "condition": {
+        "fact": "temple.gate_open",
+        "equals": true
+      },
+      "actions": [
+        {
+          "type": "inventory.add",
+          "item": "stone_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.stone_lens.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "I have the Stone Lens.",
+          "bg": "Имам Каменната леща."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "place-stone-lens",
+      "once": true,
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "sun_compass"
+      },
+      "condition": {
+        "all": [
+          {
+            "event": "item",
+            "equals": "stone_lens"
+          },
+          {
+            "inventory_contains": "stone_lens"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "inventory.remove",
+          "item": "stone_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "compass.stone_lens_placed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.mirror_hall.revealed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "slice.stone_lens_complete",
+          "value": true
+        },
+        {
+          "type": "puzzle.complete",
+          "puzzle": "sun_temple_slice_03_complete"
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "All three lenses point to Mirror Hall. Where is the light?",
+          "bg": "И трите лещи сочат към Залата с огледалата. Къде е светлината?"
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "exit-temple-to-courtyard",
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_sun_courtyard"
+      },
+      "condition": {
+        "fact": "temple.gate_open",
+        "equals": true
+      },
+      "actions": [
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-sun-courtyard-content.json"
+        }
+      ]
+    },
+    {
+      "id": "exit-temple-to-waterfall",
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_map_path"
+      },
+      "actions": [
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-waterfall-mouth-content.json"
+        }
+      ]
+    },
+    {
+      "id": "exit-courtyard-to-temple",
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_temple_steps"
+      },
+      "actions": [
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-temple-steps-content.json"
+        }
+      ]
+    },
+    {
+      "id": "map-travel-temple",
+      "event": {
+        "type": "location.travel_requested",
+        "target": "temple-steps"
+      },
+      "condition": {
+        "fact": "compass.blue_lens_placed",
+        "equals": true
+      },
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "location.temple_steps.discovered",
+          "value": true
+        },
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-temple-steps-content.json"
+        }
+      ]
+    },
+    {
+      "id": "map-travel-courtyard",
+      "event": {
+        "type": "location.travel_requested",
+        "target": "sun-courtyard"
+      },
+      "condition": {
+        "fact": "location.sun_courtyard.discovered",
+        "equals": true
+      },
+      "actions": [
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-sun-courtyard-content.json"
+        }
+      ]
+    },
+    {
+      "id": "map-travel-mirror-hall",
+      "event": {
+        "type": "location.travel_requested",
+        "target": "mirror-hall"
+      },
+      "condition": {
+        "fact": "compass.stone_lens_placed",
+        "equals": true
+      },
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "location.mirror_hall.discovered",
+          "value": true
+        },
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-mirror-hall-content.json"
+        }
+      ]
+    },
+    {
+      "id": "arrive-mirror-hall",
+      "once": true,
+      "event": {
+        "type": "scene.entered",
+        "target": "sun-temple-adventure-mirror-hall"
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The light is inside.",
+          "bg": "Светлината е вътре."
+        }
+      ]
+    },
+    {
+      "id": "inspect-mirror-hall-light-source",
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "light_source"
+      },
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "mirror_hall.light_source_seen",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The light is inside.",
+          "bg": "Светлината е вътре."
+        }
+      ]
+    },
+    {
+      "id": "inspect-mirror-hall-fixed-mirror",
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "fixed_mirror"
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The mirror turns the light.",
+          "bg": "Огледалото завърта светлината."
+        }
+      ]
+    },
+    {
+      "id": "align-near-mirror",
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "near_mirror"
+      },
+      "condition": {
+        "fact": "mirror_hall.near_mirror_aligned",
+        "equals": false
+      },
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "mirror_hall.near_mirror_aligned",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The light reaches the next mirror.",
+          "bg": "Светлината достига до следващото огледало."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "inspect-far-mirror-early",
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "far_mirror"
+      },
+      "condition": {
+        "fact": "mirror_hall.near_mirror_aligned",
+        "equals": false
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The light does not reach this mirror yet.",
+          "bg": "Светлината още не достига до това огледало."
+        }
+      ]
+    },
+    {
+      "id": "align-far-mirror",
+      "once": true,
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "far_mirror"
+      },
+      "condition": {
+        "all": [
+          {
+            "fact": "mirror_hall.near_mirror_aligned",
+            "equals": true
+          },
+          {
+            "fact": "mirror_hall.far_mirror_aligned",
+            "equals": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "fact.set",
+          "fact": "mirror_hall.far_mirror_aligned",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "mirror_hall.beam_path_complete",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "mirror_hall.sun_panel_open",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The light opens the panel.",
+          "bg": "Светлината отваря панела."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "inspect-sun-panel-closed",
+      "event": {
+        "type": "hotspot.inspected",
+        "target": "sun_panel"
+      },
+      "condition": {
+        "fact": "mirror_hall.sun_panel_open",
+        "equals": false
+      },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "The panel is closed.",
+          "bg": "Панелът е затворен."
+        }
+      ]
+    },
+    {
+      "id": "take-mirror-lens",
+      "once": true,
+      "event": {
+        "type": "item.taken",
+        "target": "mirror_lens"
+      },
+      "condition": {
+        "fact": "mirror_hall.sun_panel_open",
+        "equals": true
+      },
+      "actions": [
+        {
+          "type": "inventory.add",
+          "item": "mirror_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "item.mirror_lens.taken",
+          "value": true
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Alex",
+          "text": "This is the Mirror Lens.",
+          "bg": "Това е Огледалната леща."
+        },
+        {
+          "type": "screen.refresh"
+        }
+      ]
+    },
+    {
+      "id": "place-mirror-lens",
+      "once": true,
+      "event": {
+        "type": "inventory.item_used_on_hotspot",
+        "target": "sun_compass"
+      },
+      "condition": {
+        "all": [
+          {
+            "event": "item",
+            "equals": "mirror_lens"
+          },
+          {
+            "inventory_contains": "mirror_lens"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "inventory.remove",
+          "item": "mirror_lens"
+        },
+        {
+          "type": "fact.set",
+          "fact": "compass.mirror_lens_placed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "location.observatory_approach.revealed",
+          "value": true
+        },
+        {
+          "type": "fact.set",
+          "fact": "slice.mirror_lens_complete",
+          "value": true
+        },
+        {
+          "type": "puzzle.complete",
+          "puzzle": "sun_temple_slice_04_complete"
+        },
+        {
+          "type": "dialog.show",
+          "speaker": "Mira",
+          "text": "Four lenses show the route. One space is still dark.",
+          "bg": "Четири лещи показват пътя. Едно място още е тъмно."
+        },
+        {
+          "type": "screen.refresh"
+        },
+        {
+          "type": "ui.map.refresh"
+        }
+      ]
+    },
+    {
+      "id": "exit-mirror-hall",
+      "event": {
+        "type": "exit.reached",
+        "target": "exit_map_path"
+      },
+      "actions": [
+        {
+          "type": "scene.transition",
+          "scenario": "scenarios/sun-temple-adventure-sun-courtyard-content.json"
+        }
       ]
     }
   ],

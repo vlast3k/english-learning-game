@@ -8,7 +8,13 @@
     "background": "assets/sun-temple-adventure/camp-edge/generated/background-v1.png",
     "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
-    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
+    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png",
+    "extra_textures": {
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
+    },
+    "extra_asset_frames": [
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
+    ]
   },
   "presentation": {
     "character_scale_multiplier": 1.45,
@@ -97,6 +103,7 @@
     {
       "id": "exit_base_camp",
       "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-base-camp-table",
       "label": "base camp",
       "x": 63,
       "y": 416,
@@ -109,6 +116,7 @@
     {
       "id": "exit_jungle_path",
       "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-jungle-path",
       "label": "jungle path",
       "x": 607,
       "y": 189,
@@ -258,8 +266,53 @@
           "fact": "location.temple_steps.revealed",
           "equals": true
         },
+        "enabled_when": {
+          "fact": "compass.blue_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "sun-courtyard",
+        "label": "Sun Courtyard",
+        "destination": "scenarios/sun-temple-adventure-sun-courtyard-content.json",
+        "x": -250,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "mirror-hall",
+        "label": "Mirror Hall",
+        "destination": "scenarios/sun-temple-adventure-mirror-hall-content.json",
+        "x": 210,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.mirror_hall.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.stone_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "observatory-approach",
+        "label": "High Observatory",
+        "destination": "scenarios/sun-temple-adventure-observatory-approach-content.json",
+        "x": -20,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.observatory_approach.revealed",
+          "equals": true
+        },
         "enabled_when": false,
-        "locked_text": "The temple steps are not ready yet."
+        "locked_text": "The high path is not ready yet."
       }
     ]
   },
@@ -269,5 +322,34 @@
     "map": "карта",
     "piece": "парче",
     "path": "пътека"
+  },
+  "inventory_items": {
+    "stone_cup": {
+      "label": "stone cup",
+      "english": "stone cup",
+      "bg": "каменна чаша",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_cup"
+      }
+    },
+    "water_cup": {
+      "label": "water cup",
+      "english": "water cup",
+      "bg": "чаша с вода",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "water_cup"
+      }
+    },
+    "stone_lens": {
+      "label": "Stone Lens",
+      "english": "Stone Lens",
+      "bg": "Каменна леща",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_lens"
+      }
+    }
   }
 }

@@ -9,10 +9,12 @@
     "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
     "extra_textures": {
-      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png"
+      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png",
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
     },
     "extra_asset_frames": [
-      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json"
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
     ],
     "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
   },
@@ -83,6 +85,33 @@
         "texture": "propAtlasSlice02",
         "frame": "blue_lens"
       }
+    },
+    "stone_cup": {
+      "label": "stone cup",
+      "english": "stone cup",
+      "bg": "каменна чаша",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_cup"
+      }
+    },
+    "water_cup": {
+      "label": "water cup",
+      "english": "water cup",
+      "bg": "чаша с вода",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "water_cup"
+      }
+    },
+    "stone_lens": {
+      "label": "Stone Lens",
+      "english": "Stone Lens",
+      "bg": "Каменна леща",
+      "icon": {
+        "texture": "propAtlasSlice03",
+        "frame": "stone_lens"
+      }
     }
   },
   "navigation": {
@@ -128,6 +157,20 @@
       }
     },
     {
+      "id": "waterfall_pool",
+      "kind": "use_target",
+      "label": "waterfall pool",
+      "x": 475,
+      "y": 392,
+      "radius": 66,
+      "walk_to": {
+        "x": 483,
+        "y": 500
+      },
+      "wrong_item_text": "Use a cup here.",
+      "wrong_item_bg": "Използвай чаша тук."
+    },
+    {
       "id": "dark_cave_entrance",
       "kind": "use_target",
       "label": "dark cave",
@@ -144,6 +187,7 @@
     {
       "id": "exit_dark_cave",
       "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-dark-cave",
       "label": "dark cave",
       "x": 846,
       "y": 507,
@@ -160,6 +204,7 @@
     {
       "id": "exit_village_garden",
       "kind": "exit",
+      "arrival_from_scene": "sun-temple-adventure-village-garden",
       "label": "village garden",
       "x": 123,
       "y": 251,
@@ -324,8 +369,53 @@
           "fact": "location.temple_steps.revealed",
           "equals": true
         },
+        "enabled_when": {
+          "fact": "compass.blue_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "sun-courtyard",
+        "label": "Sun Courtyard",
+        "destination": "scenarios/sun-temple-adventure-sun-courtyard-content.json",
+        "x": -250,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "mirror-hall",
+        "label": "Mirror Hall",
+        "destination": "scenarios/sun-temple-adventure-mirror-hall-content.json",
+        "x": 210,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.mirror_hall.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.stone_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "observatory-approach",
+        "label": "High Observatory",
+        "destination": "scenarios/sun-temple-adventure-observatory-approach-content.json",
+        "x": -20,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.observatory_approach.revealed",
+          "equals": true
+        },
         "enabled_when": false,
-        "locked_text": "The temple steps are not ready yet."
+        "locked_text": "The high path is not ready yet."
       }
     ]
   },
@@ -336,6 +426,7 @@
     "jar": "буркан",
     "leaf": "лист",
     "light": "светлина",
+    "warm": "топъл",
     "waterfall": "водопад"
   }
 }

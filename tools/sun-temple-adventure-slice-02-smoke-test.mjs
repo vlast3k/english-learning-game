@@ -85,6 +85,7 @@ async function run() {
   try {
     await page.goto(`${(await serverInfo).url}/phaser.html?scenario=scenarios/sun-temple-adventure-base-camp-table-content.json&reset=1`, { waitUntil: "domcontentloaded" });
     await waitForScene("sun-temple-adventure-base-camp-table");
+    await closeBubble();
     await page.evaluate(() => {
       const scene = window.phaserGame.scene.getScene("CampScene");
       Object.assign(scene.gameEngine.state.data.facts, {

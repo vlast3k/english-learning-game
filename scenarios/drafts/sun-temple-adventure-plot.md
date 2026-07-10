@@ -6,13 +6,13 @@ Do not generate assets, scenario JSON, or mission JSON from this file alone. The
 
 ## Current Status
 
-Status: plot first pass drafted with initial design decisions recorded.
+Status: slices one and two implemented; slice three Temple Steps design reviewed and approved for asset planning.
 
 Campaign ID: `sun-temple-adventure`
 
 Working title: `Secrets of the Sun Temple`
 
-Next incomplete design step: prompt pack.
+Next incomplete design step: resolve the slice-three art-director review, then create its asset plan and prompts.
 
 ## Campaign Identity
 
@@ -134,13 +134,14 @@ Adventure purpose:
 
 ### Beat 6: The Stone Courtyard
 
-The repaired compass points to stone steps and a temple courtyard. Old animal and shape symbols mark three small doors. The player must place found items or lenses into matching slots.
+The Blue Lens reveals Temple Steps. Alex finds an empty stone cup near a dry sun channel, fills it at the already-known waterfall, and returns to send water through the stone gate. The opened gate leads to a sun courtyard, where a stone flower reveals the third lens.
 
 Adventure purpose:
 
-- use visible symbols and inventory application;
-- connect earlier locations to the temple;
-- make the temple feel earned.
+- make the child reuse a known place for a new reason;
+- use one visible water cause-and-effect chain;
+- make the temple feel earned without a symbol quiz;
+- reveal the Stone Lens as a result of the opened water path.
 
 ### Beat 7: The Observatory Door
 
