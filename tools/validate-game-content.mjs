@@ -274,6 +274,25 @@ function validateInventoryPresentation(hotspot, pathLabel) {
 
 function validateContentAssets(content, fileLabel, assetPlan) {
   for (const [key, assetPath] of Object.entries(content.assets || {})) {
+    if (key === "extra_textures") {
+      if (!assetPath || typeof assetPath !== "object" || Array.isArray(assetPath)) {
+        fail(`${fileLabel}.assets.extra_textures must be an object`);
+      }
+      for (const [textureKey, texturePath] of Object.entries(assetPath)) {
+        requireString(textureKey, `${fileLabel}.assets.extra_textures texture key`);
+        requireWorkspaceAsset(texturePath, `${fileLabel}.assets.extra_textures.${textureKey}`);
+      }
+      continue;
+    }
+    if (key === "extra_asset_frames") {
+      if (!Array.isArray(assetPath)) {
+        fail(`${fileLabel}.assets.extra_asset_frames must be an array`);
+      }
+      for (const [index, framesPath] of assetPath.entries()) {
+        requireWorkspaceAsset(framesPath, `${fileLabel}.assets.extra_asset_frames[${index}]`);
+      }
+      continue;
+    }
     requireWorkspaceAsset(assetPath, `${fileLabel}.assets.${key}`);
   }
 
@@ -314,6 +333,114 @@ function validateContentAssets(content, fileLabel, assetPlan) {
   }
 }
 
+function validateNavigation(content, fileLabel) {
+  if (!content.navigation) {
+    return;
+  }
+  if (!Array.isArray(content.navigation.walkable_polygon) || content.navigation.walkable_polygon.length < 3) {
+    fail(`${fileLabel}.navigation.walkable_polygon must have at least 3 points`);
+  }
+  content.navigation.walkable_polygon.forEach((point, index) =>
+    requirePoint(point, `${fileLabel}.navigation.walkable_polygon[${index}]`));
+  if (!Array.isArray(content.navigation.obstacles)) {
+    fail(`${fileLabel}.navigation.obstacles must be an array`);
+  }
+  for (const [index, obstacle] of content.navigation.obstacles.entries()) {
+    requireString(obstacle.id, `${fileLabel}.navigation.obstacles[${index}].id`);
+    for (const field of ["x1", "y1", "x2", "y2"]) {
+      if (!Number.isFinite(obstacle[field])) {
+        fail(`${fileLabel}.navigation.obstacles[${index}].${field} must be numeric`);
+      }
+    }
+    if (obstacle.x1 >= obstacle.x2 || obstacle.y1 >= obstacle.y2) {
+      fail(`${fileLabel}.navigation.obstacles[${index}] must have increasing bounds`);
+    }
+  }
+}
+
+function validateAdventureContent(content, fileLabel) {
+  const allowedKinds = new Set(["inspect", "takeable", "state_target", "use_target", "exit", "scenery"]);
+  if (!Array.isArray(content.hotspots)) {
+    fail(`${fileLabel}.hotspots must be an array`);
+  }
+  const hotspotIds = new Set();
+  for (const [index, hotspot] of content.hotspots.entries()) {
+    requireString(hotspot.id, `${fileLabel}.hotspots[${index}].id`);
+    requireString(hotspot.label, `${fileLabel}.${hotspot.id}.label`);
+    if (hotspotIds.has(hotspot.id)) {
+      fail(`${fileLabel}: duplicate hotspot id: ${hotspot.id}`);
+    }
+    hotspotIds.add(hotspot.id);
+    if (!allowedKinds.has(hotspot.kind)) {
+      fail(`${fileLabel}.${hotspot.id}.kind must be one of ${[...allowedKinds].join(", ")}`);
+    }
+    if (!Number.isFinite(hotspot.x) || !Number.isFinite(hotspot.y) || !Number.isFinite(hotspot.radius)) {
+      fail(`${fileLabel}.${hotspot.id} must define numeric x, y, and radius`);
+    }
+    requirePoint(hotspot.walk_to, `${fileLabel}.${hotspot.id}.walk_to`);
+    if (hotspot.kind === "takeable") {
+      requireString(hotspot.item_id, `${fileLabel}.${hotspot.id}.item_id`);
+      requireString(hotspot.english, `${fileLabel}.${hotspot.id}.english`);
+      requireString(hotspot.bg, `${fileLabel}.${hotspot.id}.bg`);
+    }
+    if (hotspot.kind === "scenery" && hotspot.description) {
+      requireString(hotspot.description.text, `${fileLabel}.${hotspot.id}.description.text`);
+      requireString(hotspot.description.bg, `${fileLabel}.${hotspot.id}.description.bg`);
+    }
+  }
+
+  if (content.guide && content.npcs) {
+    fail(`${fileLabel} must use either guide or npcs, not both`);
+  }
+  const adventureNpcs = content.npcs || (content.guide ? [content.guide] : []);
+  if (content.npcs && !Array.isArray(content.npcs)) {
+    fail(`${fileLabel}.npcs must be an array`);
+  }
+  const npcIds = new Set();
+  for (const [index, npc] of adventureNpcs.entries()) {
+    const pathLabel = content.npcs ? `${fileLabel}.npcs[${index}]` : `${fileLabel}.guide`;
+    requireString(npc.id, `${pathLabel}.id`);
+    requireString(npc.speaker, `${pathLabel}.speaker`);
+    requirePoint(npc.position, `${pathLabel}.position`);
+    requirePoint(npc.walk_to, `${pathLabel}.walk_to`);
+    if (npcIds.has(npc.id)) {
+      fail(`${fileLabel}: duplicate npc id: ${npc.id}`);
+    }
+    npcIds.add(npc.id);
+    if (npc.static_image) {
+      requireString(npc.static_image.texture, `${pathLabel}.static_image.texture`);
+      requireString(npc.static_image.frame, `${pathLabel}.static_image.frame`);
+    }
+  }
+
+  for (const [index, overlay] of (content.overlays || []).entries()) {
+    requireString(overlay.id, `${fileLabel}.overlays[${index}].id`);
+    requireString(overlay.texture, `${fileLabel}.overlays[${index}].texture`);
+    requireString(overlay.frame, `${fileLabel}.overlays[${index}].frame`);
+    if (!Number.isFinite(overlay.x) || !Number.isFinite(overlay.y)) {
+      fail(`${fileLabel}.overlays[${index}] must define numeric x and y`);
+    }
+  }
+
+  if (content.map) {
+    if (!Array.isArray(content.map.markers)) {
+      fail(`${fileLabel}.map.markers must be an array`);
+    }
+    const markerIds = new Set();
+    for (const [index, marker] of content.map.markers.entries()) {
+      requireString(marker.id, `${fileLabel}.map.markers[${index}].id`);
+      requireString(marker.label, `${fileLabel}.map.markers[${index}].label`);
+      requireString(marker.destination, `${fileLabel}.map.markers[${index}].destination`);
+      if (markerIds.has(marker.id)) {
+        fail(`${fileLabel}: duplicate map marker id: ${marker.id}`);
+      }
+      markerIds.add(marker.id);
+    }
+  }
+
+  validateNavigation(content, fileLabel);
+}
+
 function validateContent(content, fileLabel, assetPlan = null) {
   if (content.schema_version !== 1) {
     fail(`${fileLabel}: schema_version must be 1`);
@@ -325,6 +452,15 @@ function validateContent(content, fileLabel, assetPlan = null) {
   validateContentAssets(content, fileLabel, assetPlan);
   if (!content.translations || typeof content.translations !== "object") {
     fail(`${fileLabel}.translations must be an object`);
+  }
+  if (content.gameplay_mode === "adventure") {
+    validateAdventureContent(content, fileLabel);
+    return {
+      fileLabel,
+      hotspotCount: content.hotspots.length,
+      collectibleCount: content.hotspots.filter((hotspot) => hotspot.kind === "takeable").length,
+      questionCount: 0,
+    };
   }
   requireString(content.level_plan?.title, `${fileLabel}.level_plan.title`);
   requireString(content.level_plan?.mission, `${fileLabel}.level_plan.mission`);

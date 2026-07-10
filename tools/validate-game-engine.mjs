@@ -9,8 +9,10 @@ const SCENARIOS_DIR = path.join(ROOT, "scenarios");
 const MISSIONS_DIR = path.join(ROOT, "game-engine", "missions");
 const SUPPORTED_ACTIONS = new Set([
   "fact.set", "counter.increment", "inventory.add", "inventory.remove", "inventory.clear",
-  "puzzle.start", "puzzle.complete", "flag.set", "ui.status.set", "ui.toast", "ui.vocab.show",
-  "exit.refresh", "dialog.show", "event.emit", "scene.transition", "campaign.complete",
+  "puzzle.start", "puzzle.complete", "flag.set", "ui.status.set", "ui.toast",
+  "ui.inventory.clear_selection", "ui.map.refresh", "ui.map.open", "ui.vocab.show",
+  "hotspot.refresh", "screen.refresh", "exit.refresh", "dialog.show", "event.emit",
+  "scene.transition", "campaign.complete",
 ]);
 const SUPPORTED_CONDITION_KEYS = new Set([
   "puzzle", "status", "fact", "equals", "inventory_contains", "inventory_missing",
@@ -117,7 +119,8 @@ function validateGraph(bundle, filename) {
   for (const rule of engine.rules.filter((entry) => entry.event.type === "collectible.completed")) {
     if (!collectibleIds.has(rule.event.target)) fail(`${filename}: rule targets unknown collectible`);
   }
-  if (!ids.has(engine.bindings?.guide?.puzzle_id) || !ids.has(engine.bindings?.exit?.puzzle_id)) {
+  if (content.gameplay_mode !== "adventure"
+    && (!ids.has(engine.bindings?.guide?.puzzle_id) || !ids.has(engine.bindings?.exit?.puzzle_id))) {
     fail(`${filename}: guide/exit puzzle binding invalid`);
   }
   for (const [index, state] of (engine.bindings?.exit?.states || []).entries()) {

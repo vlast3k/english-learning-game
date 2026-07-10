@@ -480,8 +480,23 @@
         case "ui.toast":
           bridge?.showToast?.(action.text);
           return;
+        case "ui.inventory.clear_selection":
+          bridge?.clearInventorySelection?.();
+          return;
+        case "ui.map.refresh":
+          bridge?.refreshMap?.();
+          return;
+        case "ui.map.open":
+          bridge?.openMap?.();
+          return;
         case "ui.vocab.show":
           bridge?.showVocabulary?.(action.hotspot, action.already_retrieved === true);
+          return;
+        case "hotspot.refresh":
+          bridge?.refreshHotspots?.();
+          return;
+        case "screen.refresh":
+          bridge?.refreshScreenState?.();
           return;
         case "exit.refresh":
           bridge?.refreshExit?.();

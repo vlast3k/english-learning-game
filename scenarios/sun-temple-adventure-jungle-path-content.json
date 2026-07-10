@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "scene_id": "sun-temple-adventure-jungle-path",
+  "content_version": "2026-07-09",
+  "gameplay_mode": "adventure",
+  "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
+  "assets": {
+    "background": "assets/sun-temple-adventure/jungle-path/generated/background-v1.png",
+    "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
+    "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
+    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.45,
+    "character_depth_scale": {
+      "back_y": 300,
+      "back_scale": 0.36,
+      "front_y": 566,
+      "front_scale": 0.66
+    }
+  },
+  "hero_start": {
+    "x": 297,
+    "y": 531
+  },
+  "hud": {
+    "status_text": "Jungle Path"
+  },
+  "player": {
+    "speaker": "Alex"
+  },
+  "inventory": {
+    "max_slots": 6
+  },
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 24,
+        "y": 330
+      },
+      {
+        "x": 1000,
+        "y": 330
+      },
+      {
+        "x": 1014,
+        "y": 566
+      },
+      {
+        "x": 18,
+        "y": 566
+      }
+    ],
+    "clearance": 30,
+    "obstacles": []
+  },
+  "hotspots": [
+    {
+      "id": "path_marker",
+      "kind": "scenery",
+      "label": "sun stone",
+      "x": 265,
+      "y": 332,
+      "radius": 42,
+      "walk_to": {
+        "x": 480,
+        "y": 500
+      },
+      "description": {
+        "text": "This stone has a sun.",
+        "bg": "Този камък има слънце."
+      }
+    },
+    {
+      "id": "exit_camp_edge",
+      "kind": "exit",
+      "label": "camp edge",
+      "x": 597,
+      "y": 233,
+      "radius": 46,
+      "walk_to": {
+        "x": 145,
+        "y": 500
+      }
+    },
+    {
+      "id": "exit_broken_bridge",
+      "kind": "exit",
+      "label": "bridge",
+      "x": 499,
+      "y": 570,
+      "radius": 48,
+      "walk_to": {
+        "x": 850,
+        "y": 500
+      }
+    }
+  ],
+  "map": {
+    "button": {
+      "visible": true,
+      "enabled_when": {
+        "fact": "map.ui_unlocked",
+        "equals": true
+      }
+    },
+    "markers": [
+      {
+        "id": "base-camp-table",
+        "label": "Base Camp",
+        "destination": "scenarios/sun-temple-adventure-base-camp-table-content.json",
+        "x": -250,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "camp-edge",
+        "label": "Camp Edge",
+        "destination": "scenarios/sun-temple-adventure-camp-edge-content.json",
+        "x": -20,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "jungle-path",
+        "label": "Jungle Path",
+        "destination": "scenarios/sun-temple-adventure-jungle-path-content.json",
+        "x": 210,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "broken-bridge",
+        "label": "Broken Bridge",
+        "destination": "scenarios/sun-temple-adventure-broken-bridge-content.json",
+        "x": -250,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "village-garden",
+        "label": "Village Garden",
+        "destination": "scenarios/sun-temple-adventure-village-garden-content.json",
+        "x": -20,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "keeper-hut",
+        "label": "Keeper Hut",
+        "destination": "scenarios/sun-temple-adventure-keeper-hut-content.json",
+        "x": 210,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "waterfall-mouth",
+        "label": "Waterfall Cave",
+        "destination": "scenarios/sun-temple-adventure-waterfall-mouth-content.json",
+        "x": -250,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        }
+      },
+      {
+        "id": "dark-cave",
+        "label": "Dark Cave",
+        "destination": "scenarios/sun-temple-adventure-dark-cave-content.json",
+        "x": -20,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "temple-steps",
+        "label": "Temple Steps",
+        "destination": "scenarios/sun-temple-adventure-temple-steps-content.json",
+        "x": 210,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.temple_steps.revealed",
+          "equals": true
+        },
+        "enabled_when": false,
+        "locked_text": "The temple steps are not ready yet."
+      }
+    ]
+  },
+  "translations": {
+    "bridge": "мост",
+    "jungle": "джунгла",
+    "path": "пътека",
+    "river": "река",
+    "stone": "камък",
+    "sun": "слънце"
+  }
+}

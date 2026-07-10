@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": [
+    "Frame rectangles are based on alpha-component bounds from the accepted first-pass generated sheets.",
+    "Rectangles intentionally include a small amount of transparent padding for painted edges.",
+    "Use these as implementation-start coordinates; adjust after the first Phaser layout pass if any crop is visually tight."
+  ],
+  "textures": {
+    "propAtlas": {
+      "path": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "torn_map": { "x": 48, "y": 61, "width": 300, "height": 279 },
+        "map_piece_01": { "x": 384, "y": 79, "width": 150, "height": 252 },
+        "valley_map": { "x": 557, "y": 68, "width": 356, "height": 270 },
+        "rope_coil": { "x": 919, "y": 115, "width": 223, "height": 223 },
+        "bridge_rope_tied": { "x": 1178, "y": 121, "width": 333, "height": 195 },
+        "lost_basket": { "x": 44, "y": 383, "width": 231, "height": 251 },
+        "green_lens": { "x": 321, "y": 424, "width": 195, "height": 202 },
+        "sun_compass_green_lens": { "x": 562, "y": 397, "width": 239, "height": 248 },
+        "flower_pot_normal": { "x": 854, "y": 388, "width": 261, "height": 280 },
+        "flower_pot_green_hint": { "x": 1181, "y": 388, "width": 267, "height": 280 },
+        "drooping_sun_flower": { "x": 33, "y": 685, "width": 179, "height": 234 },
+        "sun_compass_empty": { "x": 238, "y": 709, "width": 193, "height": 199 },
+        "map_marker_waterfall_locked": { "x": 451, "y": 684, "width": 167, "height": 247 },
+        "map_marker_waterfall_unlocked": { "x": 627, "y": 684, "width": 166, "height": 245 },
+        "map_marker_base_camp": { "x": 818, "y": 703, "width": 144, "height": 218 },
+        "map_marker_camp_edge": { "x": 959, "y": 703, "width": 144, "height": 218 },
+        "map_marker_jungle_path": { "x": 1096, "y": 703, "width": 143, "height": 218 },
+        "map_marker_broken_bridge": { "x": 1231, "y": 703, "width": 143, "height": 218 },
+        "map_marker_village_garden": { "x": 1368, "y": 703, "width": 143, "height": 218 }
+      }
+    },
+    "npcMira": {
+      "path": "assets/sun-temple-adventure/shared/generated/npc-mira-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "full_body": { "x": 329, "y": 35, "width": 430, "height": 961 },
+        "portrait_smile": { "x": 924, "y": 75, "width": 269, "height": 357 },
+        "portrait_wink": { "x": 923, "y": 449, "width": 270, "height": 355 }
+      }
+    },
+    "npcLina": {
+      "path": "assets/sun-temple-adventure/shared/generated/npc-lina-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "full_body": { "x": 366, "y": 31, "width": 497, "height": 969 },
+        "portrait_happy": { "x": 942, "y": 52, "width": 259, "height": 317 }
+      }
+    },
+    "mapUi": {
+      "path": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "hud_button_disabled": { "x": 53, "y": 88, "width": 220, "height": 221 },
+        "hud_button_enabled": { "x": 51, "y": 311, "width": 222, "height": 224 },
+        "map_panel": { "x": 319, "y": 38, "width": 901, "height": 518 },
+        "marker_waterfall_locked": { "x": 1259, "y": 229, "width": 200, "height": 304 },
+        "marker_waterfall_unlocked": { "x": 1259, "y": 537, "width": 197, "height": 301 },
+        "marker_base_camp": { "x": 85, "y": 569, "width": 190, "height": 288 },
+        "marker_camp_edge": { "x": 329, "y": 570, "width": 187, "height": 286 },
+        "marker_jungle_path": { "x": 560, "y": 570, "width": 187, "height": 286 },
+        "marker_broken_bridge": { "x": 781, "y": 570, "width": 188, "height": 286 },
+        "marker_village_garden": { "x": 996, "y": 570, "width": 189, "height": 286 }
+      }
+    }
+  },
+  "inventory_icons": {
+    "torn_map": { "texture": "propAtlas", "frame": "torn_map" },
+    "map_piece_01": { "texture": "propAtlas", "frame": "map_piece_01" },
+    "valley_map": { "texture": "propAtlas", "frame": "valley_map" },
+    "rope": { "texture": "propAtlas", "frame": "rope_coil" },
+    "lost_basket": { "texture": "propAtlas", "frame": "lost_basket" },
+    "green_lens": { "texture": "propAtlas", "frame": "green_lens" }
+  },
+  "recommended_overlays": {
+    "base-camp-table": [
+      { "id": "sun_compass_green_lens", "texture": "propAtlas", "frame": "sun_compass_green_lens", "visible_when": { "fact": "compass.green_lens_placed", "equals": true } }
+    ],
+    "broken-bridge": [
+      { "id": "bridge_rope_tied", "texture": "propAtlas", "frame": "bridge_rope_tied", "visible_when": { "fact": "bridge.repaired", "equals": true } }
+    ],
+    "village-garden": [
+      { "id": "flower_pot_green_hint", "texture": "propAtlas", "frame": "flower_pot_green_hint", "visible_when": { "fact": "lina.helped", "equals": true } },
+      { "id": "green_lens", "texture": "propAtlas", "frame": "green_lens", "visible_when": { "fact": "village.flower_pot_checked", "equals": true } }
+    ]
+  }
+}

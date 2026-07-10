@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260709-balanced-spy-walk";
+  const ENGINE_ASSET_VERSION = "20260710-adventure-polish";
   const BRIDGE_GAME_WIDTH = 1024;
   const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
@@ -64,7 +64,8 @@
       }
 
       getGuidePuzzleId() {
-        return this.contentModel?.guide?.puzzle_id || this.getEngineConfig()?.bindings?.guide?.puzzle_id;
+        const primaryNpc = this.getPrimaryNpcContent?.() || this.contentModel?.guide;
+        return primaryNpc?.puzzle_id || this.getEngineConfig()?.bindings?.guide?.puzzle_id;
       }
 
       getExitBinding() {
@@ -83,7 +84,7 @@
       }
 
       bridgeConditionMatches(condition, event = {}) {
-        if (!condition) {
+        if (condition === undefined || condition === null) {
           return true;
         }
         if (typeof condition === "boolean") {
@@ -128,6 +129,63 @@
           return this.bridgeValuesEqual(this.bridgeGetPath(event, condition.event), condition.equals);
         }
         return false;
+      }
+
+      isAdventureMode() {
+        return this.contentModel?.gameplay_mode === "adventure";
+      }
+
+      getEngineFacts() {
+        return this.gameEngine?.getSnapshot().state?.facts || {};
+      }
+
+      getEngineInventory() {
+        return this.gameEngine?.getSnapshot().state?.inventory || [];
+      }
+
+      getInventoryMaxSlots() {
+        if (!this.isAdventureMode()) {
+          return null;
+        }
+        return this.contentModel?.inventory?.max_slots || 6;
+      }
+
+      getInventorySlotIds() {
+        if (!this.isAdventureMode()) {
+          return super.getInventorySlotIds();
+        }
+        return this.getEngineInventory();
+      }
+
+      getInventoryItemPresentation(itemId) {
+        if (!this.isAdventureMode()) {
+          return null;
+        }
+        const configured = this.contentModel?.inventory_items?.[itemId];
+        const manifestIcon = this.getAssetFrameManifest()?.inventory_icons?.[itemId] || null;
+        if (!configured && !manifestIcon) {
+          return null;
+        }
+        const fallbackLabel = itemId
+          .replace(/_\d+$/g, "")
+          .replace(/_/g, " ")
+          .replace(/\bgreen lens\b/i, "Green Lens");
+        const icon = configured?.icon || manifestIcon;
+        return {
+          id: itemId,
+          label: configured?.label || fallbackLabel,
+          english: configured?.english || configured?.label || fallbackLabel,
+          bg: configured?.bg || "",
+          x: configured?.x || 140,
+          y: configured?.y || 126,
+          radius: configured?.radius || 30,
+          intro: configured?.intro || {
+            text: configured?.text || `This is ${configured?.label || fallbackLabel}.`,
+            bg: configured?.text_bg || configured?.bg || "",
+          },
+          inventory: configured?.inventory || { icon },
+          icon,
+        };
       }
 
       getExitRequiredPuzzleForState() {
@@ -394,7 +452,8 @@
           return `Go to the ${hotspot.label}.`;
         }
         if (puzzleId === this.getGuidePuzzleId()) {
-          return `Talk to ${this.contentModel?.guide?.speaker || this.contentModel?.guide?.label || "the helper"}.`;
+          const primaryNpc = this.getPrimaryNpcContent?.() || this.contentModel?.guide;
+          return `Talk to ${primaryNpc?.speaker || primaryNpc?.label || "the helper"}.`;
         }
         const exitNode = this.findAssistantPuzzle(snapshot, puzzleId);
         if (exitNode?.type === "scene_exit") {
@@ -416,6 +475,11 @@
       create() {
         super.create();
         this.initializePuzzleEngine();
+        if (this.isAdventureMode()) {
+          this.createAdventureOverlays();
+          this.createAdventureMapButton();
+          this.refreshAdventureScreenState();
+        }
       }
 
       initializePuzzleEngine() {
@@ -572,7 +636,7 @@
             const hotspot = this.hotspots?.find((entry) => entry.id === itemId);
             if (hotspot) {
               this.drawHotspotGlow(hotspot, true);
-              hotspot.marker?.setAlpha(0.95);
+              hotspot.marker?.setAlpha(this.levelEditorEnabled ? 1 : 0.24);
             }
           },
           removeInventoryItem: (itemId) => {
@@ -583,11 +647,14 @@
             this.learnedWords = [];
             this.updateInventory();
           },
+          clearInventorySelection: () => this.clearAdventureInventorySelection(),
           setFlag: (flag, value) => {
             this.flags[flag] = value;
           },
           setStatus: (text) => this.statusText?.setText(text),
           showToast: (text) => this.flashToast(text),
+          openMap: () => this.openAdventureMapPanel(),
+          refreshMap: () => this.refreshAdventureMapButton(),
           showVocabulary: (hotspotId, alreadyRetrieved) => {
             const hotspot = this.hotspots?.find((entry) => entry.id === hotspotId);
             if (!hotspot) {
@@ -598,6 +665,7 @@
           },
           refreshExit: () => this.refreshEngineExitMarker(),
           refreshHotspots: () => this.refreshEngineHotspots(),
+          refreshScreenState: () => this.refreshAdventureScreenState(),
           showDialog: (action) => this.showSpeechBubble({
             speaker: action.speaker || this.contentModel?.player?.speaker || this.contentModel?.hero?.speaker || "Hero",
             text: action.text || "That path is not ready yet.",
@@ -626,6 +694,300 @@
         this.applyEngineStatePrompt();
         this.refreshEngineHotspots();
         this.refreshEngineExitMarker();
+      }
+
+      getAssetFrameManifest() {
+        if (this.assetFrameManifest !== undefined) {
+          return this.assetFrameManifest;
+        }
+        const manifests = [this.cache.json.get("assetFrames")]
+          .concat((this.contentModel?.assets?.extra_asset_frames || [])
+            .map((_path, index) => this.cache.json.get(`assetFramesExtra${index}`)))
+          .filter(Boolean);
+        if (manifests.length === 0) {
+          this.assetFrameManifest = null;
+          return this.assetFrameManifest;
+        }
+        this.assetFrameManifest = manifests.reduce((merged, manifest) => ({
+          ...merged,
+          ...manifest,
+          textures: { ...(merged.textures || {}), ...(manifest.textures || {}) },
+          inventory_icons: { ...(merged.inventory_icons || {}), ...(manifest.inventory_icons || {}) },
+          recommended_overlays: { ...(merged.recommended_overlays || {}), ...(manifest.recommended_overlays || {}) },
+        }), {});
+        return this.assetFrameManifest;
+      }
+
+      ensureAdventureTextureFrame(textureKey, frameName) {
+        const texture = this.textures.get(textureKey);
+        if (!texture || !frameName) {
+          return null;
+        }
+        if (texture.has(frameName)) {
+          return frameName;
+        }
+        const frame = this.getAssetFrameManifest()?.textures?.[textureKey]?.frames?.[frameName];
+        if (!frame) {
+          return null;
+        }
+        const source = texture.getSourceImage();
+        const x = Math.round(Phaser.Math.Clamp(frame.x, 0, source.width));
+        const y = Math.round(Phaser.Math.Clamp(frame.y, 0, source.height));
+        const width = Math.round(Phaser.Math.Clamp(frame.width, 1, source.width - x));
+        const height = Math.round(Phaser.Math.Clamp(frame.height, 1, source.height - y));
+        texture.add(frameName, 0, x, y, width, height);
+        return frameName;
+      }
+
+      createAdventureOverlays() {
+        if (!this.isAdventureMode() || this.adventureOverlays) {
+          return;
+        }
+        this.adventureOverlays = [];
+        for (const spec of this.contentModel?.overlays || []) {
+          const frameName = this.ensureAdventureTextureFrame(spec.texture, spec.frame);
+          if (!frameName && !this.textures.exists(spec.texture)) {
+            continue;
+          }
+          const image = this.add.image(spec.x, spec.y, spec.texture, frameName || undefined)
+            .setOrigin(spec.origin?.x ?? 0.5, spec.origin?.y ?? 0.5)
+            .setDepth(spec.depth ?? Math.round(spec.y || 500));
+          if (Number.isFinite(spec.scale)) {
+            image.setScale(spec.scale);
+          }
+          if (Number.isFinite(spec.display_width) || Number.isFinite(spec.display_height)) {
+            image.setDisplaySize(spec.display_width || image.displayWidth, spec.display_height || image.displayHeight);
+          }
+          this.adventureOverlays.push({ spec, image });
+        }
+      }
+
+      refreshAdventureOverlays() {
+        for (const overlay of this.adventureOverlays || []) {
+          overlay.image.setVisible(this.bridgeConditionMatches(overlay.spec.visible_when));
+        }
+      }
+
+      applyAdventureStaticGuideArt() {
+        const spec = this.getPrimaryNpcContent?.()?.static_image;
+        if (!this.isAdventureMode() || !spec || !this.guide || this.guide.staticImage) {
+          return;
+        }
+        const frameName = this.ensureAdventureTextureFrame(spec.texture, spec.frame);
+        const image = this.add.image(0, 0, spec.texture, frameName || undefined)
+          .setOrigin(spec.origin?.x ?? 0.5, spec.origin?.y ?? 1)
+          .setScale(spec.scale ?? 0.34);
+        this.guide.sprite?.setVisible(false);
+        this.guide.staticImage = image;
+        this.guide.add(image);
+      }
+
+      createInventorySlot(hotspot, index) {
+        const slot = super.createInventorySlot(hotspot, index);
+        if (!this.isAdventureMode()) {
+          return slot;
+        }
+        if (this.selectedInventoryItemId === hotspot.id) {
+          const ring = this.add.graphics();
+          ring.lineStyle(4, 0x42d982, 1);
+          ring.strokeRoundedRect(-25, -25, 50, 50, 10);
+          ring.lineStyle(2, 0xfffbef, 0.9);
+          ring.strokeRoundedRect(-19, -19, 38, 38, 7);
+          slot.addAt(ring, 0);
+          slot.selectedRing = ring;
+        }
+        return slot;
+      }
+
+      handleInventorySlotPointerDown(_slot, hotspot) {
+        if (!this.isAdventureMode() || !this.gameEngine) {
+          return false;
+        }
+        const itemId = hotspot.id;
+        if (!this.getEngineInventory().includes(itemId)) {
+          return false;
+        }
+        if (this.selectedInventoryItemId && this.selectedInventoryItemId !== itemId) {
+          const items = [this.selectedInventoryItemId, itemId].sort();
+          const result = this.gameEngine.emit("inventory.items_combined", {
+            target: items.join("+"),
+            items,
+            primary: this.selectedInventoryItemId,
+            secondary: itemId,
+          });
+          if (result.firedRules.length === 0) {
+            this.flashToast("These do not fit together.");
+          }
+          this.clearAdventureInventorySelection();
+          return true;
+        }
+        if (this.selectedInventoryItemId === itemId) {
+          this.clearAdventureInventorySelection();
+          this.openInventoryDetail(hotspot);
+          return true;
+        }
+        this.selectedInventoryItemId = itemId;
+        this.setCommand(`Use ${hotspot.label || itemId} with...`);
+        this.gameEngine.emit("inventory.item_selected", { target: itemId, item: itemId });
+        this.updateInventory();
+        return true;
+      }
+
+      clearAdventureInventorySelection() {
+        if (!this.selectedInventoryItemId) {
+          return;
+        }
+        this.selectedInventoryItemId = null;
+        this.setCommand("Walk to...");
+        this.updateInventory();
+      }
+
+      getAdventureMapConfig() {
+        return this.contentModel?.map || null;
+      }
+
+      createAdventureMapButton() {
+        if (!this.isAdventureMode() || this.adventureMapButton || !this.getAdventureMapConfig()) {
+          return;
+        }
+        const button = this.add.container(872, 92).setDepth(907).setSize(58, 58);
+        const bg = this.add.graphics();
+        const icon = this.add.graphics();
+        const hitPlate = this.add.zone(0, 0, 64, 64).setInteractive({ useHandCursor: true });
+        button.add([bg, icon, hitPlate]);
+        button.bg = bg;
+        button.icon = icon;
+        button.hitPlate = hitPlate;
+        hitPlate.on("pointerover", () => this.drawAdventureMapButton("hover"));
+        hitPlate.on("pointerout", () => this.drawAdventureMapButton("idle"));
+        hitPlate.on("pointerdown", () => {
+          this.drawAdventureMapButton("down");
+          if (button.enabled && !this.activeBubble) {
+            this.openAdventureMapPanel();
+          } else if (!button.enabled) {
+            this.flashToast("Find the map first.");
+          }
+        });
+        hitPlate.on("pointerup", () => this.drawAdventureMapButton("hover"));
+        this.adventureMapButton = button;
+        this.refreshAdventureMapButton();
+      }
+
+      isAdventureMapEnabled() {
+        const config = this.getAdventureMapConfig();
+        return this.bridgeConditionMatches(config?.button?.enabled_when);
+      }
+
+      drawAdventureMapButton(state = "idle") {
+        const button = this.adventureMapButton;
+        if (!button) {
+          return;
+        }
+        button.drawState = state;
+        const enabled = this.isAdventureMapEnabled();
+        button.enabled = enabled;
+        const hover = state === "hover";
+        const down = state === "down";
+        const fill = enabled ? 0xf4c44e : 0xb8aa89;
+        const edge = enabled ? 0x8b6336 : 0x6f6a5c;
+        button.bg.clear();
+        button.bg.fillStyle(0x2c1c13, down ? 0.32 : 0.22);
+        button.bg.fillCircle(3, 4, 31);
+        button.bg.fillStyle(fill, enabled ? 0.98 : 0.64);
+        button.bg.lineStyle(3, hover && enabled ? 0xfffbef : edge, enabled ? 0.95 : 0.55);
+        button.bg.fillCircle(0, 0, 29);
+        button.bg.strokeCircle(0, 0, 29);
+        button.icon.clear();
+        button.icon.lineStyle(3, enabled ? 0x173837 : 0x5c5a52, enabled ? 0.92 : 0.65);
+        button.icon.strokeRoundedRect(-14, -11, 28, 22, 3);
+        button.icon.beginPath();
+        button.icon.moveTo(-5, -10);
+        button.icon.lineTo(-8, 11);
+        button.icon.moveTo(5, -10);
+        button.icon.lineTo(8, 11);
+        button.icon.strokePath();
+        button.icon.fillStyle(enabled ? 0x0f7a78 : 0x6f6a5c, enabled ? 0.92 : 0.55);
+        button.icon.fillCircle(8, -4, 3);
+      }
+
+      refreshAdventureMapButton() {
+        this.drawAdventureMapButton(this.adventureMapButton?.drawState || "idle");
+      }
+
+      openAdventureMapPanel() {
+        if (!this.isAdventureMode() || !this.gameEngine || !this.getAdventureMapConfig()) {
+          return;
+        }
+        this.closeBubble();
+        this.closeAdventureMapPanel();
+        const panel = this.add.container(152, 84).setDepth(980);
+        const bg = this.add.graphics();
+        const width = 720;
+        const height = 418;
+        this.drawDialoguePanel(bg, width, height);
+        const title = this.add.text(34, 26, "Map", {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "28px",
+          fontStyle: "700",
+          color: "#123937",
+        });
+        const closeButton = this.makeCloseButton(width - 50, 22, () => this.closeAdventureMapPanel());
+        panel.add([bg, title, closeButton]);
+        const markers = (this.getAdventureMapConfig().markers || [])
+          .filter((marker) => this.bridgeConditionMatches(marker.visible_when));
+        markers.forEach((marker, index) => {
+          const x = marker.x !== undefined ? marker.x + width / 2 : 98 + (index % 3) * 220;
+          const y = marker.y !== undefined ? marker.y + height / 2 : 124 + Math.floor(index / 3) * 112;
+          panel.add(this.createAdventureMapMarker(marker, x, y));
+        });
+        this.adventureMapPanel = panel;
+      }
+
+      createAdventureMapMarker(marker, x, y) {
+        const enabled = this.bridgeConditionMatches(marker.enabled_when);
+        const container = this.add.container(x, y).setSize(188, 72);
+        const bg = this.add.graphics();
+        bg.fillStyle(enabled ? 0xffedbd : 0xd7ccb2, enabled ? 0.98 : 0.64);
+        bg.lineStyle(3, enabled ? 0x9b7343 : 0x7d7668, enabled ? 0.92 : 0.54);
+        bg.fillRoundedRect(-88, -32, 176, 64, 8);
+        bg.strokeRoundedRect(-88, -32, 176, 64, 8);
+        bg.fillStyle(enabled ? 0x0f7a78 : 0x6f6a5c, enabled ? 0.95 : 0.6);
+        bg.fillCircle(-58, 0, 14);
+        const label = this.add.text(-34, -2, marker.label, {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: marker.label.length > 16 ? "15px" : "17px",
+          fontStyle: "700",
+          color: enabled ? "#173837" : "#5c5a52",
+          wordWrap: { width: 106 },
+        }).setOrigin(0, 0.5);
+        const hitPlate = this.add.zone(0, 0, 188, 72).setInteractive({ useHandCursor: enabled });
+        hitPlate.on("pointerdown", () => {
+          if (!enabled) {
+            this.flashToast(marker.locked_text || "This place is locked.");
+            return;
+          }
+          this.closeAdventureMapPanel();
+          this.gameEngine.emit("location.travel_requested", {
+            target: marker.id,
+            location: marker.id,
+            scenario: marker.destination,
+          });
+        });
+        container.add([bg, label, hitPlate]);
+        return container;
+      }
+
+      closeAdventureMapPanel() {
+        this.adventureMapPanel?.destroy();
+        this.adventureMapPanel = null;
+      }
+
+      refreshAdventureScreenState() {
+        this.applyAdventureStaticGuideArt();
+        this.refreshEngineHotspots();
+        this.refreshEngineExitMarker();
+        this.refreshAdventureOverlays();
+        this.refreshAdventureMapButton();
       }
 
       applyEngineStatePrompt() {
@@ -689,18 +1051,29 @@
 
       refreshEngineHotspots() {
         for (const hotspot of this.hotspots || []) {
-          const visible = this.isHotspotVisibleForState(hotspot);
+          const visible = this.levelEditorEnabled ? true : this.isHotspotVisibleForState(hotspot);
           hotspot.marker?.setVisible(visible);
           hotspot.zone?.setVisible(visible);
+          hotspot.editorDragTarget?.setVisible(visible);
+          hotspot.editorResizeHandle?.setVisible(visible);
+          hotspot.editorHandleLabel?.setVisible(visible);
           if (visible) {
             hotspot.zone?.setInteractive?.({ useHandCursor: true });
+            hotspot.editorDragTarget?.setInteractive?.({ draggable: true, useHandCursor: true });
+            hotspot.editorResizeHandle?.setInteractive?.({ draggable: true, useHandCursor: true });
           } else {
             hotspot.zone?.disableInteractive?.();
+            hotspot.editorDragTarget?.disableInteractive?.();
+            hotspot.editorResizeHandle?.disableInteractive?.();
           }
         }
       }
 
       openObjectIntro(hotspot) {
+        if (this.isAdventureMode()) {
+          this.openAdventureHotspot(hotspot);
+          return;
+        }
         const puzzleId = this.getHotspotPuzzleId(hotspot);
         if (this.gameEngine && puzzleId && this.gameEngine.getPuzzleStatus(puzzleId) === "locked") {
           this.showSpeechBubble({
@@ -713,6 +1086,56 @@
           return;
         }
         super.openObjectIntro(hotspot);
+      }
+
+      openAdventureHotspot(hotspot) {
+        if (!this.gameEngine) {
+          super.openObjectIntro(hotspot);
+          return;
+        }
+        const kind = hotspot.kind || (hotspot.scenery ? "scenery" : "inspect");
+        const selectedItem = this.selectedInventoryItemId;
+        if (selectedItem && ["use_target", "state_target", "inspect", "scenery"].includes(kind)) {
+          const result = this.gameEngine.emit("inventory.item_used_on_hotspot", {
+            target: hotspot.id,
+            hotspot_id: hotspot.id,
+            item: selectedItem,
+            screen: this.contentModel?.scene_id,
+          });
+          if (result.firedRules.length === 0) {
+            this.showSpeechBubble({
+              speaker: this.contentModel?.player?.speaker || "Alex",
+              text: hotspot.wrong_item_text || `Not here. Use ${selectedItem} somewhere else.`,
+              bg: hotspot.wrong_item_bg || "Не тук. Използвай предмета другаде.",
+              anchor: { x: hotspot.x, y: hotspot.y - 40 },
+              options: [{ text: "OK", action: () => this.closeBubble() }],
+            });
+          }
+          this.clearAdventureInventorySelection();
+          return;
+        }
+        if (kind === "takeable") {
+          this.gameEngine.emit("item.taken", {
+            target: hotspot.item_id || hotspot.id,
+            hotspot_id: hotspot.id,
+            item: hotspot.item_id || hotspot.id,
+            screen: this.contentModel?.scene_id,
+          });
+          return;
+        }
+        if (kind === "exit") {
+          this.gameEngine.emit("exit.reached", {
+            target: hotspot.id,
+            exit_id: hotspot.id,
+            screen: this.contentModel?.scene_id,
+          });
+          return;
+        }
+        this.gameEngine.emit(hotspot.event || "hotspot.inspected", {
+          target: hotspot.id,
+          hotspot_id: hotspot.id,
+          screen: this.contentModel?.scene_id,
+        });
       }
 
       openSceneryBubble(hotspot) {
@@ -756,6 +1179,9 @@
       createExitMarker(x, y) {
         const config = this.getEngineConfig();
         const exit = this.contentModel?.exit_marker;
+        if (this.isAdventureMode() && !exit) {
+          return this.add.container(-999, -999).setVisible(false);
+        }
         if (!config || !exit) {
           return super.createExitMarker(x, y);
         }
@@ -806,7 +1232,51 @@
       }
 
       onGuideClicked() {
-        const guide = this.contentModel?.guide;
+        const guide = this.getPrimaryNpcContent?.() || this.contentModel?.guide;
+        if (this.isAdventureMode() && this.gameEngine && guide) {
+          this.closeBubble();
+          this.setCommand(`Talk to ${guide.speaker || guide.label || "helper"}`);
+          const walkTo = guide.walk_to || { x: this.guide.x, y: this.guide.y };
+          this.walkHeroTo(walkTo.x, walkTo.y, () => {
+            this.faceHeroToward(this.guide.x, this.guide.y, "normal");
+            this.playGuideTalk();
+            if (this.selectedInventoryItemId) {
+              const selectedItem = this.selectedInventoryItemId;
+              const result = this.gameEngine.emit("inventory.item_given_to_npc", {
+                target: guide.id || guide.speaker || "guide",
+                npc: guide.id || guide.speaker || "guide",
+                item: selectedItem,
+                screen: this.contentModel?.scene_id,
+              });
+              if (result.firedRules.length === 0) {
+                this.showSpeechBubble({
+                  speaker: guide.speaker || "Guide",
+                  text: guide.wrong_item_text || "I do not need this.",
+                  bg: guide.wrong_item_bg || "Това не ми трябва.",
+                  anchor: { x: this.guide.x, y: this.guide.y - 128 },
+                  options: [{ text: "OK", action: () => this.closeBubble() }],
+                });
+              }
+              this.clearAdventureInventorySelection();
+              return;
+            }
+            const result = this.gameEngine.emit("npc.talked", {
+              target: guide.id || guide.speaker || "guide",
+              npc: guide.id || guide.speaker || "guide",
+              screen: this.contentModel?.scene_id,
+            });
+            if (result.firedRules.length === 0 && guide.default_text) {
+              this.showSpeechBubble({
+                speaker: guide.speaker || "Guide",
+                text: guide.default_text,
+                bg: guide.default_text_bg || "",
+                anchor: { x: this.guide.x, y: this.guide.y - 128 },
+                options: [{ text: "OK", action: () => this.closeBubble() }],
+              });
+            }
+          });
+          return;
+        }
         const guidePuzzle = this.getGuidePuzzleId();
         if (!this.gameEngine || !guide || !guidePuzzle) {
           super.onGuideClicked();
@@ -863,8 +1333,9 @@
         }
         this.closeBubble();
         const guideBinding = this.getEngineConfig().bindings?.guide || {};
+        const primaryNpc = this.getPrimaryNpcContent?.() || this.contentModel?.guide;
         this.gameEngine.emit("guide.completed", {
-          target: guideBinding.id || this.contentModel?.guide?.id || this.contentModel?.guide?.speaker || "guide",
+          target: guideBinding.id || primaryNpc?.id || primaryNpc?.speaker || "guide",
           puzzle_id: this.getGuidePuzzleId(),
         });
       }

@@ -4,7 +4,7 @@
   const CONTENT_CACHE_KEY = "gameContent";
   const SCENE_WIDTH = 1024;
   const SCENE_HEIGHT = 576;
-  const ASSET_OVERRIDE_VERSION = "20260709-balanced-spy-walk";
+  const ASSET_OVERRIDE_VERSION = "20260710-adventure-polish";
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
   const BUILTIN_DEFAULT_SCENARIO = "scenarios/james-bond-level-01-content.json";
   const BUILTIN_LEVEL_SCENARIOS = {
@@ -90,6 +90,27 @@
         if (assets.inventory_icons) {
           originalImage("inventoryIcons", versionedScenarioAsset(assets.inventory_icons));
         }
+        if (assets.prop_atlas) {
+          originalImage("propAtlas", versionedScenarioAsset(assets.prop_atlas));
+        }
+        for (const [textureKey, texturePath] of Object.entries(assets.extra_textures || {})) {
+          originalImage(textureKey, versionedScenarioAsset(texturePath));
+        }
+        if (assets.map_ui) {
+          originalImage("mapUi", versionedScenarioAsset(assets.map_ui));
+        }
+        if (assets.npc_mira) {
+          originalImage("npcMira", versionedScenarioAsset(assets.npc_mira));
+        }
+        if (assets.npc_lina) {
+          originalImage("npcLina", versionedScenarioAsset(assets.npc_lina));
+        }
+        if (assets.asset_frames) {
+          this.load.json("assetFrames", versionedScenarioAsset(assets.asset_frames));
+        }
+        for (const [index, framesPath] of (assets.extra_asset_frames || []).entries()) {
+          this.load.json(`assetFramesExtra${index}`, versionedScenarioAsset(framesPath));
+        }
         this.load.image = (key, url, ...args) => {
           if (key === "campBg" && assets.background) {
             return originalImage(key, versionedScenarioAsset(assets.background), ...args);
@@ -132,9 +153,20 @@
 
       getGuideCharacterScale(y) {
         const baseScale = this.getCharacterDepthScale(y);
-        const multiplier = this.contentModel?.presentation?.guide_scale_multiplier
+        const multiplier = this.contentModel?.presentation?.npc_scale_multiplier
+          ?? this.contentModel?.presentation?.guide_scale_multiplier
           ?? this.contentModel?.presentation?.character_scale_multiplier;
         return baseScale * (Number.isFinite(multiplier) ? multiplier : 1);
+      }
+
+      getPrimaryNpcContent() {
+        if (!this.contentModel) {
+          return null;
+        }
+        if (this.contentModel.gameplay_mode === "adventure" && Array.isArray(this.contentModel.npcs)) {
+          return this.contentModel.npcs.find((npc) => npc.primary !== false) || null;
+        }
+        return this.contentModel.guide || null;
       }
 
       getCharacterDepthScale(y) {
@@ -178,18 +210,34 @@
         if (!content) {
           return;
         }
-        if (content.guide?.dialogue_tree) {
-          this.guideTree = content.guide.dialogue_tree;
+        const primaryNpc = this.getPrimaryNpcContent();
+        if (primaryNpc?.dialogue_tree) {
+          this.guideTree = primaryNpc.dialogue_tree;
         }
-        if (content.guide?.position && this.guide) {
-          this.guide.setPosition(content.guide.position.x, content.guide.position.y);
-          this.guide.setDepth(Math.round(content.guide.position.y));
-          this.guide.setScale(this.getGuideCharacterScale(content.guide.position.y));
-          this.guide.zone?.setPosition(content.guide.position.x, content.guide.position.y - 62);
+        if (content.gameplay_mode === "adventure" && !primaryNpc && this.guide) {
+          // Empty adventure screens stay character-free in play, but the editor keeps a
+          // visual reference actor so hotspot layout is never blocked by a blank scene.
+          this.guide.setVisible(this.levelEditorEnabled);
+          this.guide.zone?.disableInteractive?.();
+          if (this.levelEditorEnabled) {
+            this.guide.setAlpha(0.72);
+            this.guide.setPosition(602, 440);
+            this.guide.setDepth(440);
+            this.guide.setScale(this.getGuideCharacterScale(440));
+          }
         }
-        if (content.guide?.role_label && this.guide) {
+        if (primaryNpc?.position && this.guide) {
+          this.guide.setVisible(true);
+          this.guide.setAlpha(1);
+          this.guide.zone?.setInteractive?.({ useHandCursor: true });
+          this.guide.setPosition(primaryNpc.position.x, primaryNpc.position.y);
+          this.guide.setDepth(Math.round(primaryNpc.position.y));
+          this.guide.setScale(this.getGuideCharacterScale(primaryNpc.position.y));
+          this.guide.zone?.setPosition(primaryNpc.position.x, primaryNpc.position.y - 62);
+        }
+        if (primaryNpc?.role_label && this.guide) {
           if (!this.guide.roleLabel) {
-            this.guide.roleLabel = this.add.text(0, 0, content.guide.role_label, {
+            this.guide.roleLabel = this.add.text(0, 0, primaryNpc.role_label, {
               fontFamily: ADVENTURE_FONT,
               fontSize: "15px",
               fontStyle: "700",
@@ -199,9 +247,11 @@
             }).setOrigin(0.5).setDepth(900);
           }
           this.guide.roleLabel
-            .setText(content.guide.role_label)
+            .setText(primaryNpc.role_label)
             .setPosition(this.guide.x, this.guide.y - 172)
             .setVisible(true);
+        } else if (this.guide?.roleLabel) {
+          this.guide.roleLabel.setVisible(false);
         }
         if (content.hero_start && this.hero) {
           this.hero.setPosition(content.hero_start.x, content.hero_start.y);
@@ -247,6 +297,8 @@
 
         this.hotspots = this.contentModel.hotspots.map(normalizeHotspot);
 
+        const adventureHotspots = this.contentModel.gameplay_mode === "adventure";
+        const idleMarkerAlpha = adventureHotspots && !this.levelEditorEnabled ? 0.24 : 1;
         this.hotspots.forEach((hotspot) => {
           const marker = this.add.container(hotspot.x, hotspot.y)
             .setDepth(530)
@@ -273,8 +325,14 @@
             hotspot.radius * 2.4,
           ).setDepth(850).setInteractive({ useHandCursor: true });
 
-          zone.on("pointerover", () => label.setAlpha(1));
-          zone.on("pointerout", () => label.setAlpha(this.levelEditorEnabled || hotspot.label_visible ? 1 : 0));
+          zone.on("pointerover", () => {
+            marker.setAlpha(1);
+            label.setAlpha(1);
+          });
+          zone.on("pointerout", () => {
+            marker.setAlpha(idleMarkerAlpha);
+            label.setAlpha(this.levelEditorEnabled || hotspot.label_visible ? 1 : 0);
+          });
           zone.on("pointerdown", () => {
             if (this.levelEditorEnabled) {
               return;
@@ -289,6 +347,7 @@
 
           hotspot.marker = marker;
           hotspot.zone = zone;
+          marker.setAlpha(idleMarkerAlpha);
           this.tweens.add({
             targets: glow,
             alpha: { from: 0.45, to: 1 },
@@ -340,22 +399,36 @@
             },
           });
         }
-        if (this.guide) {
+        if (this.guide && (!this.isAdventureMode?.() || this.getPrimaryNpcContent())) {
+          const primaryNpc = this.getPrimaryNpcContent();
+          const usesAdventureNpcs = this.contentModel.gameplay_mode === "adventure" && Array.isArray(this.contentModel.npcs);
           this.guide.zone?.disableInteractive();
           this.createActorEditorControls({
             id: "guide",
-            label: this.contentModel.guide?.id || "guide",
+            label: primaryNpc?.id || "guide",
             actor: this.guide,
             color: 0xe88957,
-            getMultiplier: () => this.contentModel.presentation.guide_scale_multiplier
+            getMultiplier: () => this.contentModel.presentation.npc_scale_multiplier
+              ?? this.contentModel.presentation.guide_scale_multiplier
               ?? this.contentModel.presentation.character_scale_multiplier
               ?? 1,
             setMultiplier: (value) => {
-              this.contentModel.presentation.guide_scale_multiplier = value;
+              if (usesAdventureNpcs) {
+                this.contentModel.presentation.npc_scale_multiplier = value;
+              } else {
+                this.contentModel.presentation.guide_scale_multiplier = value;
+              }
             },
             applyPosition: (x, y) => {
-              this.contentModel.guide = this.contentModel.guide || {};
-              this.contentModel.guide.position = { x, y };
+              if (usesAdventureNpcs) {
+                const npc = this.getPrimaryNpcContent();
+                if (npc) {
+                  npc.position = { x, y };
+                }
+              } else {
+                this.contentModel.guide = this.contentModel.guide || {};
+                this.contentModel.guide.position = { x, y };
+              }
               this.guide.setPosition(x, y);
               this.guide.setDepth(Math.round(y));
               this.guide.setScale(this.getGuideCharacterScale(y));
@@ -787,18 +860,29 @@
 
       getActorEditorPatch() {
         const presentation = this.contentModel?.presentation || {};
-        return {
+        const primaryNpc = this.getPrimaryNpcContent();
+        const isAdventureScreen = this.contentModel?.gameplay_mode === "adventure";
+        const usesAdventureNpcs = this.contentModel?.gameplay_mode === "adventure" && Boolean(primaryNpc);
+        const patch = {
           hero: this.hero ? {
             x: Math.round(this.hero.x),
             y: Math.round(this.hero.y),
             scale_multiplier: Number((presentation.character_scale_multiplier ?? 1).toFixed(2)),
           } : null,
-          guide: this.guide ? {
+        };
+        if (this.guide && (!isAdventureScreen || primaryNpc)) {
+          patch[usesAdventureNpcs ? "npc" : "guide"] = {
             x: Math.round(this.guide.x),
             y: Math.round(this.guide.y),
-            scale_multiplier: Number((presentation.guide_scale_multiplier ?? presentation.character_scale_multiplier ?? 1).toFixed(2)),
-          } : null,
-        };
+            scale_multiplier: Number((
+              presentation.npc_scale_multiplier
+              ?? presentation.guide_scale_multiplier
+              ?? presentation.character_scale_multiplier
+              ?? 1
+            ).toFixed(2)),
+          };
+        }
+        return patch;
       }
 
       getObstacleEditorPatch() {
@@ -927,7 +1011,7 @@
       }
 
       onGuideClicked() {
-        const guideContent = this.contentModel?.guide;
+        const guideContent = this.getPrimaryNpcContent();
         if (!guideContent) {
           super.onGuideClicked();
           return;

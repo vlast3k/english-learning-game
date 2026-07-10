@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260708-fullscreen-shell";
+const ASSET_VERSION = "20260710-adventure-polish";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const WORD_REVEAL_HOLD_MS = 1000;
@@ -1537,6 +1537,9 @@ class CampScene extends Phaser.Scene {
       slot.hoverState = "down";
       redraw("down");
       this.hideInventoryTooltip();
+      if (this.handleInventorySlotPointerDown?.(slot, hotspot) === true) {
+        return;
+      }
       this.openInventoryDetail(hotspot);
     });
     hitPlate.on("pointerup", () => {
@@ -1626,6 +1629,12 @@ class CampScene extends Phaser.Scene {
     const frame = spec.frame;
     if (!texture || !frame) {
       return null;
+    }
+    if (typeof frame === "string") {
+      if (texture.has(frame)) {
+        return frame;
+      }
+      return this.ensureAdventureTextureFrame?.(spec.texture, frame) || null;
     }
     const source = texture.getSourceImage();
     const width = Math.round(frame.width);
@@ -2190,7 +2199,8 @@ class CampScene extends Phaser.Scene {
     this.inventoryText.setVisible(false);
     const expectedIds = this.getInventorySlotIds();
     expectedIds.forEach((itemId, index) => {
-      const hotspot = this.hotspots?.find((candidate) => candidate.id === itemId);
+      const hotspot = this.getInventoryItemPresentation?.(itemId)
+        || this.hotspots?.find((candidate) => candidate.id === itemId);
       if (hotspot && this.learnedWords.includes(itemId)) {
         this.inventoryItems.add(this.createInventorySlot(hotspot, index));
         return;
@@ -2205,7 +2215,8 @@ class CampScene extends Phaser.Scene {
       ?.filter((hotspot) => !hotspot.scenery)
       .map((hotspot) => hotspot.id) || [];
     const baseIds = Array.isArray(requiredItems) && requiredItems.length > 0 ? requiredItems : collectibleIds;
-    return [...new Set([...this.learnedWords, ...baseIds])].slice(0, 3);
+    const maxSlots = this.getInventoryMaxSlots?.() || 3;
+    return [...new Set([...this.learnedWords, ...baseIds])].slice(0, maxSlots);
   }
 
   setCommand(text) {

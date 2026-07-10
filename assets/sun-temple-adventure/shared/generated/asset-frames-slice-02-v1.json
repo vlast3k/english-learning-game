@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": [
+    "Frame rectangles are starter crops for the Waterfall Cave slice-two prop atlas.",
+    "Rectangles include transparent padding for painted edges and glow effects.",
+    "Review and tune after the first Phaser layout pass."
+  ],
+  "textures": {
+    "propAtlasSlice02": {
+      "path": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "empty_jar": { "x": 40, "y": 125, "width": 245, "height": 365 },
+        "glow_leaf": { "x": 340, "y": 110, "width": 260, "height": 390 },
+        "glow_jar": { "x": 650, "y": 120, "width": 245, "height": 375 },
+        "cave_lit_glow": { "x": 940, "y": 130, "width": 295, "height": 370 },
+        "stone_key": { "x": 1300, "y": 115, "width": 150, "height": 390 },
+        "blue_stone_box_shut": { "x": 35, "y": 575, "width": 295, "height": 310 },
+        "blue_stone_box_open": { "x": 380, "y": 535, "width": 305, "height": 370 },
+        "blue_lens": { "x": 660, "y": 590, "width": 290, "height": 255 },
+        "sun_compass_blue_lens": { "x": 980, "y": 600, "width": 260, "height": 255 },
+        "map_marker_temple_steps": { "x": 1245, "y": 565, "width": 245, "height": 365 }
+      }
+    }
+  },
+  "inventory_icons": {
+    "empty_jar": { "texture": "propAtlasSlice02", "frame": "empty_jar" },
+    "glow_leaf": { "texture": "propAtlasSlice02", "frame": "glow_leaf" },
+    "glow_jar": { "texture": "propAtlasSlice02", "frame": "glow_jar" },
+    "stone_key": { "texture": "propAtlasSlice02", "frame": "stone_key" },
+    "blue_lens": { "texture": "propAtlasSlice02", "frame": "blue_lens" }
+  },
+  "recommended_overlays": {
+    "waterfall-mouth": [
+      { "id": "cave_lit_glow", "texture": "propAtlasSlice02", "frame": "cave_lit_glow", "visible_when": { "fact": "waterfall.cave_lit", "equals": true } }
+    ],
+    "dark-cave": [
+      { "id": "stone_key", "texture": "propAtlasSlice02", "frame": "stone_key", "visible_when": { "fact": "dark_cave.wall_checked", "equals": true } },
+      { "id": "blue_stone_box_open", "texture": "propAtlasSlice02", "frame": "blue_stone_box_open", "visible_when": { "fact": "dark_cave.box_open", "equals": true } },
+      { "id": "blue_lens", "texture": "propAtlasSlice02", "frame": "blue_lens", "visible_when": { "fact": "dark_cave.box_open", "equals": true } }
+    ],
+    "base-camp-table": [
+      { "id": "sun_compass_blue_lens", "texture": "propAtlasSlice02", "frame": "sun_compass_blue_lens", "visible_when": { "fact": "compass.blue_lens_placed", "equals": true } }
+    ]
+  }
+}

@@ -85,6 +85,7 @@ function normalizeActorPatch(rawActors) {
   return {
     hero: normalizeActor(rawActors.hero, "hero"),
     guide: normalizeActor(rawActors.guide, "guide"),
+    npc: normalizeActor(rawActors.npc, "npc"),
   };
 }
 
@@ -421,7 +422,7 @@ function patchTopLevelPropertyObjectNumber(text, property, values, options = {})
 }
 
 function ensurePresentationText(text, actors) {
-  if (!actors.hero && !actors.guide && !actors.depthScale) {
+  if (!actors.hero && !actors.guide && !actors.npc && !actors.depthScale) {
     return text;
   }
   if (findTopLevelPropertyObject(text, "presentation")) {
@@ -433,7 +434,7 @@ function ensurePresentationText(text, actors) {
   }
   const indent = heroStartMatch[0].match(/\n(\s*)"/)?.[1] || "  ";
   const heroScale = actors.hero?.scale_multiplier ?? 1;
-  const guideScale = actors.guide?.scale_multiplier ?? heroScale;
+  const guideScale = actors.guide?.scale_multiplier ?? actors.npc?.scale_multiplier ?? heroScale;
   const depthScale = actors.depthScale
     ? `,\n${indent}  "character_depth_scale": {\n${indent}    "back_y": ${actors.depthScale.back_y},\n${indent}    "back_scale": ${actors.depthScale.back_scale},\n${indent}    "front_y": ${actors.depthScale.front_y},\n${indent}    "front_scale": ${actors.depthScale.front_scale}\n${indent}  }`
     : "";
@@ -463,6 +464,23 @@ function patchActorText(originalText, actors, depthScale = null) {
     }, guideRange.start);
     text = patchTopLevelPropertyObjectNumber(text, "presentation", {
       guide_scale_multiplier: actors.guide.scale_multiplier,
+    }, { allowMissing: true });
+  }
+  if (actors.npc) {
+    const npcArray = findPropertyArray(text, "npcs");
+    const firstNpcStart = npcArray ? text.indexOf("{", npcArray.start) : -1;
+    const npcRange = npcArray && firstNpcStart >= 0
+      ? findTopLevelObjectInArrayContainingIndex(text, npcArray, firstNpcStart)
+      : null;
+    if (!npcRange) {
+      throw new Error("could not find primary npc");
+    }
+    text = patchPropertyObjectNumber(text, "position", {
+      x: actors.npc.x,
+      y: actors.npc.y,
+    }, npcRange.start);
+    text = patchTopLevelPropertyObjectNumber(text, "presentation", {
+      npc_scale_multiplier: actors.npc.scale_multiplier,
     }, { allowMissing: true });
   }
   if (depthScale) {

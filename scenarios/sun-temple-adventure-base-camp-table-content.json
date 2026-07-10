@@ -1,0 +1,441 @@
+{
+  "schema_version": 1,
+  "scene_id": "sun-temple-adventure-base-camp-table",
+  "content_version": "2026-07-09",
+  "gameplay_mode": "adventure",
+  "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
+  "assets": {
+    "background": "assets/sun-temple-adventure/base-camp-table/generated/background-v1.png",
+    "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
+    "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
+    "extra_textures": {
+      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png"
+    },
+    "extra_asset_frames": [
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json"
+    ],
+    "npc_mira": "assets/sun-temple-adventure/shared/generated/npc-mira-v1.png",
+    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
+  },
+  "presentation": {
+    "character_scale_multiplier": 1.45,
+    "npc_scale_multiplier": 1.2,
+    "character_depth_scale": {
+      "back_y": 300,
+      "back_scale": 0.36,
+      "front_y": 566,
+      "front_scale": 0.66
+    }
+  },
+  "hero_start": {
+    "x": 267,
+    "y": 530
+  },
+  "hud": {
+    "status_text": "Base Camp"
+  },
+  "player": {
+    "speaker": "Alex"
+  },
+  "inventory": {
+    "max_slots": 6
+  },
+  "inventory_items": {
+    "torn_map": {
+      "label": "torn map",
+      "english": "torn map",
+      "bg": "скъсана карта",
+      "icon": {
+        "texture": "propAtlas",
+        "frame": "torn_map"
+      }
+    },
+    "map_piece_01": {
+      "label": "map piece",
+      "english": "map piece",
+      "bg": "парче от карта",
+      "icon": {
+        "texture": "propAtlas",
+        "frame": "map_piece_01"
+      }
+    },
+    "valley_map": {
+      "label": "map",
+      "english": "map",
+      "bg": "карта",
+      "icon": {
+        "texture": "propAtlas",
+        "frame": "valley_map"
+      }
+    },
+    "rope": {
+      "label": "rope",
+      "english": "rope",
+      "bg": "въже",
+      "icon": {
+        "texture": "propAtlas",
+        "frame": "rope_coil"
+      }
+    },
+    "lost_basket": {
+      "label": "basket",
+      "english": "basket",
+      "bg": "кошница",
+      "icon": {
+        "texture": "propAtlas",
+        "frame": "lost_basket"
+      }
+    },
+    "green_lens": {
+      "label": "Green Lens",
+      "english": "Green Lens",
+      "bg": "Зелена леща",
+      "icon": {
+        "texture": "propAtlas",
+        "frame": "green_lens"
+      }
+    },
+    "empty_jar": {
+      "label": "empty jar",
+      "english": "empty jar",
+      "bg": "празен буркан",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "empty_jar"
+      }
+    },
+    "glow_leaf": {
+      "label": "glow leaf",
+      "english": "glow leaf",
+      "bg": "светещ лист",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "glow_leaf"
+      }
+    },
+    "glow_jar": {
+      "label": "glow jar",
+      "english": "glow jar",
+      "bg": "светещ буркан",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "glow_jar"
+      }
+    },
+    "stone_key": {
+      "label": "stone key",
+      "english": "stone key",
+      "bg": "каменен ключ",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "stone_key"
+      }
+    },
+    "blue_lens": {
+      "label": "Blue Lens",
+      "english": "Blue Lens",
+      "bg": "Синя леща",
+      "icon": {
+        "texture": "propAtlasSlice02",
+        "frame": "blue_lens"
+      }
+    }
+  },
+  "npcs": [
+    {
+      "id": "mira",
+      "speaker": "Mira",
+      "label": "Mira",
+      "position": {
+        "x": 739,
+        "y": 501
+      },
+      "walk_to": {
+        "x": 610,
+        "y": 492
+      },
+      "static_image": {
+        "texture": "npcMira",
+        "frame": "full_body",
+        "scale": 0.34
+      },
+      "default_text": "The Sun Compass needs five lenses.",
+      "default_text_bg": "Слънчевият компас има нужда от пет лещи."
+    }
+  ],
+  "navigation": {
+    "walkable_polygon": [
+      {
+        "x": 26,
+        "y": 362
+      },
+      {
+        "x": 1002,
+        "y": 362
+      },
+      {
+        "x": 1016,
+        "y": 566
+      },
+      {
+        "x": 18,
+        "y": 566
+      }
+    ],
+    "clearance": 30,
+    "obstacles": [
+      {
+        "id": "camp_table",
+        "x1": 269,
+        "y1": 194,
+        "x2": 678,
+        "y2": 360
+      }
+    ]
+  },
+  "hotspots": [
+    {
+      "id": "sun_compass",
+      "kind": "use_target",
+      "label": "Sun Compass",
+      "x": 365,
+      "y": 252,
+      "radius": 48,
+      "walk_to": {
+        "x": 488,
+        "y": 438
+      },
+      "wrong_item_text": "This is for a lens.",
+      "wrong_item_bg": "Това е за леща."
+    },
+    {
+      "id": "torn_map",
+      "kind": "takeable",
+      "item_id": "torn_map",
+      "label": "torn map",
+      "english": "torn map",
+      "bg": "скъсана карта",
+      "x": 560,
+      "y": 262,
+      "radius": 38,
+      "walk_to": {
+        "x": 438,
+        "y": 440
+      },
+      "hidden_when": {
+        "fact": "item.torn_map.taken",
+        "equals": true
+      }
+    },
+    {
+      "id": "exit_supply_tent",
+      "kind": "exit",
+      "label": "supply tent",
+      "x": 142,
+      "y": 203,
+      "radius": 44,
+      "walk_to": {
+        "x": 170,
+        "y": 470
+      }
+    },
+    {
+      "id": "exit_camp_edge",
+      "kind": "exit",
+      "label": "camp edge",
+      "x": 965,
+      "y": 376,
+      "radius": 46,
+      "walk_to": {
+        "x": 870,
+        "y": 476
+      }
+    }
+  ],
+  "overlays": [
+    {
+      "id": "sun_compass_green_lens",
+      "texture": "propAtlas",
+      "frame": "sun_compass_green_lens",
+      "x": 520,
+      "y": 318,
+      "scale": 0.28,
+      "depth": 520,
+      "visible_when": {
+        "fact": "compass.green_lens_placed",
+        "equals": true
+      }
+    },
+    {
+      "id": "sun_compass_blue_lens",
+      "texture": "propAtlasSlice02",
+      "frame": "sun_compass_blue_lens",
+      "x": 520,
+      "y": 318,
+      "scale": 0.28,
+      "depth": 522,
+      "visible_when": {
+        "fact": "compass.blue_lens_placed",
+        "equals": true
+      }
+    }
+  ],
+  "map": {
+    "button": {
+      "visible": true,
+      "enabled_when": {
+        "fact": "map.ui_unlocked",
+        "equals": true
+      }
+    },
+    "markers": [
+      {
+        "id": "base-camp-table",
+        "label": "Base Camp",
+        "destination": "scenarios/sun-temple-adventure-base-camp-table-content.json",
+        "x": -250,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "camp-edge",
+        "label": "Camp Edge",
+        "destination": "scenarios/sun-temple-adventure-camp-edge-content.json",
+        "x": -20,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "jungle-path",
+        "label": "Jungle Path",
+        "destination": "scenarios/sun-temple-adventure-jungle-path-content.json",
+        "x": 210,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "broken-bridge",
+        "label": "Broken Bridge",
+        "destination": "scenarios/sun-temple-adventure-broken-bridge-content.json",
+        "x": -250,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "village-garden",
+        "label": "Village Garden",
+        "destination": "scenarios/sun-temple-adventure-village-garden-content.json",
+        "x": -20,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "keeper-hut",
+        "label": "Keeper Hut",
+        "destination": "scenarios/sun-temple-adventure-keeper-hut-content.json",
+        "x": 210,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "waterfall-mouth",
+        "label": "Waterfall Cave",
+        "destination": "scenarios/sun-temple-adventure-waterfall-mouth-content.json",
+        "x": -250,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        }
+      },
+      {
+        "id": "dark-cave",
+        "label": "Dark Cave",
+        "destination": "scenarios/sun-temple-adventure-dark-cave-content.json",
+        "x": -20,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "temple-steps",
+        "label": "Temple Steps",
+        "destination": "scenarios/sun-temple-adventure-temple-steps-content.json",
+        "x": 210,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.temple_steps.revealed",
+          "equals": true
+        },
+        "enabled_when": false,
+        "locked_text": "The temple steps are not ready yet."
+      }
+    ]
+  },
+  "translations": {
+    "basket": "кошница",
+    "bridge": "мост",
+    "camp": "лагер",
+    "cave": "пещера",
+    "compass": "компас",
+    "five": "пет",
+    "green": "зелен",
+    "lens": "леща",
+    "map": "карта",
+    "needs": "има нужда",
+    "rope": "въже",
+    "sun": "слънце"
+  }
+}
