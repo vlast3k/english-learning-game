@@ -290,6 +290,14 @@ if (snapshot.state.facts["level04.unlocked"] !== true) {
 if (transitions.at(-1)?.scenario !== "scenarios/james-bond-level-04-content.json") {
   fail("Level 02 return did not transition to Level 04");
 }
+// A previously persisted once-rule must not strand a child at the green exit
+// when a mobile browser interrupts the first navigation attempt.
+transitions.length = 0;
+level2Return.state.markRuleFired("level02-complete-village-loop");
+level2Return.emit("exit.reached", { target: "safe_flat_door" });
+if (transitions.at(-1)?.scenario !== "scenarios/james-bond-level-04-content.json") {
+  fail("Level 02 return exit could not retry an interrupted transition");
+}
 level2Return.destroy();
 
 const level4 = API.create(campaignContents[3].engine, { storage, content: campaignContents[3].content, bridge });

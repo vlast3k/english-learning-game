@@ -352,7 +352,7 @@ Treat the Observatory approach and Sun Observatory ending as one design unit eve
 5. Completed: Workstream 3, campaign-wide world-state plan. Finale art is deferred until the relevant puzzle and composition designs are approved.
 6. Completed: Workstream 4, full Mirror Hall design and independent art-direction review.
 7. Completed: Workstream 5, generated and implemented Slice 4. User hotspot alignment is the remaining local visual-edit step.
-8. Next: Workstream 6, design Observatory approach and finale as a combined payoff.
+8. Completed: Workstream 6 design package for the Observatory approach and finale. Final-region art and implementation remain the next work.
 9. Generate and implement the final slices only after the final-state art plan is approved.
 10. End with a campaign-wide child playtest and a single coordinated polish pass for dialogue, visual states, hotspot alignment, and Bulgarian support.
 

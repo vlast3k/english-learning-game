@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260710-save-resume-fix";
+  const ENGINE_ASSET_VERSION = "20260710-campaign-chooser-v2";
   const BRIDGE_GAME_WIDTH = 1024;
   const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
@@ -1087,9 +1087,10 @@
       }
 
       transitionToEngineScenario(action, event = {}) {
-        if (!action.scenario) {
+        if (!action.scenario || this.engineScenarioTransitionPending) {
           return;
         }
+        this.engineScenarioTransitionPending = true;
         const navigate = () => {
           const url = new URL(root.location.href);
           const test = url.searchParams.get("test");

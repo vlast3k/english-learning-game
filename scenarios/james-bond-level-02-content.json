@@ -129,8 +129,8 @@
         "bg": "Използвай вратата на тайния апартамент."
       },
       "level02_send_village_plan": {
-        "text": "Send the supply message.",
-        "bg": "Изпрати съобщението за доставки."
+        "text": "Step 1: Send the village plan on the desk.",
+        "bg": "Стъпка 1: Изпрати плана за селото на бюрото."
       },
       "level02_complete_village_loop": {
         "text": "Use the final report.",
@@ -144,8 +144,8 @@
         "fact": "level02.return_unlocked",
         "equals": true
       },
-      "status_text": "Send the village supply plan",
-      "command_text": "Return task: send the village supply message"
+      "status_text": "Step 1 of 2: send the village plan on the desk",
+      "command_text": "Click the glowing village supply message on the desk"
     }
   ],
   "navigation": {
@@ -229,6 +229,7 @@
     "bring": "донеси",
     "by": "до",
     "camera": "камера",
+    "click": "натисни",
     "can": "може",
     "chair": "стол",
     "challenge": "предизвикателство",
@@ -255,6 +256,7 @@
     "flat": "апартамент",
     "football": "футбол",
     "for": "за",
+    "from": "от",
     "fruit": "плод",
     "full": "пълен",
     "good": "добре",
@@ -289,6 +291,7 @@
     "notes": "бележки",
     "object": "предмет",
     "on": "на",
+    "of": "от",
     "open": "отворен",
     "pack": "раница",
     "phone": "телефон",
@@ -312,6 +315,7 @@
     "starts": "започва",
     "stays": "остава",
     "supply": "доставка",
+    "step": "стъпка",
     "table": "маса",
     "take": "вземи",
     "talk": "говори",
@@ -453,14 +457,33 @@
     "states": [
       {
         "when": {
+          "all": [
+            {
+              "fact": "level02.return_unlocked",
+              "equals": true
+            },
+            {
+              "puzzle": "level02_send_village_plan",
+              "status": "completed"
+            }
+          ]
+        },
+        "label": "Animal Trail report",
+        "command": "Go to the Animal Trail",
+        "unlocked_command": "The Animal Trail report is ready!",
+        "unlocked_status": "Step 2 of 2: go to the Animal Trail",
+        "unlocked_toast": "Mission 04 unlocked!"
+      },
+      {
+        "when": {
           "fact": "level02.return_unlocked",
           "equals": true
         },
-        "label": "final report",
-        "command": "Walk to final report",
-        "unlocked_command": "The final report is ready!",
-        "unlocked_status": "Final report ready",
-        "unlocked_toast": "Mission 04 unlocked!"
+        "label": "Step 1: desk plan",
+        "command": "First send the village plan on the desk",
+        "unlocked_command": "First send the village plan on the desk",
+        "unlocked_status": "Step 1: send the village plan",
+        "unlocked_toast": "Send the desk plan first!"
       }
     ]
   },
@@ -672,7 +695,7 @@
     {
       "id": "supply_message",
       "kind": "collectible",
-      "label": "supply message",
+      "label": "SEND village plan",
       "english": "supply message",
       "bg": "съобщение за доставки",
       "x": 548,
@@ -689,8 +712,8 @@
       "locked_text": "This message is for later. I need the village list first.",
       "locked_text_bg": "Това съобщение е за по-късно. Първо ми трябва списъкът от селото.",
       "intro": {
-        "text": "The village list is on the desk. Send the plan: We help the village.",
-        "bg": "Списъкът от селото е на бюрото. Изпрати плана: Ние помагаме на селото.",
+        "text": "Step 1: send the village plan from the desk — We help the village.",
+        "bg": "Стъпка 1: изпрати плана за селото от бюрото — Ние помагаме на селото.",
         "translation_check": {
           "prompt": "Choose the Bulgarian translation before you send it.",
           "validating_text": "Validating...",

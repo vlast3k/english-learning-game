@@ -1,0 +1,3 @@
+# Slice 05 State Atlas Prompt
+
+Create a painted point-and-click state atlas on a perfectly flat `#ff00ff` chroma-key background. No texture, shadow, text, or filler. Arrange only: turn-wheel before and after; receiver light; closed and open Sun Lens niche; Sun Lens; Sun Lens Compass overlay; closed and open Observatory Door rings; great mirror before and after; outgoing warm light beam; complete bright map marker; Base Camp restored flower; Village Garden plant-turn overlay; Temple channel glow; Courtyard flower glow. Match Sun Temple Adventure's warm storybook style. All objects are isolated with generous padding. No extra props, characters, UI, keys, weapons, traps, coins, or text.

@@ -5,16 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Junior Agent Spy Academy</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f7a78'/%3E%3Cpath d='M8 21h16v3H8zM10 8h12l-2 11h-8z' fill='%23f4b942'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="phaser-style.css?v=20260710-save-resume-fix">
+    <link rel="stylesheet" href="phaser-style.css?v=20260710-campaign-chooser-v2">
   </head>
   <body>
     <main class="phaser-shell" aria-label="Junior Agent Spy Academy game">
       <div id="phaser-game" class="phaser-game"></div>
+      <section id="game-selector" class="game-selector" aria-label="Choose a game" hidden>
+        <div class="game-selector__panel">
+          <h1>Choose an adventure</h1>
+          <div class="game-selector__choices">
+            <button type="button" class="game-choice game-choice--spy" data-campaign="spy-academy">
+              <span>Spy Academy</span>
+              <small>Junior agent missions</small>
+            </button>
+            <button type="button" class="game-choice game-choice--sun" data-campaign="sun-temple">
+              <span>Sun Temple Adventure</span>
+              <small>Restore light to the valley</small>
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <script src="vendor/phaser.min.js"></script>
     <script>
       (() => {
+        const SELECTED_CAMPAIGN_KEY = "english-game:selected-campaign";
+        const CAMPAIGN_STORAGE_KEYS = {
+          "spy-academy": "english-game:junior-agent-spy-academy",
+          "sun-temple": "english-game:sun-temple-adventure",
+        };
+        const params = new URLSearchParams(window.location.search);
+        const explicitScenario = params.has("scenario") || params.has("level") || params.has("editor") || params.has("levelEditor");
+        const requestedCampaign = params.get("campaign");
+        const selectedCampaign = requestedCampaign || window.localStorage?.getItem(SELECTED_CAMPAIGN_KEY);
+        const resetRequested = ["1", "true", "yes"].includes(String(params.get("reset") || "").toLowerCase());
+        const selector = document.getElementById("game-selector");
+        const resetCampaignSave = (campaign) => {
+          if (!resetRequested || !CAMPAIGN_STORAGE_KEYS[campaign]) return;
+          window.localStorage?.removeItem(CAMPAIGN_STORAGE_KEYS[campaign]);
+          window.sessionStorage?.removeItem(CAMPAIGN_STORAGE_KEYS[campaign]);
+        };
+        const loadScript = (src) => new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = src;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+        const startGame = () => [
+          "vendor/phaser.min.js",
+          "game-engine/runtime.js?v=20260710-campaign-chooser-v2",
+          "game-engine/phaser-bridge.js?v=20260710-campaign-chooser-v2",
+          "phaser-content.js?v=20260710-campaign-chooser-v2",
+          "phaser-game.js?v=20260710-campaign-chooser-v2",
+        ].reduce((chain, src) => chain.then(() => loadScript(src)), Promise.resolve());
+        if (!explicitScenario && (params.has("choose") || !selectedCampaign)) {
+          selector.hidden = false;
+          selector.querySelectorAll("[data-campaign]").forEach((button) => {
+            button.addEventListener("click", () => {
+              const campaign = button.dataset.campaign;
+              resetCampaignSave(campaign);
+              window.localStorage?.setItem(SELECTED_CAMPAIGN_KEY, campaign);
+              const url = new URL(window.location.href);
+              url.searchParams.set("campaign", campaign);
+              url.searchParams.delete("choose");
+              window.location.assign(url.toString());
+            });
+          });
+        } else {
+          resetCampaignSave(selectedCampaign);
+          startGame();
+        }
         const gameShell = document.querySelector(".phaser-shell");
         const prefersTouchFullscreen = window.matchMedia("(pointer: coarse)").matches;
         const requestFullscreen = () => {
@@ -28,9 +89,5 @@
         gameShell?.addEventListener("pointerdown", requestFullscreen, { once: true, passive: true });
       })();
     </script>
-    <script src="game-engine/runtime.js?v=20260710-save-resume-fix"></script>
-    <script src="game-engine/phaser-bridge.js?v=20260710-save-resume-fix"></script>
-    <script src="phaser-content.js?v=20260710-save-resume-fix"></script>
-    <script src="phaser-game.js?v=20260710-save-resume-fix"></script>
   </body>
 </html>

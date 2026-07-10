@@ -1,20 +1,24 @@
 {
   "schema_version": 1,
-  "scene_id": "sun-temple-adventure-broken-bridge",
-  "content_version": "2026-07-09",
+  "scene_id": "sun-temple-adventure-observatory-approach",
+  "content_version": "2026-07-10-slice-05",
   "gameplay_mode": "adventure",
   "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
   "assets": {
-    "background": "assets/sun-temple-adventure/broken-bridge/generated/background-broken-v1.png",
+    "background": "assets/sun-temple-adventure/observatory-approach/generated/background-v1.png",
     "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
-    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png",
     "extra_textures": {
-      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
+      "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png",
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
+      "propAtlasSlice05": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-05-v1.png"
     },
     "extra_asset_frames": [
-      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
-    ]
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-05-v1.json"
+    ],
+    "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
   },
   "presentation": {
     "character_scale_multiplier": 1.45,
@@ -26,11 +30,11 @@
     }
   },
   "hero_start": {
-    "x": 222,
-    "y": 507
+    "x": 150,
+    "y": 510
   },
   "hud": {
-    "status_text": "Broken Bridge"
+    "status_text": "High Observatory"
   },
   "player": {
     "speaker": "Alex"
@@ -38,15 +42,26 @@
   "inventory": {
     "max_slots": 6
   },
+  "inventory_items": {
+    "sun_lens": {
+      "label": "Sun Lens",
+      "english": "Sun Lens",
+      "bg": "Слънчева леща",
+      "icon": {
+        "texture": "propAtlasSlice05",
+        "frame": "sun_lens"
+      }
+    }
+  },
   "navigation": {
     "walkable_polygon": [
       {
         "x": 18,
-        "y": 352
+        "y": 344
       },
       {
-        "x": 1008,
-        "y": 352
+        "x": 1006,
+        "y": 344
       },
       {
         "x": 1014,
@@ -62,103 +77,145 @@
   },
   "hotspots": [
     {
-      "id": "broken_bridge",
-      "kind": "use_target",
-      "label": "bridge",
-      "x": 512,
-      "y": 396,
-      "radius": 58,
+      "id": "light_receiver",
+      "kind": "state_target",
+      "label": "light receiver",
+      "x": 716,
+      "y": 284,
+      "radius": 37,
       "walk_to": {
-        "x": 430,
-        "y": 506
-      },
-      "wrong_item_text": "The bridge is not safe. I need a rope.",
-      "wrong_item_bg": "Мостът не е безопасен. Трябва ми въже."
-    },
-    {
-      "id": "lost_basket_far",
-      "kind": "scenery",
-      "label": "basket",
-      "x": 672,
-      "y": 131,
-      "radius": 34,
-      "walk_to": {
-        "x": 430,
-        "y": 506
-      },
-      "visible_when": {
-        "not": {
-          "fact": "bridge.repaired",
-          "equals": true
-        }
-      },
-      "description": {
-        "text": "A basket is over there. Someone needs it.",
-        "bg": "Има кошница там. Някой има нужда от нея."
+        "x": 610,
+        "y": 480
       }
     },
     {
-      "id": "lost_basket",
+      "id": "sun_lens",
       "kind": "takeable",
-      "item_id": "lost_basket",
-      "label": "basket",
-      "english": "basket",
-      "bg": "кошница",
-      "x": 401,
-      "y": 443,
-      "radius": 38,
+      "item_id": "sun_lens",
+      "label": "Sun Lens",
+      "english": "Sun Lens",
+      "bg": "Слънчева леща",
+      "x": 704,
+      "y": 142,
+      "radius": 30,
       "walk_to": {
-        "x": 720,
-        "y": 506
+        "x": 650,
+        "y": 430
       },
       "visible_when": {
-        "fact": "bridge.repaired",
+        "fact": "observatory.sun_lens_niche_open",
         "equals": true
       },
       "hidden_when": {
-        "fact": "item.lost_basket.taken",
+        "fact": "item.sun_lens.taken",
         "equals": true
       }
     },
     {
-      "id": "exit_jungle_path",
+      "id": "exit_observatory_door",
       "kind": "exit",
-      "arrival_from_scene": "sun-temple-adventure-jungle-path",
-      "label": "jungle path",
-      "x": 105,
-      "y": 535,
-      "radius": 46,
+      "arrival_from_scene": "sun-temple-adventure-observatory-door",
+      "label": "Observatory Door",
+      "x": 705,
+      "y": 160,
+      "radius": 64,
       "walk_to": {
-        "x": 150,
-        "y": 506
+        "x": 650,
+        "y": 430
+      },
+      "visible_when": {
+        "fact": "compass.sun_lens_placed",
+        "equals": true
       }
     },
     {
-      "id": "exit_village_garden",
+      "id": "exit_base_camp",
       "kind": "exit",
-      "arrival_from_scene": "sun-temple-adventure-village-garden",
-      "label": "village garden",
-      "x": 800,
-      "y": 516,
-      "radius": 46,
+      "arrival_from_scene": "sun-temple-adventure-base-camp-table",
+      "label": "path back",
+      "x": 116,
+      "y": 506,
+      "radius": 58,
       "walk_to": {
-        "x": 842,
-        "y": 500
+        "x": 150,
+        "y": 510
       }
     }
   ],
   "overlays": [
     {
-      "id": "bridge_rope_tied",
-      "texture": "propAtlas",
-      "frame": "bridge_rope_tied",
-      "x": 520,
-      "y": 350,
-      "scale": 0.34,
-      "depth": 520,
+      "id": "receiver_off",
+      "texture": "propAtlasSlice05",
+      "frame": "receiver_off",
+      "x": 610,
+      "y": 260,
+      "scale": 0.35,
+      "depth": 330,
       "visible_when": {
-        "fact": "bridge.repaired",
+        "fact": "observatory.receiver_aligned",
+        "equals": false
+      }
+    },
+    {
+      "id": "receiver_on",
+      "texture": "propAtlasSlice05",
+      "frame": "receiver_on",
+      "x": 610,
+      "y": 260,
+      "scale": 0.35,
+      "depth": 330,
+      "visible_when": {
+        "fact": "observatory.receiver_aligned",
         "equals": true
+      }
+    },
+    {
+      "id": "niche_closed",
+      "texture": "propAtlasSlice05",
+      "frame": "niche_closed",
+      "x": 704,
+      "y": 142,
+      "scale": 0.32,
+      "depth": 300,
+      "visible_when": {
+        "fact": "observatory.sun_lens_niche_open",
+        "equals": false
+      }
+    },
+    {
+      "id": "niche_open",
+      "texture": "propAtlasSlice05",
+      "frame": "niche_open",
+      "x": 704,
+      "y": 142,
+      "scale": 0.32,
+      "depth": 300,
+      "visible_when": {
+        "fact": "observatory.sun_lens_niche_open",
+        "equals": true
+      }
+    },
+    {
+      "id": "sun_lens",
+      "texture": "propAtlasSlice05",
+      "frame": "sun_lens",
+      "x": 704,
+      "y": 142,
+      "scale": 0.2,
+      "depth": 310,
+      "visible_when": {
+        "all": [
+          {
+            "fact": "observatory.sun_lens_niche_open",
+            "equals": true
+          },
+          {
+            "not": {
+              "fact": "item.sun_lens.taken",
+              "equals": true
+            }
+          }
+        ]
       }
     }
   ],
@@ -355,42 +412,12 @@
     ]
   },
   "translations": {
-    "basket": "кошница",
-    "bridge": "мост",
-    "jungle": "джунгла",
-    "path": "пътека",
-    "river": "река",
-    "rope": "въже",
-    "safe": "безопасен",
-    "someone": "някой"
-  },
-  "inventory_items": {
-    "stone_cup": {
-      "label": "stone cup",
-      "english": "stone cup",
-      "bg": "каменна чаша",
-      "icon": {
-        "texture": "propAtlasSlice03",
-        "frame": "stone_cup"
-      }
-    },
-    "water_cup": {
-      "label": "water cup",
-      "english": "water cup",
-      "bg": "чаша с вода",
-      "icon": {
-        "texture": "propAtlasSlice03",
-        "frame": "water_cup"
-      }
-    },
-    "stone_lens": {
-      "label": "Stone Lens",
-      "english": "Stone Lens",
-      "bg": "Каменна леща",
-      "icon": {
-        "texture": "propAtlasSlice03",
-        "frame": "stone_lens"
-      }
-    }
+    "courtyard": "двор",
+    "flower": "цвете",
+    "lens": "леща",
+    "stone": "камък",
+    "sun": "слънце",
+    "water": "вода",
+    "opens": "отваря"
   }
 }

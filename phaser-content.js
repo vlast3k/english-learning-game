@@ -4,8 +4,13 @@
   const CONTENT_CACHE_KEY = "gameContent";
   const SCENE_WIDTH = 1024;
   const SCENE_HEIGHT = 576;
-  const ASSET_OVERRIDE_VERSION = "20260710-save-resume-fix";
+  const ASSET_OVERRIDE_VERSION = "20260710-campaign-chooser-v2";
   const LAST_CAMPAIGN_KEY = "english-game:last-campaign";
+  const SELECTED_CAMPAIGN_KEY = "english-game:selected-campaign";
+  const CAMPAIGNS = {
+    "spy-academy": { id: "junior-agent-spy-academy", storageKey: "english-game:junior-agent-spy-academy", start: "scenarios/james-bond-level-01-content.json" },
+    "sun-temple": { id: "sun-temple-adventure", storageKey: "english-game:sun-temple-adventure", start: "scenarios/sun-temple-adventure-base-camp-table-content.json" },
+  };
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
   const BUILTIN_DEFAULT_SCENARIO = "scenarios/james-bond-level-01-content.json";
   const BUILTIN_LEVEL_SCENARIOS = {
@@ -34,6 +39,9 @@
     "scenarios/sun-temple-adventure-temple-steps-content.json",
     "scenarios/sun-temple-adventure-sun-courtyard-content.json",
     "scenarios/sun-temple-adventure-mirror-hall-content.json",
+    "scenarios/sun-temple-adventure-observatory-approach-content.json",
+    "scenarios/sun-temple-adventure-observatory-door-content.json",
+    "scenarios/sun-temple-adventure-sun-observatory-content.json",
   ];
 
   function loadJsonSync(url) {
@@ -73,15 +81,15 @@
     return path.startsWith("scenarios/") && path.endsWith(".json") && !path.includes("..") && !path.includes("://");
   }
 
-  function getSavedResumeScenario() {
+  function getSavedResumeScenario(campaign) {
     try {
-      const latest = JSON.parse(window.localStorage?.getItem(LAST_CAMPAIGN_KEY) || "null");
-      if (!latest?.campaignId || !latest?.storageKey) {
+      const selected = CAMPAIGNS[campaign];
+      if (!selected) {
         return null;
       }
-      const save = JSON.parse(window.localStorage.getItem(latest.storageKey) || "null");
+      const save = JSON.parse(window.localStorage.getItem(selected.storageKey) || "null");
       const scenario = normalizeScenarioPath(save?.resume?.scenario);
-      if (save?.campaignId !== latest.campaignId || !isSafeScenarioPath(scenario)) {
+      if (save?.campaignId !== selected.id || !isSafeScenarioPath(scenario)) {
         return null;
       }
       return scenario;
@@ -95,13 +103,18 @@
     const params = new URLSearchParams(locationSearch);
     const scenario = params.get("scenario");
     const level = params.get("level");
+    const campaign = params.get("campaign") || window.localStorage?.getItem(SELECTED_CAMPAIGN_KEY);
     if (!scenario) {
       if (LEVEL_SCENARIOS[level]) {
         return `${LEVEL_SCENARIOS[level]}?v=${ASSET_OVERRIDE_VERSION}`;
       }
-      const resumeScenario = params.has("reset") || params.has("new") ? null : getSavedResumeScenario();
+      const selectedCampaign = CAMPAIGNS[campaign] ? campaign : "spy-academy";
+      const resumeScenario = params.has("reset") || params.has("new") ? null : getSavedResumeScenario(selectedCampaign);
       if (resumeScenario) {
         return `${resumeScenario}?v=${ASSET_OVERRIDE_VERSION}`;
+      }
+      if (CAMPAIGNS[selectedCampaign]) {
+        return `${CAMPAIGNS[selectedCampaign].start}?v=${ASSET_OVERRIDE_VERSION}`;
       }
       return DEFAULT_CONTENT_URL;
     }

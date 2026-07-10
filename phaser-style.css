@@ -77,6 +77,61 @@ body {
   max-height: 100%;
 }
 
+.game-selector {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #173837;
+  z-index: 20;
+}
+
+.game-selector[hidden] {
+  display: none;
+}
+
+.game-selector__panel {
+  width: min(860px, 100%);
+  text-align: center;
+  color: #fffbed;
+}
+
+.game-selector h1 {
+  margin: 0 0 28px;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.game-selector__choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.game-choice {
+  min-height: 230px;
+  border: 4px solid #f4c44e;
+  border-radius: 8px;
+  color: #fffbed;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  padding: 22px;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 999px rgba(23, 56, 55, 0.38);
+}
+
+.game-choice--spy { background-image: url("assets/james-bond/level-01-briefing/generated/briefing-room-background.png"); }
+.game-choice--sun { background-image: url("assets/sun-temple-adventure/base-camp-table/generated/background-v1.png"); }
+.game-choice span, .game-choice small { display: block; text-shadow: 0 2px 3px #173837; }
+.game-choice span { font-size: 25px; font-weight: 800; }
+.game-choice small { margin-top: 8px; font-size: 16px; }
+.game-choice:focus-visible, .game-choice:hover { outline: 3px solid #fffbed; outline-offset: 3px; }
+
+@media (max-width: 680px) { .game-selector__choices { grid-template-columns: 1fr; } .game-choice { min-height: 155px; } }
+
 @media (max-width: 680px) {
   .phaser-game {
     width: 100vw;

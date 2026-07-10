@@ -625,7 +625,7 @@ try {
     { timeout: 5000 },
   );
   await page.waitForFunction(() => window.__ENGLISH_GAME_ENGINE__?.config?.scene_id === "james-bond-level-02");
-  const returnAssistant = await clickAssistantAndExpect(page, "Send the supply message.");
+  const returnAssistant = await clickAssistantAndExpect(page, "Step 1: Send the village plan on the desk.");
   if (!returnAssistant.bg || !returnAssistant.choices.includes("OK")) {
     fail("Returned Level 02 assistant should explain the state-specific task", returnAssistant);
   }
@@ -653,8 +653,8 @@ try {
   }
   if (
     level2Return.statusText !== "Village supply plan sent"
-    || level2Return.exitLabel !== "final report"
-    || !level2Return.commandText.includes("supply message")
+    || level2Return.exitLabel !== "Animal Trail report"
+    || !level2Return.commandText.includes("village plan")
   ) {
     fail("Returned Level 02 UI did not communicate the state-specific supply task", level2Return);
   }

@@ -11,12 +11,14 @@
     "extra_textures": {
       "propAtlasSlice02": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-02-v1.png",
       "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
-      "propAtlasSlice04": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-04-v1.png"
+      "propAtlasSlice04": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-04-v1.png",
+      "propAtlasSlice05": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-05-v1.png"
     },
     "extra_asset_frames": [
       "assets/sun-temple-adventure/shared/generated/asset-frames-slice-02-v1.json",
       "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json",
-      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-04-v1.json"
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-04-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-05-v1.json"
     ],
     "npc_mira": "assets/sun-temple-adventure/shared/generated/npc-mira-v1.png",
     "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png"
@@ -178,6 +180,15 @@
       "icon": {
         "texture": "propAtlasSlice04",
         "frame": "mirror_lens"
+      }
+    },
+    "sun_lens": {
+      "label": "Sun Lens",
+      "english": "Sun Lens",
+      "bg": "Слънчева леща",
+      "icon": {
+        "texture": "propAtlasSlice05",
+        "frame": "sun_lens"
       }
     }
   },
@@ -356,6 +367,32 @@
       "depth": 526,
       "visible_when": {
         "fact": "compass.mirror_lens_placed",
+        "equals": true
+      }
+    },
+    {
+      "id": "sun_compass_complete",
+      "texture": "propAtlasSlice05",
+      "frame": "compass_complete",
+      "x": 520,
+      "y": 318,
+      "scale": 0.28,
+      "depth": 528,
+      "visible_when": {
+        "fact": "compass.sun_lens_placed",
+        "equals": true
+      }
+    },
+    {
+      "id": "sun_flower_restored",
+      "texture": "propAtlasSlice05",
+      "frame": "restored_flower",
+      "x": 735,
+      "y": 360,
+      "scale": 0.25,
+      "depth": 430,
+      "visible_when": {
+        "fact": "valley.light_restored",
         "equals": true
       }
     }
@@ -544,7 +581,10 @@
           "fact": "location.observatory_approach.revealed",
           "equals": true
         },
-        "enabled_when": false,
+        "enabled_when": {
+          "fact": "compass.mirror_lens_placed",
+          "equals": true
+        },
         "locked_text": "The high path is not ready yet."
       }
     ]
@@ -565,6 +605,7 @@
     "needs": "има нужда",
     "rope": "въже",
     "sun": "слънце",
-    "temple": "храм"
+    "temple": "храм",
+    "complete": "завършен"
   }
 }

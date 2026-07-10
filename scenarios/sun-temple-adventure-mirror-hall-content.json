@@ -25,24 +25,48 @@
       "front_scale": 0.66
     }
   },
-  "hero_start": { "x": 585, "y": 374 },
-  "hud": { "status_text": "Mirror Hall" },
-  "player": { "speaker": "Alex" },
-  "inventory": { "max_slots": 6 },
+  "hero_start": {
+    "x": 585,
+    "y": 374
+  },
+  "hud": {
+    "status_text": "Mirror Hall"
+  },
+  "player": {
+    "speaker": "Alex"
+  },
+  "inventory": {
+    "max_slots": 6
+  },
   "inventory_items": {
     "mirror_lens": {
       "label": "Mirror Lens",
       "english": "Mirror Lens",
       "bg": "Огледална леща",
-      "icon": { "texture": "propAtlasSlice04", "frame": "mirror_lens" }
+      "icon": {
+        "texture": "propAtlasSlice04",
+        "frame": "mirror_lens"
+      }
     }
   },
   "navigation": {
     "walkable_polygon": [
-      { "x": 18, "y": 348 },
-      { "x": 1006, "y": 348 },
-      { "x": 1014, "y": 566 },
-      { "x": 18, "y": 566 }
+      {
+        "x": 18,
+        "y": 348
+      },
+      {
+        "x": 1006,
+        "y": 348
+      },
+      {
+        "x": 1014,
+        "y": 566
+      },
+      {
+        "x": 18,
+        "y": 566
+      }
     ],
     "clearance": 30,
     "obstacles": []
@@ -57,7 +81,10 @@
       "x": 163,
       "y": 84,
       "radius": 46,
-      "walk_to": { "x": 238, "y": 462 }
+      "walk_to": {
+        "x": 238,
+        "y": 462
+      }
     },
     {
       "id": "fixed_mirror",
@@ -68,7 +95,10 @@
       "x": 212,
       "y": 246,
       "radius": 44,
-      "walk_to": { "x": 248, "y": 470 }
+      "walk_to": {
+        "x": 248,
+        "y": 470
+      }
     },
     {
       "id": "near_mirror",
@@ -79,7 +109,10 @@
       "x": 410,
       "y": 436,
       "radius": 39,
-      "walk_to": { "x": 410, "y": 510 }
+      "walk_to": {
+        "x": 410,
+        "y": 510
+      }
     },
     {
       "id": "far_mirror",
@@ -90,7 +123,10 @@
       "x": 653,
       "y": 374,
       "radius": 34,
-      "walk_to": { "x": 650, "y": 498 }
+      "walk_to": {
+        "x": 650,
+        "y": 498
+      }
     },
     {
       "id": "sun_panel",
@@ -101,7 +137,10 @@
       "x": 803,
       "y": 272,
       "radius": 36,
-      "walk_to": { "x": 756, "y": 490 }
+      "walk_to": {
+        "x": 756,
+        "y": 490
+      }
     },
     {
       "id": "mirror_lens",
@@ -113,7 +152,10 @@
       "x": 747,
       "y": 385,
       "radius": 31,
-      "walk_to": { "x": 756, "y": 490 },
+      "walk_to": {
+        "x": 756,
+        "y": 490
+      },
       "visible_when": {
         "fact": "mirror_hall.sun_panel_open",
         "equals": true
@@ -131,7 +173,10 @@
       "x": 44,
       "y": 457,
       "radius": 58,
-      "walk_to": { "x": 130, "y": 510 }
+      "walk_to": {
+        "x": 130,
+        "y": 510
+      }
     }
   ],
   "overlays": [
@@ -143,7 +188,10 @@
       "y": 435,
       "scale": 0.31,
       "depth": 425,
-      "visible_when": { "fact": "mirror_hall.near_mirror_aligned", "equals": false }
+      "visible_when": {
+        "fact": "mirror_hall.near_mirror_aligned",
+        "equals": false
+      }
     },
     {
       "id": "near_mirror_aligned",
@@ -153,7 +201,10 @@
       "y": 435,
       "scale": 0.31,
       "depth": 425,
-      "visible_when": { "fact": "mirror_hall.near_mirror_aligned", "equals": true }
+      "visible_when": {
+        "fact": "mirror_hall.near_mirror_aligned",
+        "equals": true
+      }
     },
     {
       "id": "far_mirror_start",
@@ -163,7 +214,10 @@
       "y": 380,
       "scale": 0.29,
       "depth": 395,
-      "visible_when": { "fact": "mirror_hall.far_mirror_aligned", "equals": false }
+      "visible_when": {
+        "fact": "mirror_hall.far_mirror_aligned",
+        "equals": false
+      }
     },
     {
       "id": "far_mirror_aligned",
@@ -173,7 +227,10 @@
       "y": 380,
       "scale": 0.29,
       "depth": 395,
-      "visible_when": { "fact": "mirror_hall.far_mirror_aligned", "equals": true }
+      "visible_when": {
+        "fact": "mirror_hall.far_mirror_aligned",
+        "equals": true
+      }
     },
     {
       "id": "sun_panel_closed",
@@ -183,7 +240,10 @@
       "y": 278,
       "scale": 0.49,
       "depth": 300,
-      "visible_when": { "fact": "mirror_hall.sun_panel_open", "equals": false }
+      "visible_when": {
+        "fact": "mirror_hall.sun_panel_open",
+        "equals": false
+      }
     },
     {
       "id": "sun_panel_open",
@@ -193,7 +253,10 @@
       "y": 278,
       "scale": 0.49,
       "depth": 300,
-      "visible_when": { "fact": "mirror_hall.sun_panel_open", "equals": true }
+      "visible_when": {
+        "fact": "mirror_hall.sun_panel_open",
+        "equals": true
+      }
     },
     {
       "id": "sun_panel_glow",
@@ -203,7 +266,10 @@
       "y": 250,
       "scale": 0.43,
       "depth": 305,
-      "visible_when": { "fact": "mirror_hall.sun_panel_open", "equals": true }
+      "visible_when": {
+        "fact": "mirror_hall.sun_panel_open",
+        "equals": true
+      }
     },
     {
       "id": "mirror_lens",
@@ -215,15 +281,36 @@
       "depth": 310,
       "visible_when": {
         "all": [
-          { "fact": "mirror_hall.sun_panel_open", "equals": true },
-          { "not": { "fact": "item.mirror_lens.taken", "equals": true } }
+          {
+            "fact": "mirror_hall.sun_panel_open",
+            "equals": true
+          },
+          {
+            "not": {
+              "fact": "item.mirror_lens.taken",
+              "equals": true
+            }
+          }
         ]
       }
     },
     {
       "id": "beam_source_fixed",
       "kind": "water_path",
-      "points": [{ "x": 158, "y": 84 }, { "x": 191, "y": 267 }, { "x": 410, "y": 435 }],
+      "points": [
+        {
+          "x": 158,
+          "y": 84
+        },
+        {
+          "x": 191,
+          "y": 267
+        },
+        {
+          "x": 410,
+          "y": 435
+        }
+      ],
       "depth": 290,
       "bank_width": 18,
       "bank_color": 14180388,
@@ -235,7 +322,16 @@
     {
       "id": "beam_near_wrong",
       "kind": "water_path",
-      "points": [{ "x": 410, "y": 435 }, { "x": 515, "y": 396 }],
+      "points": [
+        {
+          "x": 410,
+          "y": 435
+        },
+        {
+          "x": 515,
+          "y": 396
+        }
+      ],
       "depth": 290,
       "bank_width": 18,
       "bank_color": 14180388,
@@ -243,12 +339,24 @@
       "water_color": 16766423,
       "highlight_width": 3,
       "highlight_color": 16777215,
-      "visible_when": { "fact": "mirror_hall.near_mirror_aligned", "equals": false }
+      "visible_when": {
+        "fact": "mirror_hall.near_mirror_aligned",
+        "equals": false
+      }
     },
     {
       "id": "beam_near_far",
       "kind": "water_path",
-      "points": [{ "x": 410, "y": 435 }, { "x": 650, "y": 380 }],
+      "points": [
+        {
+          "x": 410,
+          "y": 435
+        },
+        {
+          "x": 650,
+          "y": 380
+        }
+      ],
       "depth": 290,
       "bank_width": 18,
       "bank_color": 14180388,
@@ -256,12 +364,24 @@
       "water_color": 16766423,
       "highlight_width": 3,
       "highlight_color": 16777215,
-      "visible_when": { "fact": "mirror_hall.near_mirror_aligned", "equals": true }
+      "visible_when": {
+        "fact": "mirror_hall.near_mirror_aligned",
+        "equals": true
+      }
     },
     {
       "id": "beam_far_wrong",
       "kind": "water_path",
-      "points": [{ "x": 650, "y": 380 }, { "x": 708, "y": 320 }],
+      "points": [
+        {
+          "x": 650,
+          "y": 380
+        },
+        {
+          "x": 708,
+          "y": 320
+        }
+      ],
       "depth": 290,
       "bank_width": 18,
       "bank_color": 14180388,
@@ -271,15 +391,30 @@
       "highlight_color": 16777215,
       "visible_when": {
         "all": [
-          { "fact": "mirror_hall.near_mirror_aligned", "equals": true },
-          { "fact": "mirror_hall.far_mirror_aligned", "equals": false }
+          {
+            "fact": "mirror_hall.near_mirror_aligned",
+            "equals": true
+          },
+          {
+            "fact": "mirror_hall.far_mirror_aligned",
+            "equals": false
+          }
         ]
       }
     },
     {
       "id": "beam_far_panel",
       "kind": "water_path",
-      "points": [{ "x": 650, "y": 380 }, { "x": 800, "y": 278 }],
+      "points": [
+        {
+          "x": 650,
+          "y": 380
+        },
+        {
+          "x": 800,
+          "y": 278
+        }
+      ],
       "depth": 290,
       "bank_width": 18,
       "bank_color": 14180388,
@@ -287,24 +422,202 @@
       "water_color": 16766423,
       "highlight_width": 3,
       "highlight_color": 16777215,
-      "visible_when": { "fact": "mirror_hall.far_mirror_aligned", "equals": true }
+      "visible_when": {
+        "fact": "mirror_hall.far_mirror_aligned",
+        "equals": true
+      }
     }
   ],
   "map": {
-    "button": { "visible": true, "enabled_when": { "fact": "map.ui_unlocked", "equals": true } },
+    "button": {
+      "visible": true,
+      "enabled_when": {
+        "fact": "map.ui_unlocked",
+        "equals": true
+      }
+    },
     "markers": [
-      { "id": "base-camp-table", "label": "Base Camp", "destination": "scenarios/sun-temple-adventure-base-camp-table-content.json", "x": -250, "y": -104, "visible_when": { "fact": "location.base_camp.discovered", "equals": true }, "enabled_when": { "fact": "location.base_camp.discovered", "equals": true } },
-      { "id": "camp-edge", "label": "Camp Edge", "destination": "scenarios/sun-temple-adventure-camp-edge-content.json", "x": -20, "y": -104, "visible_when": { "fact": "location.camp_edge.discovered", "equals": true }, "enabled_when": { "fact": "location.camp_edge.discovered", "equals": true } },
-      { "id": "jungle-path", "label": "Jungle Path", "destination": "scenarios/sun-temple-adventure-jungle-path-content.json", "x": 210, "y": -104, "visible_when": { "fact": "location.jungle_path.discovered", "equals": true }, "enabled_when": { "fact": "location.jungle_path.discovered", "equals": true } },
-      { "id": "broken-bridge", "label": "Broken Bridge", "destination": "scenarios/sun-temple-adventure-broken-bridge-content.json", "x": -250, "y": 0, "visible_when": { "fact": "location.broken_bridge.discovered", "equals": true }, "enabled_when": { "fact": "location.broken_bridge.discovered", "equals": true } },
-      { "id": "village-garden", "label": "Village Garden", "destination": "scenarios/sun-temple-adventure-village-garden-content.json", "x": -20, "y": 0, "visible_when": { "fact": "location.village_garden.discovered", "equals": true }, "enabled_when": { "fact": "location.village_garden.discovered", "equals": true } },
-      { "id": "keeper-hut", "label": "Keeper Hut", "destination": "scenarios/sun-temple-adventure-keeper-hut-content.json", "x": 210, "y": 0, "visible_when": { "fact": "location.keeper_hut.discovered", "equals": true }, "enabled_when": { "fact": "location.keeper_hut.discovered", "equals": true } },
-      { "id": "waterfall-mouth", "label": "Waterfall Cave", "destination": "scenarios/sun-temple-adventure-waterfall-mouth-content.json", "x": -250, "y": 104, "visible_when": { "fact": "location.waterfall_cave.revealed", "equals": true }, "enabled_when": { "fact": "location.waterfall_cave.revealed", "equals": true } },
-      { "id": "dark-cave", "label": "Dark Cave", "destination": "scenarios/sun-temple-adventure-dark-cave-content.json", "x": -20, "y": 104, "visible_when": { "fact": "location.dark_cave.discovered", "equals": true }, "enabled_when": { "fact": "location.dark_cave.discovered", "equals": true } },
-      { "id": "temple-steps", "label": "Temple Steps", "destination": "scenarios/sun-temple-adventure-temple-steps-content.json", "x": 210, "y": 104, "visible_when": { "fact": "location.temple_steps.revealed", "equals": true }, "enabled_when": { "fact": "compass.blue_lens_placed", "equals": true } },
-      { "id": "sun-courtyard", "label": "Sun Courtyard", "destination": "scenarios/sun-temple-adventure-sun-courtyard-content.json", "x": -250, "y": 208, "visible_when": { "fact": "location.sun_courtyard.discovered", "equals": true }, "enabled_when": { "fact": "location.sun_courtyard.discovered", "equals": true } },
-      { "id": "mirror-hall", "label": "Mirror Hall", "destination": "scenarios/sun-temple-adventure-mirror-hall-content.json", "x": 210, "y": 208, "visible_when": { "fact": "location.mirror_hall.revealed", "equals": true }, "enabled_when": { "fact": "compass.stone_lens_placed", "equals": true } },
-      { "id": "observatory-approach", "label": "High Observatory", "destination": "scenarios/sun-temple-adventure-observatory-approach-content.json", "x": -20, "y": 208, "visible_when": { "fact": "location.observatory_approach.revealed", "equals": true }, "enabled_when": false, "locked_text": "The high path is not ready yet." }
+      {
+        "id": "base-camp-table",
+        "label": "Base Camp",
+        "destination": "scenarios/sun-temple-adventure-base-camp-table-content.json",
+        "x": -250,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.base_camp.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "camp-edge",
+        "label": "Camp Edge",
+        "destination": "scenarios/sun-temple-adventure-camp-edge-content.json",
+        "x": -20,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.camp_edge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "jungle-path",
+        "label": "Jungle Path",
+        "destination": "scenarios/sun-temple-adventure-jungle-path-content.json",
+        "x": 210,
+        "y": -104,
+        "visible_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.jungle_path.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "broken-bridge",
+        "label": "Broken Bridge",
+        "destination": "scenarios/sun-temple-adventure-broken-bridge-content.json",
+        "x": -250,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.broken_bridge.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "village-garden",
+        "label": "Village Garden",
+        "destination": "scenarios/sun-temple-adventure-village-garden-content.json",
+        "x": -20,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.village_garden.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "keeper-hut",
+        "label": "Keeper Hut",
+        "destination": "scenarios/sun-temple-adventure-keeper-hut-content.json",
+        "x": 210,
+        "y": 0,
+        "visible_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.keeper_hut.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "waterfall-mouth",
+        "label": "Waterfall Cave",
+        "destination": "scenarios/sun-temple-adventure-waterfall-mouth-content.json",
+        "x": -250,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.waterfall_cave.revealed",
+          "equals": true
+        }
+      },
+      {
+        "id": "dark-cave",
+        "label": "Dark Cave",
+        "destination": "scenarios/sun-temple-adventure-dark-cave-content.json",
+        "x": -20,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.dark_cave.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "temple-steps",
+        "label": "Temple Steps",
+        "destination": "scenarios/sun-temple-adventure-temple-steps-content.json",
+        "x": 210,
+        "y": 104,
+        "visible_when": {
+          "fact": "location.temple_steps.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.blue_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "sun-courtyard",
+        "label": "Sun Courtyard",
+        "destination": "scenarios/sun-temple-adventure-sun-courtyard-content.json",
+        "x": -250,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "location.sun_courtyard.discovered",
+          "equals": true
+        }
+      },
+      {
+        "id": "mirror-hall",
+        "label": "Mirror Hall",
+        "destination": "scenarios/sun-temple-adventure-mirror-hall-content.json",
+        "x": 210,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.mirror_hall.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.stone_lens_placed",
+          "equals": true
+        }
+      },
+      {
+        "id": "observatory-approach",
+        "label": "High Observatory",
+        "destination": "scenarios/sun-temple-adventure-observatory-approach-content.json",
+        "x": -20,
+        "y": 208,
+        "visible_when": {
+          "fact": "location.observatory_approach.revealed",
+          "equals": true
+        },
+        "enabled_when": {
+          "fact": "compass.mirror_lens_placed",
+          "equals": true
+        },
+        "locked_text": "The high path is not ready yet."
+      }
     ]
   },
   "translations": {

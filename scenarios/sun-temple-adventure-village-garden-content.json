@@ -11,10 +11,12 @@
     "npc_lina": "assets/sun-temple-adventure/shared/generated/npc-lina-v1.png",
     "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png",
     "extra_textures": {
-      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
+      "propAtlasSlice05": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-05-v1.png"
     },
     "extra_asset_frames": [
-      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json",
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-05-v1.json"
     ]
   },
   "presentation": {
@@ -160,6 +162,19 @@
       "depth": 505,
       "visible_when": {
         "fact": "lina.helped",
+        "equals": true
+      }
+    },
+    {
+      "id": "garden_restored",
+      "frame": "garden_restored",
+      "x": 512,
+      "y": 320,
+      "scale": 0.34,
+      "depth": 430,
+      "texture": "propAtlasSlice05",
+      "visible_when": {
+        "fact": "valley.light_restored",
         "equals": true
       }
     }
@@ -348,7 +363,10 @@
           "fact": "location.observatory_approach.revealed",
           "equals": true
         },
-        "enabled_when": false,
+        "enabled_when": {
+          "fact": "compass.mirror_lens_placed",
+          "equals": true
+        },
         "locked_text": "The high path is not ready yet."
       }
     ]

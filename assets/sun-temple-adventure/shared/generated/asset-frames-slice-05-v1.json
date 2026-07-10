@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": ["Starter crops for final Sun Temple state art; tune overlay layout after first Phaser integration."],
+  "textures": {
+    "propAtlasSlice05": {
+      "path": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-05-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "frames": {
+        "receiver_off": { "x": 55, "y": 35, "width": 255, "height": 250 },
+        "receiver_on": { "x": 345, "y": 35, "width": 255, "height": 250 },
+        "sun_lens": { "x": 620, "y": 35, "width": 265, "height": 250 },
+        "niche_closed": { "x": 930, "y": 35, "width": 250, "height": 250 },
+        "niche_open": { "x": 1190, "y": 35, "width": 250, "height": 250 },
+        "compass_complete": { "x": 335, "y": 300, "width": 270, "height": 240 },
+        "door_closed": { "x": 620, "y": 300, "width": 250, "height": 235 },
+        "door_open": { "x": 885, "y": 300, "width": 250, "height": 235 },
+        "great_mirror_off": { "x": 1040, "y": 300, "width": 220, "height": 235 },
+        "great_mirror_on": { "x": 1270, "y": 300, "width": 220, "height": 235 },
+        "final_beam": { "x": 45, "y": 550, "width": 350, "height": 170 },
+        "restored_flower": { "x": 620, "y": 545, "width": 240, "height": 230 },
+        "garden_restored": { "x": 850, "y": 545, "width": 250, "height": 230 },
+        "courtyard_restored": { "x": 1180, "y": 760, "width": 300, "height": 230 }
+      }
+    }
+  },
+  "inventory_icons": { "sun_lens": { "texture": "propAtlasSlice05", "frame": "sun_lens" } }
+}

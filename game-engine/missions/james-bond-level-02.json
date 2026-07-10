@@ -91,6 +91,24 @@
       "actions": [{ "type": "puzzle.complete", "puzzle": "level02_understand_mission" }]
     },
     {
+      "id": "level02-return-briefing",
+      "once": true,
+      "event": { "type": "scene.started", "target": "james-bond-level-02" },
+      "condition": { "fact": "level02.return_unlocked", "equals": true },
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Director",
+          "text": "You are back from the village! Step 1: click the village supply message on the desk and send the plan. Step 2: use the Animal Trail report to continue.",
+          "bg": "Върна се от селото! Стъпка 1: натисни съобщението за доставки на бюрото и изпрати плана. Стъпка 2: използвай доклада за Пътеката с животните, за да продължиш."
+        },
+        {
+          "type": "ui.status.set",
+          "text": "Step 1 of 2: send the village plan on the desk"
+        }
+      ]
+    },
+    {
       "id": "level02-collect-phone_clue",
       "once": true,
       "event": { "type": "collectible.completed", "target": "phone_clue" },

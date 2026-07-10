@@ -414,7 +414,10 @@
           "fact": "location.observatory_approach.revealed",
           "equals": true
         },
-        "enabled_when": false,
+        "enabled_when": {
+          "fact": "compass.mirror_lens_placed",
+          "equals": true
+        },
         "locked_text": "The high path is not ready yet."
       }
     ]

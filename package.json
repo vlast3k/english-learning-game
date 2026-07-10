@@ -16,6 +16,7 @@
     "test:browser:sun-temple:slice-02": "node tools/sun-temple-adventure-slice-02-smoke-test.mjs",
     "test:browser:sun-temple:slice-03": "node tools/sun-temple-adventure-slice-03-smoke-test.mjs",
     "test:browser:sun-temple:slice-04": "node tools/sun-temple-adventure-slice-04-smoke-test.mjs",
+    "test:browser:sun-temple:finale": "node tools/sun-temple-adventure-finale-smoke-test.mjs",
     "serve": "python3 -m http.server 9231",
     "serve:editor": "node tools/level-editor-server.mjs"
   },

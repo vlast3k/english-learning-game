@@ -584,14 +584,19 @@
         if (!this.matches(rule, event)) {
           continue;
         }
-        if (rule.once && this.state.hasFiredRule(rule.id)) {
+        // A scene transition can be interrupted after its state changes have
+        // been persisted (for example, when a mobile browser is suspended).
+        // Do not permanently consume that rule: its idempotent actions must
+        // remain available so the child can retry the green exit.
+        const hasSceneTransition = (rule.actions || []).some((action) => action.type === "scene.transition");
+        if (rule.once && !hasSceneTransition && this.state.hasFiredRule(rule.id)) {
           continue;
         }
         if (!this.evaluator.evaluate(rule.condition, event)) {
           continue;
         }
         this.executor.executeAll(rule.actions, event);
-        if (rule.once) {
+        if (rule.once && !hasSceneTransition) {
           this.state.markRuleFired(rule.id);
         }
         fired.push(rule.id);

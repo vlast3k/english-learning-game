@@ -21,7 +21,14 @@
       "mirror_hall.near_mirror_aligned": false,
       "mirror_hall.far_mirror_aligned": false,
       "mirror_hall.beam_path_complete": false,
-      "mirror_hall.sun_panel_open": false
+      "mirror_hall.sun_panel_open": false,
+      "observatory.receiver_aligned": false,
+      "observatory.sun_lens_niche_open": false,
+      "item.sun_lens.taken": false,
+      "observatory.door_open": false,
+      "observatory.great_mirror_aligned": false,
+      "valley.light_restored": false,
+      "map.complete": false
     },
     "inventory": [],
     "counters": {},
@@ -2256,6 +2263,112 @@
           "type": "scene.transition",
           "scenario": "scenarios/sun-temple-adventure-sun-courtyard-content.json"
         }
+      ]
+    },
+    {
+      "id": "map-travel-observatory-approach",
+      "event": { "type": "location.travel_requested", "target": "observatory-approach" },
+      "condition": { "fact": "compass.mirror_lens_placed", "equals": true },
+      "actions": [
+        { "type": "fact.set", "fact": "location.observatory_approach.discovered", "value": true },
+        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-observatory-approach-content.json" }
+      ]
+    },
+    {
+      "id": "align-observatory-receiver",
+      "once": true,
+      "event": { "type": "hotspot.inspected", "target": "light_receiver" },
+      "condition": { "fact": "observatory.receiver_aligned", "equals": false },
+      "actions": [
+        { "type": "fact.set", "fact": "observatory.receiver_aligned", "value": true },
+        { "type": "fact.set", "fact": "observatory.sun_lens_niche_open", "value": true },
+        { "type": "dialog.show", "speaker": "Alex", "text": "The light opens the niche.", "bg": "Светлината отваря нишата." },
+        { "type": "screen.refresh" }
+      ]
+    },
+    {
+      "id": "take-sun-lens",
+      "once": true,
+      "event": { "type": "item.taken", "target": "sun_lens" },
+      "condition": { "fact": "observatory.sun_lens_niche_open", "equals": true },
+      "actions": [
+        { "type": "inventory.add", "item": "sun_lens" },
+        { "type": "fact.set", "fact": "item.sun_lens.taken", "value": true },
+        { "type": "dialog.show", "speaker": "Alex", "text": "This is the Sun Lens.", "bg": "Това е Слънчевата леща." },
+        { "type": "screen.refresh" }
+      ]
+    },
+    {
+      "id": "place-sun-lens",
+      "once": true,
+      "event": { "type": "inventory.item_used_on_hotspot", "target": "sun_compass" },
+      "condition": { "all": [{ "event": "item", "equals": "sun_lens" }, { "inventory_contains": "sun_lens" }] },
+      "actions": [
+        { "type": "inventory.remove", "item": "sun_lens" },
+        { "type": "fact.set", "fact": "compass.sun_lens_placed", "value": true },
+        { "type": "dialog.show", "speaker": "Mira", "text": "The Compass is complete.", "bg": "Компасът е завършен." },
+        { "type": "screen.refresh" }
+      ]
+    },
+    {
+      "id": "open-observatory-door",
+      "once": true,
+      "event": { "type": "hotspot.inspected", "target": "compass_socket" },
+      "condition": { "fact": "compass.sun_lens_placed", "equals": true },
+      "actions": [
+        { "type": "fact.set", "fact": "observatory.door_open", "value": true },
+        { "type": "dialog.show", "speaker": "Alex", "text": "The door is open.", "bg": "Вратата е отворена." },
+        { "type": "screen.refresh" }
+      ]
+    },
+    {
+      "id": "exit-approach-to-observatory-door",
+      "event": { "type": "exit.reached", "target": "exit_observatory_door" },
+      "condition": { "fact": "compass.sun_lens_placed", "equals": true },
+      "actions": [
+        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-observatory-door-content.json" }
+      ]
+    },
+    {
+      "id": "enter-sun-observatory",
+      "event": { "type": "exit.reached", "target": "exit_sun_observatory" },
+      "condition": { "fact": "observatory.door_open", "equals": true },
+      "actions": [
+        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-sun-observatory-content.json" }
+      ]
+    },
+    {
+      "id": "restore-valley-light",
+      "once": true,
+      "event": { "type": "hotspot.inspected", "target": "great_sun_mirror" },
+      "condition": { "fact": "observatory.great_mirror_aligned", "equals": false },
+      "actions": [
+        { "type": "fact.set", "fact": "observatory.great_mirror_aligned", "value": true },
+        { "type": "fact.set", "fact": "valley.light_restored", "value": true },
+        { "type": "fact.set", "fact": "map.complete", "value": true },
+        { "type": "dialog.show", "speaker": "Alex", "text": "The light found the valley.", "bg": "Светлината намери долината." },
+        { "type": "screen.refresh" }
+      ]
+    },
+    {
+      "id": "exit-observatory-door-to-approach",
+      "event": { "type": "exit.reached", "target": "exit_observatory_approach" },
+      "actions": [
+        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-observatory-approach-content.json" }
+      ]
+    },
+    {
+      "id": "exit-approach-to-base-camp",
+      "event": { "type": "exit.reached", "target": "exit_base_camp" },
+      "actions": [
+        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-base-camp-table-content.json" }
+      ]
+    },
+    {
+      "id": "exit-observatory-to-door",
+      "event": { "type": "exit.reached", "target": "exit_observatory_door" },
+      "actions": [
+        { "type": "scene.transition", "scenario": "scenarios/sun-temple-adventure-observatory-door-content.json" }
       ]
     }
   ],
