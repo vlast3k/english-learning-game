@@ -144,9 +144,9 @@
       "label": "stone cup",
       "english": "stone cup",
       "bg": "каменна чаша",
-      "x": 110,
-      "y": 466,
-      "radius": 48,
+      "x": 109,
+      "y": 447,
+      "radius": 36,
       "walk_to": {
         "x": 192,
         "y": 510
@@ -160,8 +160,8 @@
       "id": "sun_channel",
       "kind": "use_target",
       "label": "sun channel",
-      "x": 503,
-      "y": 469,
+      "x": 500,
+      "y": 526,
       "radius": 72,
       "walk_to": {
         "x": 580,
@@ -192,8 +192,8 @@
       "kind": "exit",
       "arrival_from_scene": "sun-temple-adventure-waterfall-mouth",
       "label": "path back",
-      "x": 922,
-      "y": 492,
+      "x": 978,
+      "y": 449,
       "radius": 58,
       "walk_to": {
         "x": 862,

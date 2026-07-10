@@ -25,7 +25,7 @@
       "front_scale": 0.66
     }
   },
-  "hero_start": { "x": 120, "y": 510 },
+  "hero_start": { "x": 585, "y": 374 },
   "hud": { "status_text": "Mirror Hall" },
   "player": { "speaker": "Alex" },
   "inventory": { "max_slots": 6 },
@@ -54,8 +54,8 @@
       "label": "light opening",
       "english": "light opening",
       "bg": "отвор за светлина",
-      "x": 158,
-      "y": 88,
+      "x": 163,
+      "y": 84,
       "radius": 46,
       "walk_to": { "x": 238, "y": 462 }
     },
@@ -65,9 +65,9 @@
       "label": "fixed mirror",
       "english": "fixed mirror",
       "bg": "неподвижно огледало",
-      "x": 191,
-      "y": 267,
-      "radius": 66,
+      "x": 212,
+      "y": 246,
+      "radius": 44,
       "walk_to": { "x": 248, "y": 470 }
     },
     {
@@ -77,8 +77,8 @@
       "english": "near mirror",
       "bg": "близко огледало",
       "x": 410,
-      "y": 448,
-      "radius": 62,
+      "y": 436,
+      "radius": 39,
       "walk_to": { "x": 410, "y": 510 }
     },
     {
@@ -87,9 +87,9 @@
       "label": "far mirror",
       "english": "far mirror",
       "bg": "далечно огледало",
-      "x": 650,
-      "y": 390,
-      "radius": 62,
+      "x": 653,
+      "y": 374,
+      "radius": 34,
       "walk_to": { "x": 650, "y": 498 }
     },
     {
@@ -98,9 +98,9 @@
       "label": "sun panel",
       "english": "sun panel",
       "bg": "слънчев панел",
-      "x": 800,
-      "y": 278,
-      "radius": 100,
+      "x": 803,
+      "y": 272,
+      "radius": 36,
       "walk_to": { "x": 756, "y": 490 }
     },
     {
@@ -110,9 +110,9 @@
       "label": "Mirror Lens",
       "english": "Mirror Lens",
       "bg": "Огледална леща",
-      "x": 800,
-      "y": 278,
-      "radius": 55,
+      "x": 747,
+      "y": 385,
+      "radius": 31,
       "walk_to": { "x": 756, "y": 490 },
       "visible_when": {
         "fact": "mirror_hall.sun_panel_open",
@@ -128,8 +128,8 @@
       "kind": "exit",
       "arrival_from_scene": "sun-temple-adventure-sun-courtyard",
       "label": "path back",
-      "x": 78,
-      "y": 474,
+      "x": 44,
+      "y": 457,
       "radius": 58,
       "walk_to": { "x": 130, "y": 510 }
     }

@@ -28,8 +28,8 @@
     }
   },
   "hero_start": {
-    "x": 220,
-    "y": 505
+    "x": 410,
+    "y": 532
   },
   "hud": {
     "status_text": "Sun Courtyard"
@@ -144,9 +144,9 @@
       "label": "Stone Lens",
       "english": "Stone Lens",
       "bg": "Каменна леща",
-      "x": 512,
-      "y": 331,
-      "radius": 68,
+      "x": 502,
+      "y": 317,
+      "radius": 41,
       "walk_to": {
         "x": 512,
         "y": 470
@@ -161,9 +161,9 @@
       "kind": "exit",
       "arrival_from_scene": "sun-temple-adventure-temple-steps",
       "label": "Temple Steps",
-      "x": 94,
-      "y": 332,
-      "radius": 56,
+      "x": 868,
+      "y": 142,
+      "radius": 45,
       "walk_to": {
         "x": 162,
         "y": 500
