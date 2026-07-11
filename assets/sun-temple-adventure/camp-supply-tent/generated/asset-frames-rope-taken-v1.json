@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": [
+    "Full-frame crop for the supply-tent background after the rope is collected."
+  ],
+  "textures": {
+    "supplyTentRopeTakenBackground": {
+      "path": "assets/sun-temple-adventure/camp-supply-tent/generated/background-rope-taken-v1.png",
+      "width": 1672,
+      "height": 941,
+      "frames": {
+        "full_scene": { "x": 0, "y": 0, "width": 1672, "height": 941 }
+      }
+    }
+  }
+}

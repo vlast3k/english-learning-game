@@ -536,6 +536,9 @@
         case "dialog.show":
           bridge?.showDialog?.(action);
           return;
+        case "dialog.sequence":
+          bridge?.showDialogSequence?.(action);
+          return;
         case "event.emit":
           bus.emit({
             ...(action.payload || {}),

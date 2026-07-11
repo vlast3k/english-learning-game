@@ -26,8 +26,8 @@
     }
   },
   "hero_start": {
-    "x": 297,
-    "y": 531
+    "x": 527,
+    "y": 396
   },
   "hud": {
     "status_text": "Jungle Path"
@@ -82,8 +82,8 @@
       "kind": "exit",
       "arrival_from_scene": "sun-temple-adventure-camp-edge",
       "label": "camp edge",
-      "x": 597,
-      "y": 233,
+      "x": 166,
+      "y": 471,
       "radius": 46,
       "walk_to": {
         "x": 145,
@@ -95,12 +95,12 @@
       "kind": "exit",
       "arrival_from_scene": "sun-temple-adventure-broken-bridge",
       "label": "bridge",
-      "x": 499,
-      "y": 570,
-      "radius": 48,
+      "x": 607,
+      "y": 227,
+      "radius": 36,
       "walk_to": {
-        "x": 850,
-        "y": 500
+        "x": 607,
+        "y": 340
       }
     }
   ],

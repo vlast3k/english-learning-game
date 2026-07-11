@@ -78,6 +78,23 @@ function makeScenario(extra = {}) {
   };
 }
 
+function makeExitScenario() {
+  return {
+    schema_version: 1,
+    scene_id: "level-editor-exit-save-test",
+    assets: {},
+    navigation: { obstacles: [] },
+    hotspots: [{
+      id: "exit_path",
+      kind: "exit",
+      x: 600,
+      y: 400,
+      radius: 42,
+      walk_to: { x: 560, y: 460 },
+    }],
+  };
+}
+
 async function main() {
   const server = createLevelEditorServer();
   const baseUrl = await listen(server);
@@ -115,6 +132,27 @@ async function main() {
     assert.equal(updated.presentation.character_scale_multiplier, 1.61);
     assert.equal(updated.presentation.guide_scale_multiplier, 1.74);
     assert.equal(updated.presentation.character_depth_scale.back_y, 220);
+
+    const exitScenario = "scenarios/__level-editor-save-exit.json";
+    TEST_FILES.push(exitScenario);
+    await fs.writeFile(
+      path.join(ROOT, exitScenario),
+      `${JSON.stringify(makeExitScenario(), null, 2)}\n`,
+    );
+    const exitResponse = await fetch(`${baseUrl}/__level-editor/save-hotspots`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        scenario: exitScenario,
+        hotspots: [{ id: "exit_path", x: 620, y: 310, radius: 48 }],
+        actors: {},
+        obstacles: [],
+        depth_scale: null,
+      }),
+    });
+    assert.equal(exitResponse.status, 200, await exitResponse.text());
+    const savedExit = JSON.parse(await fs.readFile(path.join(ROOT, exitScenario), "utf8"));
+    assert.deepEqual(savedExit.hotspots[0].walk_to, { x: 620, y: 310 });
   } finally {
     await Promise.all(TEST_FILES.map((file) => fs.rm(path.join(ROOT, file), { force: true })));
     await close(server);

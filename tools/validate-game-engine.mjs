@@ -11,7 +11,7 @@ const SUPPORTED_ACTIONS = new Set([
   "fact.set", "counter.increment", "inventory.add", "inventory.remove", "inventory.clear",
   "puzzle.start", "puzzle.complete", "flag.set", "ui.status.set", "ui.toast",
   "ui.inventory.clear_selection", "ui.map.refresh", "ui.map.open", "ui.vocab.show",
-  "hotspot.refresh", "screen.refresh", "exit.refresh", "dialog.show", "event.emit",
+  "hotspot.refresh", "screen.refresh", "exit.refresh", "dialog.show", "dialog.sequence", "event.emit",
   "scene.transition", "campaign.complete",
 ]);
 const SUPPORTED_CONDITION_KEYS = new Set([
@@ -97,6 +97,19 @@ function validateGraph(bundle, filename) {
       }
       if (action.type === "scene.transition" && !existsSync(path.join(ROOT, action.scenario))) {
         fail(`${filename}: ${rule.id} transition target is missing`);
+      }
+      if (action.type === "dialog.sequence") {
+        if (!Array.isArray(action.lines) || action.lines.length === 0) {
+          fail(`${filename}: ${rule.id} dialog.sequence needs at least one line`);
+        }
+        for (const [index, line] of action.lines.entries()) {
+          if (!line || typeof line.text !== "string" || !line.text.trim()) {
+            fail(`${filename}: ${rule.id} dialog.sequence line ${index + 1} needs text`);
+          }
+          if (typeof line.bg !== "string" || !line.bg.trim()) {
+            fail(`${filename}: ${rule.id} dialog.sequence line ${index + 1} needs Bulgarian bg text`);
+          }
+        }
       }
     }
   }

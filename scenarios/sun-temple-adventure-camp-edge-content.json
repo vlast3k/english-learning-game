@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "sun-temple-adventure-camp-edge",
-  "content_version": "2026-07-09",
+  "content_version": "2026-07-10",
   "gameplay_mode": "adventure",
   "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
   "assets": {
@@ -10,12 +10,45 @@
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
     "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png",
     "extra_textures": {
-      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
+      "campEdgeBranchMovedBackground": "assets/sun-temple-adventure/camp-edge/generated/background-branch-moved-v1.png",
+      "campEdgeMapTakenBackground": "assets/sun-temple-adventure/camp-edge/generated/background-map-taken-v1.png"
     },
     "extra_asset_frames": [
-      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
+      "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json",
+      "assets/sun-temple-adventure/camp-edge/generated/asset-frames-background-states-v1.json"
     ]
   },
+  "overlays": [
+    {
+      "id": "camp_edge_branch_moved_background",
+      "texture": "campEdgeBranchMovedBackground",
+      "frame": "full_scene",
+      "x": 512,
+      "y": 288,
+      "display_width": 1024,
+      "display_height": 576,
+      "depth": 1,
+      "visible_when": {
+        "fact": "camp_edge.branch_moved",
+        "equals": true
+      }
+    },
+    {
+      "id": "camp_edge_map_taken_background",
+      "texture": "campEdgeMapTakenBackground",
+      "frame": "full_scene",
+      "x": 512,
+      "y": 288,
+      "display_width": 1024,
+      "display_height": 576,
+      "depth": 2,
+      "visible_when": {
+        "fact": "item.map_piece_01.taken",
+        "equals": true
+      }
+    }
+  ],
   "presentation": {
     "character_scale_multiplier": 1.45,
     "character_depth_scale": {
@@ -42,11 +75,11 @@
     "walkable_polygon": [
       {
         "x": 24,
-        "y": 338
+        "y": 180
       },
       {
         "x": 1000,
-        "y": 338
+        "y": 180
       },
       {
         "x": 1014,
@@ -122,8 +155,8 @@
       "y": 189,
       "radius": 48,
       "walk_to": {
-        "x": 850,
-        "y": 498
+        "x": 607,
+        "y": 189
       }
     }
   ],

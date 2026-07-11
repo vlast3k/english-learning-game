@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "sun-temple-adventure-village-garden",
-  "content_version": "2026-07-09",
+  "content_version": "2026-07-10",
   "gameplay_mode": "adventure",
   "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
   "assets": {
@@ -153,16 +153,26 @@
   ],
   "overlays": [
     {
-      "id": "flower_pot_green_hint",
+      "id": "green_lens_visible",
       "texture": "propAtlas",
-      "frame": "flower_pot_green_hint",
-      "x": 430,
-      "y": 386,
-      "scale": 0.23,
-      "depth": 505,
+      "frame": "green_lens",
+      "x": 322,
+      "y": 451,
+      "scale": 0.26,
+      "depth": 535,
       "visible_when": {
-        "fact": "lina.helped",
-        "equals": true
+        "all": [
+          {
+            "fact": "village.flower_pot_checked",
+            "equals": true
+          },
+          {
+            "not": {
+              "fact": "item.green_lens.taken",
+              "equals": true
+            }
+          }
+        ]
       }
     },
     {

@@ -141,9 +141,9 @@
       "id": "cave_wall",
       "kind": "state_target",
       "label": "cave wall",
-      "x": 523,
-      "y": 253,
-      "radius": 54,
+      "x": 627,
+      "y": 317,
+      "radius": 40,
       "walk_to": {
         "x": 600,
         "y": 472
@@ -156,8 +156,8 @@
       "label": "stone key",
       "english": "stone key",
       "bg": "каменен ключ",
-      "x": 650,
-      "y": 181,
+      "x": 652,
+      "y": 246,
       "radius": 30,
       "walk_to": {
         "x": 600,
@@ -218,8 +218,8 @@
       "y": 190,
       "radius": 56,
       "walk_to": {
-        "x": 188,
-        "y": 482
+        "x": 139,
+        "y": 190
       }
     }
   ],

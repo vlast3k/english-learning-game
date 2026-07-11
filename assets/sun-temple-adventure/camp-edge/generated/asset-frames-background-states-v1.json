@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "campaign_id": "sun-temple-adventure",
+  "notes": [
+    "Full-scene Camp Edge background states for the branch reveal and map pickup."
+  ],
+  "textures": {
+    "campEdgeBranchMovedBackground": {
+      "path": "assets/sun-temple-adventure/camp-edge/generated/background-branch-moved-v1.png",
+      "width": 1672,
+      "height": 941,
+      "frames": {
+        "full_scene": { "x": 0, "y": 0, "width": 1672, "height": 941 }
+      }
+    },
+    "campEdgeMapTakenBackground": {
+      "path": "assets/sun-temple-adventure/camp-edge/generated/background-map-taken-v1.png",
+      "width": 1672,
+      "height": 941,
+      "frames": {
+        "full_scene": { "x": 0, "y": 0, "width": 1672, "height": 941 }
+      }
+    }
+  }
+}

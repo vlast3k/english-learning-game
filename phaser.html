@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Junior Agent Spy Academy</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f7a78'/%3E%3Cpath d='M8 21h16v3H8zM10 8h12l-2 11h-8z' fill='%23f4b942'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="phaser-style.css?v=20260710-campaign-chooser-v2">
+    <link rel="stylesheet" href="phaser-style.css?v=20260710-base-camp-map-v6">
   </head>
   <body>
     <main class="phaser-shell" aria-label="Junior Agent Spy Academy game">
@@ -37,7 +37,8 @@
         const params = new URLSearchParams(window.location.search);
         const explicitScenario = params.has("scenario") || params.has("level") || params.has("editor") || params.has("levelEditor");
         const requestedCampaign = params.get("campaign");
-        const selectedCampaign = requestedCampaign || window.localStorage?.getItem(SELECTED_CAMPAIGN_KEY);
+        const storedCampaign = window.localStorage?.getItem(SELECTED_CAMPAIGN_KEY);
+        const selectedCampaign = requestedCampaign || storedCampaign;
         const resetRequested = ["1", "true", "yes"].includes(String(params.get("reset") || "").toLowerCase());
         const selector = document.getElementById("game-selector");
         const resetCampaignSave = (campaign) => {
@@ -54,12 +55,12 @@
         });
         const startGame = () => [
           "vendor/phaser.min.js",
-          "game-engine/runtime.js?v=20260710-campaign-chooser-v2",
-          "game-engine/phaser-bridge.js?v=20260710-campaign-chooser-v2",
-          "phaser-content.js?v=20260710-campaign-chooser-v2",
-          "phaser-game.js?v=20260710-campaign-chooser-v2",
+          "game-engine/runtime.js?v=20260710-exit-editor-v7",
+          "game-engine/phaser-bridge.js?v=20260710-topology-hints-v10",
+          "phaser-content.js?v=20260710-rope-bridge-v9",
+          "phaser-game.js?v=20260710-topology-hints-v10",
         ].reduce((chain, src) => chain.then(() => loadScript(src)), Promise.resolve());
-        if (!explicitScenario && (params.has("choose") || !selectedCampaign)) {
+        if (!explicitScenario && (params.has("choose") || !storedCampaign)) {
           selector.hidden = false;
           selector.querySelectorAll("[data-campaign]").forEach((button) => {
             button.addEventListener("click", () => {

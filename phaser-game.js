@@ -1,6 +1,6 @@
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 576;
-const ASSET_VERSION = "20260710-campaign-chooser-v2";
+const ASSET_VERSION = "20260710-topology-hints-v10";
 const UI_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const ADVENTURE_FONT = "\"Merienda\", \"Trebuchet MS\", \"Georgia\", serif";
 const WORD_REVEAL_HOLD_MS = 1000;
@@ -128,7 +128,7 @@ class CampScene extends Phaser.Scene {
     this.guideTree = this.scenario.dialogues.guide_intro_tree;
     this.objectQuizzes = this.createObjectQuizzes();
 
-    this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, "campBg").setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
+    this.backgroundImage = this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, "campBg").setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
     this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT - 44, GAME_WIDTH, 88, 0x1f2d24, 0.16);
     this.createCharacterAnimations();
     this.setupNavigation();
@@ -459,7 +459,7 @@ class CampScene extends Phaser.Scene {
         color: "#173837",
         backgroundColor: "rgba(255,251,239,0.93)",
         padding: { x: 7, y: 4 },
-      }).setOrigin(0.5).setAlpha(0);
+      }).setOrigin(0.5).setAlpha(hotspot.attention_label ? 1 : 0);
 
       marker.add([glow, label]);
       hotspot.glow = glow;
@@ -468,7 +468,7 @@ class CampScene extends Phaser.Scene {
         .setDepth(850)
         .setInteractive({ useHandCursor: true });
       zone.on("pointerover", () => label.setAlpha(1));
-      zone.on("pointerout", () => label.setAlpha(0));
+      zone.on("pointerout", () => label.setAlpha(hotspot.attention_label ? 1 : 0));
       zone.on("pointerdown", () => {
         this.closeBubble();
         this.setCommand(`Look at ${hotspot.label}`);
@@ -569,8 +569,13 @@ class CampScene extends Phaser.Scene {
     guide.zone = this.add.zone(x, y - 62, 96, 142)
       .setDepth(850)
       .setInteractive({ useHandCursor: true });
+    guide.zone.on("pointerover", () => this.onGuidePointerOver());
     guide.zone.on("pointerdown", () => this.onGuideClicked());
     return guide;
+  }
+
+  onGuidePointerOver() {
+    this.setCommand("Talk to guide");
   }
 
   drawHotspotGlow(hotspot, retrieved) {
@@ -1753,6 +1758,14 @@ class CampScene extends Phaser.Scene {
     this.flashToast("Jungle path unlocked!");
   }
 
+  getDialoguePortraitSpec(speaker) {
+    const normalizedSpeaker = String(speaker || "").trim().toLowerCase();
+    if (["alex", "hero"].includes(normalizedSpeaker) && this.textures.exists("heroPortraits")) {
+      return { texture: "heroPortraits", frame: 3, displayWidth: 66, displayHeight: 66 };
+    }
+    return null;
+  }
+
   showSpeechBubble({ speaker, text, bg, anchor, options, onClose = null, revealTranslations = true }) {
     this.closeBubble();
     const width = 660;
@@ -1762,9 +1775,11 @@ class CampScene extends Phaser.Scene {
     const feedbackReserve = 104;
     const hiddenFeedbackReserve = 26;
     const speakerTitle = speaker ? `${speaker[0].toUpperCase()}${speaker.slice(1)}` : "";
-    const textX = 30;
+    const portraitSpec = this.getDialoguePortraitSpec?.(speaker);
+    const hasPortrait = Boolean(portraitSpec?.texture && this.textures.exists(portraitSpec.texture));
+    const textX = hasPortrait ? 118 : 30;
     const textY = 61;
-    const textFlow = this.createRevealTextFlow(textX, textY, text, width - 62, {
+    const textFlow = this.createRevealTextFlow(textX, textY, text, width - (hasPortrait ? 150 : 62), {
       fontFamily: UI_FONT,
       fontSize: "23px",
       fontStyle: "700",
@@ -1782,28 +1797,42 @@ class CampScene extends Phaser.Scene {
 
     const panel = this.add.graphics();
     this.drawDialoguePanel(panel, width, initialHeight);
-    const textShield = this.add.zone(textX, textY, width - 62, Math.max(48, textFlow.contentHeight))
+    const textShield = this.add.zone(textX, textY, width - (hasPortrait ? 150 : 62), Math.max(48, textFlow.contentHeight))
       .setOrigin(0, 0)
       .setInteractive();
 
     const speakerRibbon = this.add.graphics();
     const ribbonWidth = Phaser.Math.Clamp(speakerTitle.length * 16 + 40, 132, 236);
     speakerRibbon.fillStyle(0x4f2f1e, 0.22);
-    speakerRibbon.fillRoundedRect(19, 18, ribbonWidth, 34, 9);
+    const ribbonX = hasPortrait ? 102 : 16;
+    speakerRibbon.fillRoundedRect(ribbonX + 3, 18, ribbonWidth, 34, 9);
     speakerRibbon.fillStyle(0x174846, 0.96);
-    speakerRibbon.fillRoundedRect(16, 14, ribbonWidth, 34, 9);
+    speakerRibbon.fillRoundedRect(ribbonX, 14, ribbonWidth, 34, 9);
     speakerRibbon.fillStyle(0xf0b74f, 1);
-    speakerRibbon.fillRoundedRect(16, 14, 8, 34, 4);
+    speakerRibbon.fillRoundedRect(ribbonX, 14, 8, 34, 4);
     speakerRibbon.lineStyle(1, 0xfff2cf, 0.38);
-    speakerRibbon.strokeRoundedRect(24, 18, ribbonWidth - 12, 25, 7);
+    speakerRibbon.strokeRoundedRect(ribbonX + 8, 18, ribbonWidth - 12, 25, 7);
 
-    const speakerBadge = this.add.text(32, 16, speakerTitle,
+    const speakerBadge = this.add.text(ribbonX + 16, 16, speakerTitle,
     {
       fontFamily: ADVENTURE_FONT,
       fontSize: "19px",
       fontStyle: "700",
       color: "#fff4cf",
     });
+    const portraitFrame = hasPortrait ? this.add.graphics() : null;
+    const portrait = hasPortrait
+      ? this.add.image(60, 57, portraitSpec.texture, portraitSpec.frame)
+        .setDisplaySize(portraitSpec.displayWidth || 62, portraitSpec.displayHeight || 66)
+      : null;
+    if (portraitFrame) {
+      portraitFrame.fillStyle(0x4f2f1e, 0.22);
+      portraitFrame.fillRoundedRect(21, 17, 78, 78, 13);
+      portraitFrame.fillStyle(0xffedbd, 0.98);
+      portraitFrame.fillRoundedRect(18, 14, 78, 78, 13);
+      portraitFrame.lineStyle(3, 0x9b7343, 0.95);
+      portraitFrame.strokeRoundedRect(18, 14, 78, 78, 13);
+    }
     const closeButton = onClose ? this.makeCloseButton(width - 51, 17, onClose) : null;
 
     const choices = options.map((option, index) => {
@@ -1819,7 +1848,7 @@ class CampScene extends Phaser.Scene {
       return choice;
     });
 
-    bubble.add([panel, textShield, speakerRibbon, speakerBadge, textFlow, ...choices]);
+    bubble.add([panel, textShield, speakerRibbon, speakerBadge, portraitFrame, portrait, textFlow, ...choices].filter(Boolean));
     if (closeButton) {
       bubble.add(closeButton);
     }

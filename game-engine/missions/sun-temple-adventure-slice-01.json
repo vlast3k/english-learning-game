@@ -34,6 +34,85 @@
     "counters": {},
     "puzzles": {}
   },
+  "assistant": {
+    "speaker": "Mira",
+    "topology": [
+      {
+        "when": {
+          "all": [
+            { "inventory_contains": "empty_jar" },
+            { "inventory_missing": "glow_leaf" },
+            { "fact": "location.waterfall_cave.revealed", "equals": true }
+          ]
+        },
+        "text": "Your empty jar needs a light. Open the map and go to Waterfall Cave. Take the glowing leaf in the bright plant beside the cave entrance.",
+        "bg": "Празният буркан има нужда от светлина. Отвори картата и отиди до Пещерата при водопада. Вземи светещото листо от яркото растение до входа на пещерата."
+      },
+      {
+        "when": {
+          "all": [
+            { "inventory_contains": "glow_leaf" },
+            { "inventory_missing": "empty_jar" },
+            { "fact": "location.keeper_hut.discovered", "equals": true }
+          ]
+        },
+        "text": "You have the glowing leaf. Go to the Keeper Hut and take the empty jar from the shelf.",
+        "bg": "Имаш светещото листо. Отиди до Колибата на пазача и вземи празния буркан от рафта."
+      },
+      {
+        "when": {
+          "all": [
+            { "inventory_contains": "empty_jar" },
+            { "inventory_contains": "glow_leaf" },
+            { "inventory_missing": "glow_jar" }
+          ]
+        },
+        "text": "Both pieces are in your Field Kit. Select the empty jar, then select the glowing leaf to make a glow jar.",
+        "bg": "И двете части са в комплекта ти. Избери празния буркан, после светещото листо, за да направиш светещ буркан."
+      },
+      {
+        "when": {
+          "all": [
+            { "inventory_contains": "glow_jar" },
+            { "not": { "fact": "waterfall.cave_lit", "equals": true } }
+          ]
+        },
+        "text": "Take the glow jar to Waterfall Cave and use it on the dark cave entrance.",
+        "bg": "Занеси светещия буркан до Пещерата при водопада и го използвай на тъмния вход на пещерата."
+      },
+      {
+        "when": {
+          "all": [
+            { "fact": "waterfall.cave_lit", "equals": true },
+            { "inventory_missing": "stone_key" },
+            { "not": { "fact": "dark_cave.box_open", "equals": true } }
+          ]
+        },
+        "text": "The cave is lit. Enter it and inspect the wall crack to find the stone key.",
+        "bg": "Пещерата е осветена. Влез вътре и разгледай пукнатината в стената, за да намериш каменния ключ."
+      },
+      {
+        "when": {
+          "all": [
+            { "inventory_contains": "stone_key" },
+            { "not": { "fact": "dark_cave.box_open", "equals": true } }
+          ]
+        },
+        "text": "Use the stone key on the blue stone box in the Dark Cave.",
+        "bg": "Използвай каменния ключ върху синята каменна кутия в Тъмната пещера."
+      },
+      {
+        "when": {
+          "all": [
+            { "inventory_contains": "blue_lens" },
+            { "not": { "fact": "compass.blue_lens_placed", "equals": true } }
+          ]
+        },
+        "text": "You have the Blue Lens. Return to Base Camp and place it in the Sun Compass.",
+        "bg": "Имаш Синята леща. Върни се в Базовия лагер и я постави в Слънчевия компас."
+      }
+    ]
+  },
   "puzzles": [
     {
       "id": "sun_temple_slice_01_complete",
@@ -102,10 +181,19 @@
           "value": true
         },
         {
-          "type": "dialog.show",
-          "speaker": "Mira",
-          "text": "This is the Sun Compass. Five lenses are missing.",
-          "bg": "Това е Слънчевият компас. Липсват пет лещи."
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Mira",
+              "text": "Five lenses are missing. The Compass changed when the light faded.",
+              "bg": "Липсват пет лещи. Компасът се промени, когато светлината изчезна."
+            },
+            {
+              "speaker": "Alex",
+              "text": "Then the lenses may show us what happened.",
+              "bg": "Тогава лещите може да ни покажат какво се е случило."
+            }
+          ]
         }
       ]
     },
@@ -118,10 +206,19 @@
       },
       "actions": [
         {
-          "type": "dialog.show",
-          "speaker": "Mira",
-          "text": "That flower faces the temple. Now it has no light.",
-          "bg": "Това цвете гледа към храма. Сега няма светлина."
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Mira",
+              "text": "That flower always faced the temple. Now the light never reaches it.",
+              "bg": "Това цвете винаги гледаше към храма. Сега светлината никога не стига до него."
+            },
+            {
+              "speaker": "Alex",
+              "text": "The temple and Compass changed together. We need clues.",
+              "bg": "Храмът и Компасът са се променили заедно. Трябват ни улики."
+            }
+          ]
         }
       ]
     },
@@ -136,8 +233,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "This flower needs light.",
-          "bg": "Това цвете има нужда от светлина."
+          "text": "This flower leans away from the shade.",
+          "bg": "Това цвете се накланя далеч от сянката."
         }
       ]
     },
@@ -192,8 +289,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "I have a rope.",
-          "bg": "Имам въже."
+          "text": "A strong rope. Mira packs for every problem—almost every problem.",
+          "bg": "Здраво въже. Мира приготвя неща за всеки проблем — почти всеки проблем."
         },
         {
           "type": "screen.refresh"
@@ -216,27 +313,6 @@
           "value": true
         },
         {
-          "type": "dialog.show",
-          "speaker": "Alex",
-          "text": "A piece of paper is under the branch.",
-          "bg": "Има парче хартия под клона."
-        }
-      ]
-    },
-    {
-      "id": "move-branch",
-      "priority": 10,
-      "once": true,
-      "event": {
-        "type": "hotspot.inspected",
-        "target": "fallen_branch"
-      },
-      "condition": {
-        "fact": "camp_edge.branch_inspected",
-        "equals": true
-      },
-      "actions": [
-        {
           "type": "fact.set",
           "fact": "camp_edge.branch_moved",
           "value": true
@@ -244,8 +320,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The map piece is here.",
-          "bg": "Парчето от карта е тук."
+          "text": "I moved the branch. A piece of the map was underneath!",
+          "bg": "Преместих клона. Отдолу имаше парче от картата!"
         },
         {
           "type": "screen.refresh"
@@ -355,8 +431,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "This path has a sun mark.",
-          "bg": "Тази пътека има слънчев знак."
+          "text": "Someone marked this path with a sun.",
+          "bg": "Някой е отбелязал тази пътека със слънце."
         }
       ]
     },
@@ -423,8 +499,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The bridge is safe now.",
-          "bg": "Мостът вече е безопасен."
+          "text": "The rope bridge reaches the far bank. Now I can cross and get Lina's basket.",
+          "bg": "Въженият мост стига до отсрещния бряг. Сега мога да премина и да взема кошницата на Лина."
         },
         {
           "type": "screen.refresh"
@@ -442,8 +518,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "A basket is over there. Someone needs it.",
-          "bg": "Има кошница там. Някой има нужда от нея."
+          "text": "A basket on the other side. Someone must be looking for it.",
+          "bg": "Кошница от другата страна. Някой сигурно я търси."
         }
       ]
     },
@@ -480,6 +556,35 @@
       ]
     },
     {
+      "id": "talk-to-mira-after-restoration",
+      "event": {
+        "type": "npc.talked",
+        "target": "mira"
+      },
+      "condition": {
+        "fact": "valley.light_restored",
+        "equals": true
+      },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Mira",
+              "text": "You followed every path, Alex. Then you found how they belonged together.",
+              "bg": "Ти проследи всеки път, Алекс. После откри как всички те са свързани."
+            },
+            {
+              "speaker": "Alex",
+              "text": "The valley showed us the way.",
+              "bg": "Долината ни показа пътя."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "talk-to-mira",
       "event": {
         "type": "npc.talked",
@@ -489,8 +594,8 @@
         {
           "type": "dialog.show",
           "speaker": "Mira",
-          "text": "The Sun Compass needs five lenses.",
-          "bg": "Слънчевият компас има нужда от пет лещи."
+          "text": "The Compass needs five lenses. Let the valley give us clues.",
+          "bg": "Компасът има нужда от пет лещи. Нека долината ни даде улики."
         }
       ]
     },
@@ -516,8 +621,8 @@
         {
           "type": "dialog.show",
           "speaker": "Lina",
-          "text": "My seed basket is near the old bridge. I need it.",
-          "bg": "Моята кошница със семена е до стария мост. Имам нужда от нея."
+          "text": "My seed basket fell near the old bridge. I need it before the planting beds dry out.",
+          "bg": "Кошницата ми със семена падна до стария мост. Трябва ми, преди лехите да изсъхнат."
         }
       ]
     },
@@ -536,8 +641,28 @@
         {
           "type": "dialog.show",
           "speaker": "Lina",
-          "text": "The Green Lens is under the flower pot.",
-          "bg": "Зелената леща е под саксията."
+          "text": "I found something green and bright beneath that flower pot. It may belong to your Compass.",
+          "bg": "Намерих нещо зелено и ярко под онази саксия. Може да принадлежи на твоя Компас."
+        }
+      ]
+    },
+    {
+      "id": "talk-to-lina-after-restoration",
+      "event": {
+        "type": "npc.talked",
+        "target": "lina"
+      },
+      "condition": {
+        "fact": "valley.light_restored",
+        "equals": true
+      },
+      "stop_propagation": true,
+      "actions": [
+        {
+          "type": "dialog.show",
+          "speaker": "Lina",
+          "text": "The flowers are turning toward the temple again. You brought the sunlight back.",
+          "bg": "Цветята отново се обръщат към храма. Ти върна слънчевата светлина."
         }
       ]
     },
@@ -557,8 +682,8 @@
         {
           "type": "dialog.show",
           "speaker": "Lina",
-          "text": "The hut has a jar. Waterfall leaves glow at night.",
-          "bg": "В колибата има буркан. Листата край водопада светят нощем."
+          "text": "There is an empty jar in the hut. Some waterfall leaves glow after sunset.",
+          "bg": "В колибата има празен буркан. Някои листа край водопада светят след залез."
         }
       ]
     },
@@ -593,8 +718,8 @@
         {
           "type": "dialog.show",
           "speaker": "Lina",
-          "text": "My seeds are safe. Thank you.",
-          "bg": "Семената ми са в безопасност. Благодаря."
+          "text": "My seeds are safe. Thank you, Alex.",
+          "bg": "Семената ми са в безопасност. Благодаря ти, Алекс."
         },
         {
           "type": "screen.refresh"
@@ -728,10 +853,19 @@
           "puzzle": "sun_temple_slice_01_complete"
         },
         {
-          "type": "dialog.show",
-          "speaker": "Mira",
-          "text": "The lens shows an old water path.",
-          "bg": "Лещата показва стар път до водата."
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Mira",
+              "text": "The Compass has marked Waterfall Cave. Open the map: its new marker is on the right, beside the waterfall.",
+              "bg": "Компасът отбеляза Пещерата при водопада. Отвори картата: новият знак е вдясно, до водопада."
+            },
+            {
+              "speaker": "Alex",
+              "text": "The Compass is not pointing north. It is rebuilding the map—and showing us where to go next.",
+              "bg": "Компасът не сочи север. Той възстановява картата и ни показва къде да отидем след това."
+            }
+          ]
         },
         {
           "type": "screen.refresh"
@@ -804,8 +938,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "This is an empty jar.",
-          "bg": "Това е празен буркан."
+          "text": "An empty jar. It could carry something small.",
+          "bg": "Празен буркан. Може да носи нещо малко."
         },
         {
           "type": "screen.refresh"
@@ -822,8 +956,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "These plants open in sunlight.",
-          "bg": "Тези растения се отварят на слънце."
+          "text": "These plants close in shade and open in sunlight.",
+          "bg": "Тези растения се затварят на сянка и се отварят на слънце."
         }
       ]
     },
@@ -847,8 +981,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "This leaf has light. It is not warm.",
-          "bg": "Този лист има светлина. Не е топъл."
+          "text": "This leaf is glowing—and it is not even warm.",
+          "bg": "Това листо свети — и дори не е топло."
         },
         {
           "type": "screen.refresh"
@@ -900,8 +1034,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The jar holds the light.",
-          "bg": "Бурканът държи светлината."
+          "text": "The jar holds the glow.",
+          "bg": "Бурканът задържа сиянието."
         },
         {
           "type": "screen.refresh"
@@ -925,8 +1059,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The cave is dark. I need light.",
-          "bg": "Пещерата е тъмна. Трябва ми светлина."
+          "text": "The light stops at the entrance. I need a way to carry it inside.",
+          "bg": "Светлината спира на входа. Трябва ми начин да я нося вътре."
         }
       ]
     },
@@ -962,8 +1096,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "I can see now.",
-          "bg": "Вече виждам."
+          "text": "The glow reaches the cave walls now.",
+          "bg": "Сиянието вече достига стените на пещерата."
         },
         {
           "type": "screen.refresh"
@@ -986,8 +1120,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "One stone has a thin line.",
-          "bg": "Един камък има тънка линия."
+          "text": "One stone has a thin line around it.",
+          "bg": "Около един камък има тънка линия."
         },
         {
           "type": "screen.refresh"
@@ -1018,8 +1152,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "I have a stone key.",
-          "bg": "Имам каменен ключ."
+          "text": "A key inside the wall. This place was built to hide things.",
+          "bg": "Ключ вътре в стената. Това място е построено да крие неща."
         },
         {
           "type": "screen.refresh"
@@ -1043,8 +1177,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The box is closed.",
-          "bg": "Кутията е затворена."
+          "text": "The blue box has a stone keyhole.",
+          "bg": "Синята кутия има каменна ключалка."
         }
       ]
     },
@@ -1079,8 +1213,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The box is open.",
-          "bg": "Кутията е отворена."
+          "text": "The key opened the blue box.",
+          "bg": "Ключът отвори синята кутия."
         },
         {
           "type": "screen.refresh"
@@ -1162,10 +1296,19 @@
           "puzzle": "sun_temple_slice_02_complete"
         },
         {
-          "type": "dialog.show",
-          "speaker": "Mira",
-          "text": "The cave path joins the river path.",
-          "bg": "Пътят през пещерата се свързва с пътя край реката."
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Alex",
+              "text": "The cave route joins the river route here.",
+              "bg": "Пътят през пещерата се свързва тук с пътя край реката."
+            },
+            {
+              "speaker": "Mira",
+              "text": "Then the Compass may be showing one connected system.",
+              "bg": "Тогава Компасът може да показва една свързана система."
+            }
+          ]
         },
         {
           "type": "screen.refresh"
@@ -1617,8 +1760,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "These marks are water paths.",
-          "bg": "Тези знаци са пътища за вода."
+          "text": "These marks look like paths for water.",
+          "bg": "Тези знаци приличат на пътища за вода."
         }
       ]
     },
@@ -1645,8 +1788,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The waterfall can fill this cup.",
-          "bg": "Водопадът може да напълни тази чаша."
+          "text": "The cup is empty. The waterfall could fill it.",
+          "bg": "Чашата е празна. Водопадът може да я напълни."
         }
       ]
     },
@@ -1690,8 +1833,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "This cup is empty.",
-          "bg": "Тази чаша е празна."
+          "text": "This cup is empty. It belongs near the channel.",
+          "bg": "Тази чаша е празна. Тя принадлежи до канала."
         },
         {
           "type": "screen.refresh"
@@ -1733,8 +1876,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "I have water now.",
-          "bg": "Сега имам вода."
+          "text": "Water from the waterfall. The channel can use it now.",
+          "bg": "Вода от водопада. Каналът може да я използва сега."
         },
         {
           "type": "screen.refresh"
@@ -1787,8 +1930,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The water follows the sun marks! The gate is open.",
-          "bg": "Водата следва слънчевите знаци! Портата е отворена."
+          "text": "The water is following the sun marks! The gate is opening.",
+          "bg": "Водата следва слънчевите знаци! Портата се отваря."
         },
         {
           "type": "screen.refresh"
@@ -1806,8 +1949,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The water opens the stone flower.",
-          "bg": "Водата отваря каменното цвете."
+          "text": "The water opened the stone flower.",
+          "bg": "Водата отвори каменното цвете."
         }
       ]
     },
@@ -1886,10 +2029,24 @@
           "puzzle": "sun_temple_slice_03_complete"
         },
         {
-          "type": "dialog.show",
-          "speaker": "Mira",
-          "text": "All three lenses point to Mirror Hall. Where is the light?",
-          "bg": "И трите лещи сочат към Залата с огледалата. Къде е светлината?"
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Mira",
+              "text": "All three lenses are pointing toward the Mirror Hall.",
+              "bg": "И трите лещи сочат към Залата с огледалата."
+            },
+            {
+              "speaker": "Alex",
+              "text": "But there is no sunlight inside the temple... is there?",
+              "bg": "Но вътре в храма няма слънчева светлина... нали?"
+            },
+            {
+              "speaker": "Mira",
+              "text": "That is what we need to discover next.",
+              "bg": "Това е следващото, което трябва да открием."
+            }
+          ]
         },
         {
           "type": "screen.refresh"
@@ -2011,8 +2168,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The light is inside.",
-          "bg": "Светлината е вътре."
+          "text": "A narrow beam is reaching into the hall.",
+          "bg": "Тесен лъч достига до залата."
         }
       ]
     },
@@ -2032,8 +2189,8 @@
         {
           "type": "dialog.show",
           "speaker": "Alex",
-          "text": "The light is inside.",
-          "bg": "Светлината е вътре."
+          "text": "The beam comes from outside, then disappears among the mirrors.",
+          "bg": "Лъчът идва отвън, после изчезва между огледалата."
         }
       ]
     },
@@ -2135,10 +2292,19 @@
           "value": true
         },
         {
-          "type": "dialog.show",
-          "speaker": "Alex",
-          "text": "The light opens the panel.",
-          "bg": "Светлината отваря панела."
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Alex",
+              "text": "The light was here all along. The mirrors carried it through the temple.",
+              "bg": "Светлината е била тук през цялото време. Огледалата са я носили през храма."
+            },
+            {
+              "speaker": "Mira",
+              "text": "And the Compass is following the same path.",
+              "bg": "А Компасът следва същия път."
+            }
+          ]
         },
         {
           "type": "screen.refresh"
@@ -2239,10 +2405,19 @@
           "puzzle": "sun_temple_slice_04_complete"
         },
         {
-          "type": "dialog.show",
-          "speaker": "Mira",
-          "text": "Four lenses show the route. One space is still dark.",
-          "bg": "Четири лещи показват пътя. Едно място още е тъмно."
+          "type": "dialog.sequence",
+          "lines": [
+            {
+              "speaker": "Mira",
+              "text": "Four lenses show the route. One space is still dark.",
+              "bg": "Четири лещи показват пътя. Едно място още е тъмно."
+            },
+            {
+              "speaker": "Alex",
+              "text": "The Sun Lens completes it.",
+              "bg": "Слънчевата леща го завършва."
+            }
+          ]
         },
         {
           "type": "screen.refresh"
@@ -2282,7 +2457,7 @@
       "actions": [
         { "type": "fact.set", "fact": "observatory.receiver_aligned", "value": true },
         { "type": "fact.set", "fact": "observatory.sun_lens_niche_open", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The light opens the niche.", "bg": "Светлината отваря нишата." },
+        { "type": "dialog.show", "speaker": "Alex", "text": "This receiver focuses the light. It opened the niche.", "bg": "Този приемник фокусира светлината. Той отвори нишата." },
         { "type": "screen.refresh" }
       ]
     },
@@ -2294,7 +2469,7 @@
       "actions": [
         { "type": "inventory.add", "item": "sun_lens" },
         { "type": "fact.set", "fact": "item.sun_lens.taken", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "This is the Sun Lens.", "bg": "Това е Слънчевата леща." },
+        { "type": "dialog.show", "speaker": "Alex", "text": "This is the Sun Lens. It focuses the path of light.", "bg": "Това е Слънчевата леща. Тя фокусира пътя на светлината." },
         { "type": "screen.refresh" }
       ]
     },
@@ -2306,7 +2481,10 @@
       "actions": [
         { "type": "inventory.remove", "item": "sun_lens" },
         { "type": "fact.set", "fact": "compass.sun_lens_placed", "value": true },
-        { "type": "dialog.show", "speaker": "Mira", "text": "The Compass is complete.", "bg": "Компасът е завършен." },
+        { "type": "dialog.sequence", "lines": [
+          { "speaker": "Mira", "text": "The Compass is complete. Its five paths form one pattern.", "bg": "Компасът е завършен. Петте му пътя образуват един модел." },
+          { "speaker": "Alex", "text": "The Observatory Door may be waiting for this pattern.", "bg": "Вратата на Обсерваторията може да очаква този модел." }
+        ] },
         { "type": "screen.refresh" }
       ]
     },
@@ -2317,7 +2495,10 @@
       "condition": { "fact": "compass.sun_lens_placed", "equals": true },
       "actions": [
         { "type": "fact.set", "fact": "observatory.door_open", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The door is open.", "bg": "Вратата е отворена." },
+        { "type": "dialog.sequence", "lines": [
+          { "speaker": "Alex", "text": "The socket matches the Compass pattern.", "bg": "Гнездото съвпада с модела на Компаса." },
+          { "speaker": "Mira", "text": "The five lens colours aligned the door mechanism.", "bg": "Петте цвята на лещите подравниха механизма на вратата." }
+        ] },
         { "type": "screen.refresh" }
       ]
     },
@@ -2346,7 +2527,10 @@
         { "type": "fact.set", "fact": "observatory.great_mirror_aligned", "value": true },
         { "type": "fact.set", "fact": "valley.light_restored", "value": true },
         { "type": "fact.set", "fact": "map.complete", "value": true },
-        { "type": "dialog.show", "speaker": "Alex", "text": "The light found the valley.", "bg": "Светлината намери долината." },
+        { "type": "dialog.sequence", "lines": [
+          { "speaker": "Alex", "text": "The light path is complete. Let's send it home.", "bg": "Пътят на светлината е завършен. Нека я изпратим у дома." },
+          { "speaker": "Alex", "text": "The light found the valley.", "bg": "Светлината намери долината." }
+        ] },
         { "type": "screen.refresh" }
       ]
     },

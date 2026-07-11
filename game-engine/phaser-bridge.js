@@ -2,7 +2,7 @@
   "use strict";
 
   const root = window;
-  const ENGINE_ASSET_VERSION = "20260710-campaign-chooser-v2";
+  const ENGINE_ASSET_VERSION = "20260710-topology-hints-v10";
   const BRIDGE_GAME_WIDTH = 1024;
   const BRIEFING_BUTTON_WIDTH = 150;
   const ADVENTURE_FONT = '"Merienda", "Trebuchet MS", "Georgia", serif';
@@ -214,6 +214,23 @@
         };
       }
 
+      getGuideInteractionCommand(guide) {
+        const speaker = guide?.speaker || guide?.label || "helper";
+        if (!this.selectedInventoryItemId) {
+          return `Talk to ${speaker}`;
+        }
+        const item = this.getInventoryItemPresentation(this.selectedInventoryItemId);
+        return `Give ${item?.label || this.selectedInventoryItemId} to ${speaker}`;
+      }
+
+      getGuideWrongItemMessage(guide, itemId) {
+        const message = guide?.wrong_item_messages?.[itemId];
+        return {
+          text: message?.text || guide?.wrong_item_text || "I do not need this.",
+          bg: message?.bg || guide?.wrong_item_bg || "Това не ми трябва.",
+        };
+      }
+
       getExitRequiredPuzzleForState() {
         const binding = this.getExitBinding();
         for (const state of binding.states || []) {
@@ -360,6 +377,10 @@
           return super.getAssistantHint();
         }
         const snapshot = this.gameEngine.getSnapshot();
+        const topologyHint = this.getAssistantTopologyHint(snapshot);
+        if (topologyHint) {
+          return topologyHint;
+        }
         const missionPuzzle = this.gameEngine.config.mission_puzzle;
         const missionNode = missionPuzzle ? this.findAssistantPuzzle(snapshot, missionPuzzle) : null;
         if (missionNode && missionNode.status !== "completed") {
@@ -402,6 +423,23 @@
           speaker: assistant.speaker || "Helper",
           text: assistant.complete_text || "Great work. Explore the scene.",
           bg: assistant.complete_bg || "Чудесна работа. Разгледай сцената.",
+        };
+      }
+
+      getAssistantTopologyHint(snapshot) {
+        // Adventure scenes can declare a small dependency graph for Help.  It
+        // is checked before broad campaign milestones, so Help always points
+        // at the next action the player can actually reach with their kit.
+        const assistant = this.getEngineConfig()?.assistant || this.contentModel?.assistant || {};
+        const steps = Array.isArray(assistant.topology) ? assistant.topology : [];
+        const step = steps.find((candidate) => this.bridgeConditionMatches(candidate.when, { snapshot }));
+        if (!step?.text) {
+          return null;
+        }
+        return {
+          speaker: step.speaker || assistant.speaker || "Helper",
+          text: step.text,
+          bg: step.bg || assistant.fallback_bg || "Провери следващата задача.",
         };
       }
 
@@ -720,8 +758,40 @@
             anchor: action.anchor || { x: this.hero.x + 18, y: this.hero.y - 100 },
             options: [{ text: "OK", action: () => this.closeBubble() }],
           }),
+          showDialogSequence: (action) => this.showDialogSequence(action),
           transitionScene: (action, event) => this.transitionToEngineScenario(action, event),
         };
+      }
+
+      showDialogSequence(action) {
+        const lines = Array.isArray(action?.lines)
+          ? action.lines.filter((line) => line && line.text)
+          : [];
+        if (lines.length === 0) {
+          return;
+        }
+        const anchor = action.anchor || { x: this.hero.x + 18, y: this.hero.y - 100 };
+        const showLine = (index) => {
+          const line = lines[index];
+          const hasNext = index < lines.length - 1;
+          this.showSpeechBubble({
+            speaker: line.speaker || this.contentModel?.player?.speaker || "Alex",
+            text: line.text,
+            bg: line.bg || "",
+            anchor,
+            options: [{
+              text: hasNext ? "Next" : "OK",
+              action: () => {
+                if (hasNext) {
+                  showLine(index + 1);
+                  return;
+                }
+                this.closeBubble();
+              },
+            }],
+          });
+        };
+        showLine(0);
       }
 
       restorePuzzleEngineState(bridge) {
@@ -784,6 +854,24 @@
         const height = Math.round(Phaser.Math.Clamp(frame.height, 1, source.height - y));
         texture.add(frameName, 0, x, y, width, height);
         return frameName;
+      }
+
+      getDialoguePortraitSpec(speaker) {
+        const basePortrait = super.getDialoguePortraitSpec(speaker);
+        if (basePortrait) {
+          return basePortrait;
+        }
+        const normalizedSpeaker = String(speaker || "").trim().toLowerCase();
+        const portraits = {
+          mira: { texture: "npcMira", frame: "portrait_smile", displayWidth: 52, displayHeight: 68 },
+          lina: { texture: "npcLina", frame: "portrait_happy", displayWidth: 54, displayHeight: 66 },
+        };
+        const portrait = portraits[normalizedSpeaker];
+        if (!portrait || !this.textures.exists(portrait.texture)) {
+          return null;
+        }
+        const frame = this.ensureAdventureTextureFrame(portrait.texture, portrait.frame);
+        return frame ? { ...portrait, frame } : null;
       }
 
       createAdventureOverlays() {
@@ -992,6 +1080,10 @@
         if (!this.isAdventureMode() || !this.gameEngine || !this.getAdventureMapConfig()) {
           return;
         }
+        if (String(this.contentModel?.scene_id || "").startsWith("sun-temple-adventure-")) {
+          this.openTornAdventureMapPanel();
+          return;
+        }
         this.closeBubble();
         this.closeAdventureMapPanel();
         const panel = this.add.container(152, 84).setDepth(980);
@@ -1015,6 +1107,98 @@
           panel.add(this.createAdventureMapMarker(marker, x, y));
         });
         this.adventureMapPanel = panel;
+      }
+
+      openTornAdventureMapPanel() {
+        this.closeBubble();
+        this.closeAdventureMapPanel();
+        const panel = this.add.container(BRIDGE_GAME_WIDTH / 2, 288).setDepth(980);
+        const shade = this.add.rectangle(0, 0, BRIDGE_GAME_WIDTH, 576, 0x102a2a, 0.72);
+        const map = this.add.image(0, 0, "tornMapUi").setDisplaySize(924, 520);
+        const heading = this.add.text(-400, -235, "Explorer's Map", {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "26px",
+          fontStyle: "700",
+          color: "#25433b",
+          stroke: "#ffedbd",
+          strokeThickness: 4,
+        });
+        const closeButton = this.makeCloseButton(408, -238, () => this.closeAdventureMapPanel());
+        panel.add([shade, map, heading, closeButton]);
+        const config = this.getAdventureMapConfig();
+        (config.markers || [])
+          .filter((marker) => this.isExplorationMode() || this.bridgeConditionMatches(marker.visible_when))
+          .forEach((marker) => panel.add(this.createTornAdventureMapMarker(marker)));
+        this.adventureMapPanel = panel;
+      }
+
+      getTornMapMarkerPosition(markerId) {
+        const positions = {
+          "base-camp-table": { x: -350, y: -105 },
+          "camp-edge": { x: -155, y: -94 },
+          "jungle-path": { x: -34, y: -65 },
+          "broken-bridge": { x: -8, y: 20 },
+          "village-garden": { x: -165, y: 125 },
+          "keeper-hut": { x: -115, y: 95 },
+          "waterfall-mouth": { x: 225, y: 70 },
+          "dark-cave": { x: 238, y: 86 },
+          "temple-steps": { x: 12, y: 175 },
+          "sun-courtyard": { x: 30, y: 150 },
+          "mirror-hall": { x: 290, y: 190 },
+          "observatory-approach": { x: 305, y: -125 },
+          "observatory-door": { x: 345, y: -94 },
+          "sun-observatory": { x: 374, y: -125 },
+        };
+        return positions[markerId] || { x: 0, y: 0 };
+      }
+
+      createTornAdventureMapMarker(marker) {
+        const position = this.getTornMapMarkerPosition(marker.id);
+        const enabled = this.isExplorationMode() || this.bridgeConditionMatches(marker.enabled_when);
+        const container = this.add.container(position.x, position.y);
+        const pin = this.add.graphics();
+        pin.fillStyle(0x4b2d20, 0.28);
+        pin.fillCircle(3, 4, 17);
+        pin.fillStyle(enabled ? 0x0f7a78 : 0x7f775e, 1);
+        pin.fillCircle(0, 0, 15);
+        pin.lineStyle(3, enabled ? 0xffefbb : 0xcbbd91, 0.95);
+        pin.strokeCircle(0, 0, 15);
+        pin.fillStyle(enabled ? 0xf4c44e : 0x9a927b, 1);
+        pin.fillCircle(0, 0, 5);
+        const label = this.add.text(23, -2, marker.label, {
+          fontFamily: ADVENTURE_FONT,
+          fontSize: "16px",
+          fontStyle: "700",
+          color: enabled ? "#25433b" : "#6b6250",
+          stroke: "#ffedbd",
+          strokeThickness: 3,
+        }).setOrigin(0, 0.5);
+        const hitPlate = this.add.zone(0, 0, Math.max(130, label.width + 48), 44)
+          .setOrigin(0, 0.5)
+          .setInteractive({ useHandCursor: enabled });
+        hitPlate.on("pointerdown", () => {
+          if (!enabled) {
+            this.flashToast(marker.locked_text || "This place is locked.");
+            return;
+          }
+          this.closeAdventureMapPanel();
+          if (this.isExplorationMode()) {
+            this.transitionToEngineScenario({ scenario: marker.destination }, {
+              type: "location.travel_requested",
+              target: marker.id,
+              location: marker.id,
+              scenario: marker.destination,
+            });
+            return;
+          }
+          this.gameEngine.emit("location.travel_requested", {
+            target: marker.id,
+            location: marker.id,
+            scenario: marker.destination,
+          });
+        });
+        container.add([pin, label, hitPlate]);
+        return container;
       }
 
       createAdventureMapMarker(marker, x, y) {
@@ -1066,6 +1250,11 @@
       }
 
       refreshAdventureScreenState() {
+        this.setupNavigation();
+        const showTakenBackground = this.bridgeConditionMatches(this.contentModel?.assets?.background_taken_when);
+        if (this.backgroundImage && this.textures.exists("campBgTaken")) {
+          this.backgroundImage.setTexture(showTakenBackground ? "campBgTaken" : "campBg");
+        }
         this.applyAdventureStaticGuideArt();
         this.refreshEngineHotspots();
         this.refreshEngineExitMarker();
@@ -1347,7 +1536,7 @@
         const guide = this.getPrimaryNpcContent?.() || this.contentModel?.guide;
         if (this.isAdventureMode() && this.gameEngine && guide) {
           this.closeBubble();
-          this.setCommand(`Talk to ${guide.speaker || guide.label || "helper"}`);
+          this.setCommand(this.getGuideInteractionCommand(guide));
           const walkTo = guide.walk_to || { x: this.guide.x, y: this.guide.y };
           this.walkHeroTo(walkTo.x, walkTo.y, () => {
             this.faceHeroToward(this.guide.x, this.guide.y, "normal");
@@ -1361,10 +1550,11 @@
                 screen: this.contentModel?.scene_id,
               });
               if (result.firedRules.length === 0) {
+                const feedback = this.getGuideWrongItemMessage(guide, selectedItem);
                 this.showSpeechBubble({
                   speaker: guide.speaker || "Guide",
-                  text: guide.wrong_item_text || "I do not need this.",
-                  bg: guide.wrong_item_bg || "Това не ми трябва.",
+                  text: feedback.text,
+                  bg: feedback.bg,
                   anchor: { x: this.guide.x, y: this.guide.y - 128 },
                   options: [{ text: "OK", action: () => this.closeBubble() }],
                 });
@@ -1427,6 +1617,15 @@
           }
           this.openGuideQuestion(guide.dialogue_start_node);
         });
+      }
+
+      onGuidePointerOver() {
+        const guide = this.getPrimaryNpcContent?.() || this.contentModel?.guide;
+        if (this.isAdventureMode() && guide) {
+          this.setCommand(this.getGuideInteractionCommand(guide));
+          return;
+        }
+        super.onGuidePointerOver();
       }
 
       handleGuideOption(option) {

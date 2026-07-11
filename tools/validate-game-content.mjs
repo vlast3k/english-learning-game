@@ -47,6 +47,54 @@ function requireWorkspaceAsset(assetPath, pathLabel) {
   }
 }
 
+function requireStateCondition(condition, pathLabel) {
+  if (typeof condition === "boolean") {
+    return;
+  }
+  if (!condition || typeof condition !== "object" || Array.isArray(condition)) {
+    fail(`${pathLabel} must be a condition object or boolean`);
+  }
+  if (condition.fact !== undefined) {
+    requireString(condition.fact, `${pathLabel}.fact`);
+    return;
+  }
+  if (condition.inventory_contains !== undefined) {
+    requireString(condition.inventory_contains, `${pathLabel}.inventory_contains`);
+    return;
+  }
+  if (condition.inventory_missing !== undefined) {
+    requireString(condition.inventory_missing, `${pathLabel}.inventory_missing`);
+    return;
+  }
+  if (condition.puzzle !== undefined) {
+    requireString(condition.puzzle, `${pathLabel}.puzzle`);
+    return;
+  }
+  if (condition.event !== undefined) {
+    requireString(condition.event, `${pathLabel}.event`);
+    return;
+  }
+  if (condition.counter !== undefined) {
+    requireString(condition.counter, `${pathLabel}.counter`);
+    return;
+  }
+  if (condition.not !== undefined) {
+    requireStateCondition(condition.not, `${pathLabel}.not`);
+    return;
+  }
+  for (const operator of ["all", "any"]) {
+    if (condition[operator] !== undefined) {
+      if (!Array.isArray(condition[operator]) || condition[operator].length === 0) {
+        fail(`${pathLabel}.${operator} must be a non-empty condition array`);
+      }
+      condition[operator].forEach((entry, index) =>
+        requireStateCondition(entry, `${pathLabel}.${operator}[${index}]`));
+      return;
+    }
+  }
+  fail(`${pathLabel} must use a supported state-condition operator`);
+}
+
 function extractBuiltInTranslations(source) {
   const entries = new Map();
   const mapBody = source.match(/const REVEAL_TRANSLATIONS = new Map\(\[([\s\S]*?)\]\);/)?.[1] || "";
@@ -274,6 +322,10 @@ function validateInventoryPresentation(hotspot, pathLabel) {
 
 function validateContentAssets(content, fileLabel, assetPlan) {
   for (const [key, assetPath] of Object.entries(content.assets || {})) {
+    if (key === "background_taken_when") {
+      requireStateCondition(assetPath, `${fileLabel}.assets.background_taken_when`);
+      continue;
+    }
     if (key === "extra_textures") {
       if (!assetPath || typeof assetPath !== "object" || Array.isArray(assetPath)) {
         fail(`${fileLabel}.assets.extra_textures must be an object`);
@@ -294,6 +346,10 @@ function validateContentAssets(content, fileLabel, assetPlan) {
       continue;
     }
     requireWorkspaceAsset(assetPath, `${fileLabel}.assets.${key}`);
+  }
+
+  if (content.assets?.background_taken_when !== undefined && !content.assets?.background_taken) {
+    fail(`${fileLabel}.assets.background_taken_when requires assets.background_taken`);
   }
 
   if (!assetPlan) {
@@ -425,7 +481,9 @@ function validateAdventureContent(content, fileLabel) {
       continue;
     }
     requireString(overlay.texture, `${fileLabel}.overlays[${index}].texture`);
-    requireString(overlay.frame, `${fileLabel}.overlays[${index}].frame`);
+    if (overlay.frame !== undefined) {
+      requireString(overlay.frame, `${fileLabel}.overlays[${index}].frame`);
+    }
     if (!Number.isFinite(overlay.x) || !Number.isFinite(overlay.y)) {
       fail(`${fileLabel}.overlays[${index}] must define numeric x and y`);
     }

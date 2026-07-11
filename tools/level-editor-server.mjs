@@ -370,6 +370,19 @@ function patchHotspotText(originalText, patches) {
     objectText = replaceNumberProperty(objectText, "x", patch.x);
     objectText = replaceNumberProperty(objectText, "y", patch.y);
     objectText = replaceNumberProperty(objectText, "radius", patch.radius);
+    const hotspot = JSON.parse(objectText);
+    if (hotspot.kind === "exit") {
+      // The exit's hotspot is also where the hero walks before transitioning.
+      // Deriving walk_to here keeps every editor client consistent.
+      const walkToRange = findPropertyObject(objectText, "walk_to");
+      if (!walkToRange) {
+        throw new Error(`exit hotspot ${patch.id} is missing walk_to`);
+      }
+      objectText = patchObjectRangeNumber(objectText, walkToRange, {
+        x: patch.x,
+        y: patch.y,
+      });
+    }
     text = `${text.slice(0, start)}${objectText}${text.slice(end)}`;
   }
   return text;

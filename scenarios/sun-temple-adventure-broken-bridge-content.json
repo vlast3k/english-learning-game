@@ -5,12 +5,13 @@
   "gameplay_mode": "adventure",
   "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
   "assets": {
-    "background": "assets/sun-temple-adventure/broken-bridge/generated/background-broken-v1.png",
+    "background": "assets/sun-temple-adventure/broken-bridge/generated/background-basket-cleared-v2.png",
     "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
     "map_ui": "assets/sun-temple-adventure/ui-map/generated/map-ui-v1.png",
     "extra_textures": {
-      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png"
+      "propAtlasSlice03": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-slice-03-v1.png",
+      "ropeBridge": "assets/sun-temple-adventure/broken-bridge/generated/rope-bridge-v1.png"
     },
     "extra_asset_frames": [
       "assets/sun-temple-adventure/shared/generated/asset-frames-slice-03-v1.json"
@@ -58,7 +59,22 @@
       }
     ],
     "clearance": 30,
-    "obstacles": []
+    "obstacles": [],
+    "states": [
+      {
+        "when": {
+          "fact": "bridge.repaired",
+          "equals": true
+        },
+        "walkable_polygon": [
+          { "x": 18, "y": 104 },
+          { "x": 1008, "y": 104 },
+          { "x": 1014, "y": 566 },
+          { "x": 18, "y": 566 }
+        ],
+        "obstacles": []
+      }
+    ]
   },
   "hotspots": [
     {
@@ -104,12 +120,12 @@
       "label": "basket",
       "english": "basket",
       "bg": "кошница",
-      "x": 401,
-      "y": 443,
+      "x": 672,
+      "y": 131,
       "radius": 38,
       "walk_to": {
-        "x": 720,
-        "y": 506
+        "x": 672,
+        "y": 184
       },
       "visible_when": {
         "fact": "bridge.repaired",
@@ -138,24 +154,39 @@
       "kind": "exit",
       "arrival_from_scene": "sun-temple-adventure-village-garden",
       "label": "village garden",
-      "x": 800,
-      "y": 516,
+      "x": 805,
+      "y": 97,
       "radius": 46,
       "walk_to": {
         "x": 842,
-        "y": 500
+        "y": 228
       }
     }
   ],
   "overlays": [
     {
-      "id": "bridge_rope_tied",
+      "id": "lost_basket_far_art",
       "texture": "propAtlas",
-      "frame": "bridge_rope_tied",
-      "x": 520,
-      "y": 350,
+      "frame": "lost_basket",
+      "x": 672,
+      "y": 131,
       "scale": 0.34,
-      "depth": 520,
+      "depth": 230,
+      "visible_when": {
+        "not": {
+          "fact": "item.lost_basket.taken",
+          "equals": true
+        }
+      }
+    },
+    {
+      "id": "rope_bridge_complete",
+      "texture": "ropeBridge",
+      "x": 640,
+      "y": 405,
+      "display_width": 510,
+      "display_height": 255,
+      "depth": 490,
       "visible_when": {
         "fact": "bridge.repaired",
         "equals": true

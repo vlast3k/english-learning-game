@@ -74,13 +74,17 @@ async function run() {
   const clickMapMarker = async (id) => {
     const marker = await page.evaluate((markerId) => {
       const scene = window.phaserGame.scene.getScene("CampScene");
-      return scene.contentModel.map.markers.find((entry) => entry.id === markerId);
+      const marker = scene.contentModel.map.markers.find((entry) => entry.id === markerId);
+      if (!marker) return null;
+      const point = scene.getTornMapMarkerPosition?.(markerId) || marker;
+      return { x: 512 + point.x, y: 288 + point.y };
     }, id);
     if (!marker) fail(`could not find map marker ${id}`);
-    await click(152 + 360 + marker.x, 84 + 209 + marker.y);
+    await click(marker.x, marker.y);
   };
   const inventory = (index) => click(56 + index * 50, 84);
   const closeBubble = () => page.evaluate(() => window.phaserGame.scene.getScene("CampScene").closeBubble());
+  const assistantHint = () => page.evaluate(() => window.phaserGame.scene.getScene("CampScene").getAssistantHint());
 
   try {
     await page.goto(`${(await serverInfo).url}/phaser.html?scenario=scenarios/sun-temple-adventure-base-camp-table-content.json&reset=1`, { waitUntil: "domcontentloaded" });
@@ -99,7 +103,26 @@ async function run() {
       scene.refreshAdventureScreenState();
     });
 
+    await page.evaluate(() => {
+      const scene = window.phaserGame.scene.getScene("CampScene");
+      scene.gameEngine.state.data.inventory = ["valley_map", "empty_jar"];
+    });
+    const jarHint = await assistantHint();
+    if (!/Waterfall Cave/.test(jarHint.text) || !/glowing leaf/.test(jarHint.text)) {
+      fail("Help should trace the empty jar to the reachable glow leaf, not skip to the Blue Lens", jarHint);
+    }
+    await page.evaluate(() => {
+      const scene = window.phaserGame.scene.getScene("CampScene");
+      scene.gameEngine.state.data.inventory = ["valley_map"];
+    });
+
     await click(872, 92); await clickMapMarker("waterfall-mouth"); await waitForScene("sun-temple-adventure-waterfall-mouth");
+    const glowLeafLabelVisible = await page.evaluate(() => {
+      const scene = window.phaserGame.scene.getScene("CampScene");
+      const hotspot = scene.hotspots.find((entry) => entry.id === "glow_leaf");
+      return hotspot.marker.list.some((child) => child.text === "glow leaf" && child.alpha === 1);
+    });
+    if (!glowLeafLabelVisible) fail("glow leaf should have a persistent visual label");
     await clickHotspot("glow_leaf"); await assert("glow leaf should be collected", (s) => s.inventory.includes("glow_leaf")); await closeBubble();
     await click(872, 92); await clickMapMarker("village-garden"); await waitForScene("sun-temple-adventure-village-garden");
     await clickHotspot("exit_keeper_hut"); await waitForScene("sun-temple-adventure-keeper-hut");
@@ -108,6 +131,15 @@ async function run() {
 
     await click(872, 92); await clickMapMarker("waterfall-mouth"); await waitForScene("sun-temple-adventure-waterfall-mouth");
     await inventory(1); await clickHotspot("dark_cave_entrance"); await assert("glow jar should light the cave", (s) => s.facts["waterfall.cave_lit"] === true && s.visible.includes("exit_dark_cave") && s.overlays.includes("cave_lit_glow")); await closeBubble();
+    const caveLightAlignment = await page.evaluate(() => {
+      const scene = window.phaserGame.scene.getScene("CampScene");
+      const entrance = scene.hotspots.find((entry) => entry.id === "dark_cave_entrance");
+      const glow = scene.adventureOverlays.find((entry) => entry.spec.id === "cave_lit_glow")?.image;
+      return { entrance: { x: entrance.x, y: entrance.y }, glow: { x: glow.x, y: glow.y } };
+    });
+    if (caveLightAlignment.entrance.x !== caveLightAlignment.glow.x || caveLightAlignment.entrance.y !== caveLightAlignment.glow.y) {
+      fail("cave light should be centred on the dark-cave entrance", caveLightAlignment);
+    }
     await page.screenshot({ path: path.join(OUT_DIR, "07-waterfall-cave-lit.png"), fullPage: true });
     await clickHotspot("exit_dark_cave"); await waitForScene("sun-temple-adventure-dark-cave");
     await clickHotspot("cave_wall"); await assert("wall inspection should reveal the key", (s) => s.visible.includes("stone_key")); await closeBubble();

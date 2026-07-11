@@ -6,6 +6,11 @@
   "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
   "assets": {
     "background": "assets/sun-temple-adventure/base-camp-table/generated/background-v1.png",
+    "background_taken": "assets/sun-temple-adventure/base-camp-table/generated/background-map-taken-v1.png",
+    "background_taken_when": {
+      "fact": "item.torn_map.taken",
+      "equals": true
+    },
     "prop_atlas": "assets/sun-temple-adventure/shared/generated/prop-state-atlas-v1.png",
     "asset_frames": "assets/sun-temple-adventure/shared/generated/asset-frames-v1.json",
     "extra_textures": {
@@ -198,8 +203,8 @@
       "speaker": "Mira",
       "label": "Mira",
       "position": {
-        "x": 739,
-        "y": 501
+        "x": 834,
+        "y": 514
       },
       "walk_to": {
         "x": 610,
@@ -211,7 +216,13 @@
         "scale": 0.34
       },
       "default_text": "The Sun Compass needs five lenses.",
-      "default_text_bg": "Слънчевият компас има нужда от пет лещи."
+      "default_text_bg": "Слънчевият компас има нужда от пет лещи.",
+      "wrong_item_messages": {
+        "lost_basket": {
+          "text": "This basket belongs to Lina in the Village Garden.",
+          "bg": "Тази кошница принадлежи на Лина в Селската градина."
+        }
+      }
     }
   ],
   "navigation": {
@@ -322,8 +333,8 @@
       "id": "sun_compass_green_lens",
       "texture": "propAtlas",
       "frame": "sun_compass_green_lens",
-      "x": 520,
-      "y": 318,
+      "x": 365,
+      "y": 252,
       "scale": 0.28,
       "depth": 520,
       "visible_when": {
@@ -335,8 +346,8 @@
       "id": "sun_compass_blue_lens",
       "texture": "propAtlasSlice02",
       "frame": "sun_compass_blue_lens",
-      "x": 520,
-      "y": 318,
+      "x": 365,
+      "y": 252,
       "scale": 0.28,
       "depth": 522,
       "visible_when": {
@@ -348,8 +359,8 @@
       "id": "sun_compass_stone_lens",
       "texture": "propAtlasSlice03",
       "frame": "sun_compass_stone_lens",
-      "x": 520,
-      "y": 318,
+      "x": 365,
+      "y": 252,
       "scale": 0.28,
       "depth": 524,
       "visible_when": {
@@ -361,8 +372,8 @@
       "id": "sun_compass_mirror_lens",
       "texture": "propAtlasSlice04",
       "frame": "sun_compass_mirror_lens",
-      "x": 520,
-      "y": 318,
+      "x": 365,
+      "y": 252,
       "scale": 0.28,
       "depth": 526,
       "visible_when": {
@@ -374,8 +385,8 @@
       "id": "sun_compass_complete",
       "texture": "propAtlasSlice05",
       "frame": "compass_complete",
-      "x": 520,
-      "y": 318,
+      "x": 365,
+      "y": 252,
       "scale": 0.28,
       "depth": 528,
       "visible_when": {

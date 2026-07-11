@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scene_id": "sun-temple-adventure-waterfall-mouth",
-  "content_version": "2026-07-10",
+  "content_version": "2026-07-10-glow-leaf-cue-1",
   "gameplay_mode": "adventure",
   "engine_manifest": "game-engine/missions/sun-temple-adventure-slice-01.json",
   "assets": {
@@ -54,6 +54,7 @@
       "label": "glow leaf",
       "english": "glow leaf",
       "bg": "светещ лист",
+      "attention_label": "glow leaf",
       "icon": {
         "texture": "propAtlasSlice02",
         "frame": "glow_leaf"
@@ -220,8 +221,8 @@
       "id": "cave_lit_glow",
       "texture": "propAtlasSlice02",
       "frame": "cave_lit_glow",
-      "x": 853,
-      "y": 291,
+      "x": 818,
+      "y": 252,
       "scale": 0.31,
       "depth": 405,
       "visible_when": {

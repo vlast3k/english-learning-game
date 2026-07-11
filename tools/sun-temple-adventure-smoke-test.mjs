@@ -95,6 +95,8 @@ async function getAdventureState(page) {
       facts: { ...snapshot.facts },
       puzzles: { ...snapshot.puzzles },
       selected: scene.selectedInventoryItemId || null,
+      command: scene.commandText?.text || "",
+      backgroundTexture: scene.backgroundImage?.texture?.key || "",
       visibleHotspots: (scene.hotspots || [])
         .filter((hotspot) => hotspot.zone?.visible && hotspot.zone?.input?.enabled !== false)
         .map((hotspot) => hotspot.id),
@@ -124,6 +126,7 @@ async function assertState(page, label, predicate) {
         facts: { ...snapshot.facts },
         puzzles: { ...snapshot.puzzles },
         selected: scene.selectedInventoryItemId || null,
+        backgroundTexture: scene.backgroundImage?.texture?.key || "",
         visibleHotspots: (scene.hotspots || [])
           .filter((hotspot) => hotspot.zone?.visible && hotspot.zone?.input?.enabled !== false)
           .map((hotspot) => hotspot.id),
@@ -175,14 +178,20 @@ async function clickHotspot(page, id) {
 }
 
 async function clickMapMarker(page, id) {
-  const marker = await page.evaluate((markerId) => {
+  const target = await page.evaluate((markerId) => {
     const scene = window.phaserGame.scene.getScene("CampScene");
-    return scene.contentModel.map.markers.find((entry) => entry.id === markerId);
+    const marker = scene.contentModel.map.markers.find((entry) => entry.id === markerId);
+    if (!marker) return null;
+    if (String(scene.contentModel.scene_id || "").startsWith("sun-temple-adventure-")) {
+      const position = scene.getTornMapMarkerPosition(markerId);
+      return { x: 512 + position.x, y: 288 + position.y };
+    }
+    return { x: 152 + 360 + marker.x, y: 84 + 209 + marker.y };
   }, id);
-  if (!marker) {
+  if (!target) {
     fail(`could not find map marker ${id}`);
   }
-  await clickGame(page, 152 + 360 + marker.x, 84 + 209 + marker.y);
+  await clickGame(page, target.x, target.y);
 }
 
 async function clickPrimaryNpc(page) {
@@ -194,6 +203,19 @@ async function clickPrimaryNpc(page) {
     fail("could not find primary NPC");
   }
   await clickGame(page, npc.position.x, npc.position.y - 62);
+}
+
+async function hoverPrimaryNpc(page) {
+  const npc = await page.evaluate(() => {
+    const scene = window.phaserGame.scene.getScene("CampScene");
+    return scene.getPrimaryNpcContent?.();
+  });
+  if (!npc?.position) {
+    fail("could not find primary NPC");
+  }
+  const point = await gamePointToViewport(page, npc.position.x, npc.position.y - 62);
+  await page.mouse.move(point.x, point.y);
+  await page.waitForTimeout(80);
 }
 
 async function clickInventory(page, index) {
@@ -246,7 +268,9 @@ async function runSunTempleSmokeTest(baseUrl) {
       && state.facts["map.ui_unlocked"] === true
       && state.mapButton?.enabled === true
       && !state.visibleHotspots.includes("torn_map")
+      && state.backgroundTexture === "campBgTaken"
     ));
+    await saveScreenshot(page, "01-map-taken");
     await closeBubble(page);
 
     await clickHotspot(page, "exit_supply_tent");
@@ -254,12 +278,14 @@ async function runSunTempleSmokeTest(baseUrl) {
     await assertState(page, "supply tent should not show an NPC", (state) => state.npcId === null);
 
     await clickHotspot(page, "rope");
-    await assertState(page, "taking rope should add inventory and hide rope hotspot", (state) => (
+    await assertState(page, "taking rope should add inventory, hide its hotspot, and remove it from the tent", (state) => (
       state.inventory.includes("torn_map")
       && state.inventory.includes("rope")
       && state.facts["item.rope.taken"] === true
       && !state.visibleHotspots.includes("rope")
+      && state.overlayVisible.includes("rope_taken_background")
     ));
+    await saveScreenshot(page, "01a-rope-taken");
     await closeBubble(page);
 
     await clickHotspot(page, "exit_base_camp");
@@ -273,17 +299,12 @@ async function runSunTempleSmokeTest(baseUrl) {
     ));
 
     await clickHotspot(page, "fallen_branch");
-    await assertState(page, "first branch click should reveal a hint but not move the branch", (state) => (
+    await assertState(page, "one branch click should reveal the map piece", (state) => (
       state.facts["camp_edge.branch_inspected"] === true
-      && state.visibleHotspots.includes("fallen_branch")
-    ));
-    await closeBubble(page);
-
-    await clickHotspot(page, "fallen_branch");
-    await assertState(page, "second branch click should reveal the map piece", (state) => (
-      state.facts["camp_edge.branch_moved"] === true
+      && state.facts["camp_edge.branch_moved"] === true
       && !state.visibleHotspots.includes("fallen_branch")
       && state.visibleHotspots.includes("map_piece_01")
+      && state.overlayVisible.includes("camp_edge_branch_moved_background")
     ));
     await closeBubble(page);
 
@@ -292,6 +313,8 @@ async function runSunTempleSmokeTest(baseUrl) {
       state.inventory.includes("torn_map")
       && state.inventory.includes("rope")
       && state.inventory.includes("map_piece_01")
+      && !state.visibleHotspots.includes("map_piece_01")
+      && state.overlayVisible.includes("camp_edge_map_taken_background")
     ));
     await closeBubble(page);
 
@@ -317,6 +340,7 @@ async function runSunTempleSmokeTest(baseUrl) {
       state.npcId === null
       && state.visibleHotspots.includes("lost_basket_far")
       && !state.visibleHotspots.includes("lost_basket")
+      && state.overlayVisible.includes("lost_basket_far_art")
     ));
 
     await clickInventory(page, 0);
@@ -325,7 +349,8 @@ async function runSunTempleSmokeTest(baseUrl) {
     await assertState(page, "using rope should repair the bridge and consume the rope", (state) => (
       JSON.stringify(state.inventory) === JSON.stringify(["valley_map"])
       && state.facts["bridge.repaired"] === true
-      && state.overlayVisible.includes("bridge_rope_tied")
+      && state.overlayVisible.includes("rope_bridge_complete")
+      && state.overlayVisible.includes("lost_basket_far_art")
       && state.visibleHotspots.includes("lost_basket")
       && !state.visibleHotspots.includes("lost_basket_far")
     ));
@@ -336,6 +361,7 @@ async function runSunTempleSmokeTest(baseUrl) {
     await assertState(page, "taking the basket should add it to inventory", (state) => (
       JSON.stringify(state.inventory) === JSON.stringify(["valley_map", "lost_basket"])
       && state.facts["item.lost_basket.taken"] === true
+      && !state.overlayVisible.includes("lost_basket_far_art")
     ));
     await closeBubble(page);
 
@@ -347,6 +373,10 @@ async function runSunTempleSmokeTest(baseUrl) {
 
     await clickInventory(page, 1);
     await assertState(page, "basket should become selected", (state) => state.selected === "lost_basket");
+    await hoverPrimaryNpc(page);
+    await assertState(page, "hovering Lina with the basket selected should show the give action", (state) => (
+      state.command === "Give basket to Lina"
+    ));
     await clickPrimaryNpc(page);
     await assertState(page, "giving basket to Lina should remove the basket and set Lina helped", (state) => (
       JSON.stringify(state.inventory) === JSON.stringify(["valley_map"])
@@ -358,7 +388,7 @@ async function runSunTempleSmokeTest(baseUrl) {
     await assertState(page, "checking the flower pot after helping Lina should reveal the Green Lens", (state) => (
       state.facts["village.flower_pot_checked"] === true
       && state.visibleHotspots.includes("green_lens")
-      && state.overlayVisible.includes("flower_pot_green_hint")
+      && state.overlayVisible.includes("green_lens_visible")
     ));
     await closeBubble(page);
 
@@ -367,6 +397,7 @@ async function runSunTempleSmokeTest(baseUrl) {
       JSON.stringify(state.inventory) === JSON.stringify(["valley_map", "green_lens"])
       && state.facts["item.green_lens.taken"] === true
       && !state.visibleHotspots.includes("green_lens")
+      && !state.overlayVisible.includes("green_lens_visible")
     ));
     await closeBubble(page);
     await saveScreenshot(page, "04-green-lens-taken");

@@ -4,7 +4,7 @@
   const CONTENT_CACHE_KEY = "gameContent";
   const SCENE_WIDTH = 1024;
   const SCENE_HEIGHT = 576;
-  const ASSET_OVERRIDE_VERSION = "20260710-campaign-chooser-v2";
+  const ASSET_OVERRIDE_VERSION = "20260710-rope-bridge-v9";
   const LAST_CAMPAIGN_KEY = "english-game:last-campaign";
   const SELECTED_CAMPAIGN_KEY = "english-game:selected-campaign";
   const CAMPAIGNS = {
@@ -127,6 +127,26 @@
 
   const CONTENT_MANIFEST = loadContentManifest(CONTENT_URL);
 
+  function getCampaignKeyForContent(content) {
+    const sceneId = String(content?.scene_id || "");
+    if (sceneId.startsWith("sun-temple-adventure-")) {
+      return "sun-temple";
+    }
+    if (sceneId.startsWith("james-bond-level-")) {
+      return "spy-academy";
+    }
+    return null;
+  }
+
+  const contentCampaign = getCampaignKeyForContent(CONTENT_MANIFEST);
+  if (contentCampaign) {
+    try {
+      window.localStorage?.setItem(SELECTED_CAMPAIGN_KEY, contentCampaign);
+    } catch (_error) {
+      // The game remains playable when browser storage is unavailable.
+    }
+  }
+
   function versionedScenarioAsset(path) {
     return `${path}?v=${ASSET_OVERRIDE_VERSION}`;
   }
@@ -193,12 +213,23 @@
         if (assets.map_ui) {
           originalImage("mapUi", versionedScenarioAsset(assets.map_ui));
         }
-        if (assets.npc_mira) {
-          originalImage("npcMira", versionedScenarioAsset(assets.npc_mira));
+        if (assets.background_taken) {
+          originalImage("campBgTaken", versionedScenarioAsset(assets.background_taken));
         }
-        if (assets.npc_lina) {
-          originalImage("npcLina", versionedScenarioAsset(assets.npc_lina));
+        if (String(CONTENT_MANIFEST?.scene_id || "").startsWith("sun-temple-adventure-")) {
+          originalImage(
+            "tornMapUi",
+            versionedScenarioAsset("assets/sun-temple-adventure/ui-map/generated/torn-valley-map-v1-transparent.png"),
+          );
         }
+        originalImage(
+          "npcMira",
+          versionedScenarioAsset(assets.npc_mira || "assets/sun-temple-adventure/shared/generated/npc-mira-v1.png"),
+        );
+        originalImage(
+          "npcLina",
+          versionedScenarioAsset(assets.npc_lina || "assets/sun-temple-adventure/shared/generated/npc-lina-v1.png"),
+        );
         if (assets.asset_frames) {
           this.load.json("assetFrames", versionedScenarioAsset(assets.asset_frames));
         }
@@ -386,9 +417,13 @@
           super.setupNavigation();
           return;
         }
-        this.walkablePoly = navigation.walkable_polygon.map((point) => ({ x: point.x, y: point.y }));
-        this.obstacles = navigation.obstacles.map((obstacle) => ({ ...obstacle }));
-        this.navClearance = navigation.clearance ?? 30;
+        const state = (navigation.states || []).find((candidate) =>
+          this.bridgeConditionMatches?.(candidate.when),
+        );
+        this.walkablePoly = (state?.walkable_polygon || navigation.walkable_polygon)
+          .map((point) => ({ x: point.x, y: point.y }));
+        this.obstacles = (state?.obstacles || navigation.obstacles || []).map((obstacle) => ({ ...obstacle }));
+        this.navClearance = state?.clearance ?? navigation.clearance ?? 30;
       }
 
       createHotspots() {
@@ -939,6 +974,11 @@
       moveEditedHotspot(hotspot, x, y) {
         hotspot.x = Phaser.Math.Clamp(x, 0, SCENE_WIDTH);
         hotspot.y = Phaser.Math.Clamp(y, 0, SCENE_HEIGHT);
+        // An exit's hotspot and walk target describe the same doorway. Keep them
+        // together so Alex cannot walk to an old position after an edit.
+        if (hotspot.kind === "exit") {
+          hotspot.walk_to = { x: hotspot.x, y: hotspot.y };
+        }
         hotspot.marker.setPosition(hotspot.x, hotspot.y);
         hotspot.editorDragTarget.setPosition(hotspot.x, hotspot.y);
         hotspot.zone.setPosition(hotspot.x, hotspot.y);
@@ -1029,6 +1069,12 @@
           x: Math.round(hotspot.x),
           y: Math.round(hotspot.y),
           radius: Math.round(hotspot.radius),
+          ...(hotspot.kind === "exit" && hotspot.walk_to ? {
+            walk_to: {
+              x: Math.round(hotspot.walk_to.x),
+              y: Math.round(hotspot.walk_to.y),
+            },
+          } : {}),
         }));
       }
 
